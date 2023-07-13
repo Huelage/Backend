@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import {ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { UserModule } from './user/user.module';
+import { UtilsModule } from './utils/utils.module';
+import { SmsModule } from './utils/notification/sms.module';
 
 
 
@@ -24,10 +27,14 @@ import { ConfigModule } from '@nestjs/config';
       username:process.env.DB_USER,
       password:process.env.DB_PASS,
       database:process.env.DB_NAME, //database name replace with your database name but it should be same as this name
-      entities:[__dirname + '/**/*.entity{.ts,.js}'],
+      autoLoadEntities:true,
       synchronize:true,
+      entities: ["dist/**/*.entity{.ts,.js}"],
 
-    })
+    }),
+    UserModule,
+    UtilsModule,
+    SmsModule
   ]
 })
 export class AppModule {}
