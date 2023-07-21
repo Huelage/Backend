@@ -32,20 +32,20 @@ export class User {
   @Field({ nullable: true })
   phoneNumber?: string;
 
-  @Column()
+  @Column({ nullable: true }) // it can be empty (the social signup).
   password: string;
 
-  @Column({ default: false })
+  @Column({ default: false }) // set to true for social signup
   @Field()
-  isSocialAuth?: boolean;
+  isSocialAuth: boolean;
+
+  @Column({ default: false }) // if phone number is verified it changes to true
+  @Field((type) => Boolean)
+  isVerified: boolean;
 
   @Column({ default: false })
   @Field((type) => Boolean)
-  isVerified?: boolean; // if phone number is verified˝
-
-  @Column({ default: false })
-  @Field((type) => Boolean)
-  emailIsVerified?: boolean;
+  emailIsVerified: boolean;
 
   @CreateDateColumn({
     type: 'timestamp',
