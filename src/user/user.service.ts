@@ -14,10 +14,10 @@ export class UserService {
   ) {}
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);
-    await this.smsService.sendSms(
-      user.phoneNumber,
-      `Welcome to huelage ${user.firstName}, here is your otp:1234 `,
-    );
+    // await this.smsService.sendSms(
+    //   user.phoneNumber,
+    //   `Welcome to huelage ${user.firstName}, here is your otp:1234 `,
+    // );
 
     return this.userRepository.save(user);
   }

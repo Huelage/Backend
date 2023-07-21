@@ -8,6 +8,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
 import { SmsModule } from './utils/notification/sms.module';
+import { GraphQLError } from 'graphql';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { SmsModule } from './utils/notification/sms.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       formatError: (err) => {
-        return err;
+        return new GraphQLError(err.message);
       },
     }),
     TypeOrmModule.forRoot({

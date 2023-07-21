@@ -7,8 +7,8 @@ type User {
   firstName: String!
   lastName: String!
   email: String!
-  phoneNumber: String!
-  isSocialAuth: String!
+  phoneNumber: String
+  isSocialAuth: Boolean!
   isVerified: Boolean!
   emailIsVerified: Boolean!
 }
@@ -25,6 +25,6 @@ input CreateUserDto {
   firstName: String!
   lastName: String!
   email: String!
-  phoneNumber: String!
+  phoneNumber: String
   password: String!
 }

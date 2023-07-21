@@ -28,24 +28,24 @@ export class User {
   @Field()
   email: string;
 
-  @Column()
-  @Field()
-  phoneNumber: string;
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  phoneNumber?: string;
 
   @Column()
   password: string;
 
-  @Column()
+  @Column({ default: false })
   @Field()
-  isSocialAuth: string;
+  isSocialAuth?: boolean;
 
-  @Column()
+  @Column({ default: false })
   @Field((type) => Boolean)
-  isVerified: boolean;
+  isVerified?: boolean; // if phone number is verified˝
 
-  @Column()
+  @Column({ default: false })
   @Field((type) => Boolean)
-  emailIsVerified: boolean;
+  emailIsVerified?: boolean;
 
   @CreateDateColumn({
     type: 'timestamp',
