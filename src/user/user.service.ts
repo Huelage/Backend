@@ -9,16 +9,18 @@ import { SmsService } from 'src/utils/notification/sms.service';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository:Repository<User>,
-    private readonly smsService:SmsService
-  ){}
-  async create(createUserDto: CreateUserDto):Promise<User> {
-    const user = this.userRepository.create(createUserDto)
-     await this.smsService.sendSms(user.phoneNumber,`Welcome to huelage ${user.firstName},here is your otp:1234 `)
+    @InjectRepository(User) private userRepository: Repository<User>,
+    private readonly smsService: SmsService,
+  ) {}
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = this.userRepository.create(createUserDto);
+    await this.smsService.sendSms(
+      user.phoneNumber,
+      `Welcome to huelage ${user.firstName}, here is your otp:1234 `,
+    );
 
-    return this.userRepository.save(user)
+    return this.userRepository.save(user);
   }
-
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
