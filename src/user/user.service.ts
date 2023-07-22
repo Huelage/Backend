@@ -8,7 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SmsService } from 'src/utils/notification/sms.service';
+import { SmsService } from 'src/utils/sms.service';
 import { hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 
@@ -35,6 +35,10 @@ export class UserService {
       password: hashedPassword,
     });
 
+    this.smsService.sendSms(
+      user.phoneNumber,
+      `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
+    );
     try {
       await this.userRepository.save(user);
     } catch (error) {
@@ -52,10 +56,10 @@ export class UserService {
       }
     }
 
-    // this.smsService.sendSms(
-    //   user.phoneNumber,
-    //   `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
-    // );
+    this.smsService.sendSms(
+      user.phoneNumber,
+      `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
+    );
     return user;
   }
 

@@ -6,6 +6,8 @@ import { User } from './entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UtilsModule } from 'src/utils/utils.module';
+import { SmsService } from 'src/utils/sms.service';
 
 @Module({
   imports: [
@@ -29,8 +31,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([User]),
+    UtilsModule,
   ],
 
-  providers: [UserService, UserResolver],
+  providers: [UserService, UserResolver, SmsService],
 })
 export class UserModule {}
