@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-@Unique(['email', 'phoneNumber'])
+// @Unique(['email', 'phoneNumber'])
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn()
@@ -24,10 +24,12 @@ export class User {
   @Field()
   lastName: string;
 
+  @Unique(['email'])
   @Column()
   @Field()
   email: string;
 
+  @Unique(['phoneNumber'])
   @Column({ nullable: true })
   @Field({ nullable: true })
   phoneNumber?: string;
@@ -47,10 +49,14 @@ export class User {
   @Field((type) => Boolean)
   emailIsVerified: boolean;
 
+  @Column({ nullable: true })
+  phoneOtp: string;
+
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
+  @Field({ nullable: true })
   createdAt: Date;
 
   @UpdateDateColumn({
@@ -58,5 +64,6 @@ export class User {
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
+  @Field({ nullable: true })
   updatedAt: Date;
 }

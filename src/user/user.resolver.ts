@@ -13,9 +13,9 @@ export class UserResolver {
   }
 
   @Mutation((returns) => User)
-  userSignUp(
+  async userSignUp(
     @Args('createUserDto') createUserDto: CreateUserDto,
   ): Promise<User> {
-    return this.userService.create(createUserDto);
+    return await this.userService.create(createUserDto);
   }
 }
