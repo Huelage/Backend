@@ -9,6 +9,7 @@ type User {
   email: String!
   phoneNumber: String
   isSocialAuth: Boolean!
+  accessToken: String
   isVerified: Boolean!
   emailIsVerified: Boolean!
   createdAt: DateTime
@@ -26,6 +27,7 @@ type Query {
 
 type Mutation {
   userSignUp(createUserDto: CreateUserDto!): User!
+  verifyPhone(verifyPhoneDto: VerifyPhoneDto!): User!
 }
 
 input CreateUserDto {
@@ -34,4 +36,9 @@ input CreateUserDto {
   email: String!
   phoneNumber: String!
   password: String!
+}
+
+input VerifyPhoneDto {
+  phoneNumber: String!
+  phoneOtp: String!
 }

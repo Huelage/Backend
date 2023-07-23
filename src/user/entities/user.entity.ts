@@ -41,6 +41,9 @@ export class User {
   @Field()
   isSocialAuth: boolean;
 
+  @Field({ nullable: true })
+  accessToken: string;
+
   @Column({ default: false }) // if phone number is verified it changes to true
   @Field((type) => Boolean)
   isVerified: boolean;

@@ -2,6 +2,9 @@ import {
   Injectable,
   ConflictException,
   InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,9 +14,13 @@ import { Repository } from 'typeorm';
 import { SmsService } from 'src/utils/sms.service';
 import { hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { VerifyPhoneDto } from './dto/verify-phone.dto';
 
 @Injectable()
 export class UserService {
+  private logger = new Logger('UserService');
+  private otpLifeSpan = 1800000; // 30 minutes
+
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     private readonly smsService: SmsService,
@@ -35,10 +42,10 @@ export class UserService {
       password: hashedPassword,
     });
 
-    this.smsService.sendSms(
-      user.phoneNumber,
-      `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
-    );
+    // this.smsService.sendSms(
+    //   user.phoneNumber,
+    //   `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
+    // );
     try {
       await this.userRepository.save(user);
     } catch (error) {
@@ -52,6 +59,7 @@ export class UserService {
 
         throw new ConflictException(`${inUse} already in use`);
       } else {
+        this.logger.error(error.message);
         throw new InternalServerErrorException('An unexpected error occured');
       }
     }
@@ -63,7 +71,24 @@ export class UserService {
     return user;
   }
 
-  // verifyPhone(otp) {}
+  async verifyPhone(verifyPhoneDto: VerifyPhoneDto): Promise<User> {
+    const { phoneNumber, phoneOtp } = verifyPhoneDto;
+
+    const user = await this.userRepository.findOneBy({ phoneNumber });
+    if (!user)
+      throw new NotFoundException('No user with this phone number exists');
+
+    const isExpired = user.updatedAt.getTime() - Date.now() > this.otpLifeSpan;
+    const notMatch = user.phoneOtp !== phoneOtp;
+
+    if (isExpired || notMatch)
+      throw new UnauthorizedException('The otp is invalid');
+
+    const payload = { id: user.id };
+    const accessToken = await this.jwtService.sign(payload);
+
+    return { ...user, accessToken };
+  }
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
