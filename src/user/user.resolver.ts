@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { VerifyPhoneDto } from './dto/verify-phone.dto';
+import { UpdatePhoneDto } from './dto/update-phone.dto';
 
 @Resolver()
 export class UserResolver {
@@ -18,6 +19,13 @@ export class UserResolver {
     @Args('createUserDto') createUserDto: CreateUserDto,
   ): Promise<User> {
     return await this.userService.create(createUserDto);
+  }
+
+  @Mutation((returns) => User)
+  async updatePhone(
+    @Args('updatePhoneDto') updatePhoneDto: UpdatePhoneDto,
+  ): Promise<User> {
+    return await this.userService.updatePhone(updatePhoneDto);
   }
 
   @Mutation((returns) => User)

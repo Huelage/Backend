@@ -15,11 +15,15 @@ import { SmsService } from 'src/utils/sms.service';
 import { hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { VerifyPhoneDto } from './dto/verify-phone.dto';
+import { UpdatePhoneDto } from './dto/update-phone.dto';
 
 @Injectable()
 export class UserService {
   private logger = new Logger('UserService');
   private otpLifeSpan = 1800000; // 30 minutes
+  private genRandomOtp = (): string => {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+  };
 
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
@@ -28,7 +32,7 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const phoneOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    const phoneOtp = this.genRandomOtp();
 
     const { firstName, lastName, phoneNumber, password, email } = createUserDto;
     const hashedPassword = await hash(password, 10);
@@ -42,10 +46,10 @@ export class UserService {
       password: hashedPassword,
     });
 
-    // this.smsService.sendSms(
-    //   user.phoneNumber,
-    //   `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
-    // );
+    this.smsService.sendSms(
+      user.phoneNumber,
+      `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
+    );
     try {
       await this.userRepository.save(user);
     } catch (error) {
@@ -62,6 +66,30 @@ export class UserService {
         this.logger.error(error.message);
         throw new InternalServerErrorException('An unexpected error occured');
       }
+    }
+
+    this.smsService.sendSms(
+      user.phoneNumber,
+      `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
+    );
+    return user;
+  }
+
+  async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<User> {
+    const { email, phoneNumber } = updatePhoneDto;
+
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) throw new NotFoundException('No user with this email exists');
+
+    const phoneOtp = this.genRandomOtp();
+    user.phoneNumber = phoneNumber;
+    user.phoneOtp = phoneOtp;
+
+    try {
+      await this.userRepository.save(user);
+    } catch (error) {
+      this.logger.error(error.message);
+      throw new InternalServerErrorException('An unexpected error occured');
     }
 
     this.smsService.sendSms(
