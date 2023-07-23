@@ -115,6 +115,14 @@ export class UserService {
     const payload = { id: user.id };
     const accessToken = await this.jwtService.sign(payload);
 
+    user.isVerified = true;
+    try {
+      await this.userRepository.save(user);
+    } catch (error) {
+      this.logger.error(error.message);
+      throw new InternalServerErrorException('An unexpected error occured');
+    }
+
     return { ...user, accessToken };
   }
 
