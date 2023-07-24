@@ -21,6 +21,7 @@ import { UpdatePhoneDto } from './dto/update-phone.dto';
 export class UserService {
   private logger = new Logger('UserService');
   private otpLifeSpan = 1800000; // 30 minutes
+
   private genRandomOtp = (): string => {
     return Math.floor(1000 + Math.random() * 9000).toString();
   };
@@ -41,7 +42,7 @@ export class UserService {
       firstName,
       lastName,
       phoneNumber,
-      email,
+      email: email.toLowerCase(),
       phoneOtp,
       password: hashedPassword,
     });
@@ -78,7 +79,9 @@ export class UserService {
   async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<User> {
     const { email, phoneNumber } = updatePhoneDto;
 
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({
+      email: email.toLowerCase(),
+    });
     if (!user) throw new NotFoundException('No user with this email exists');
 
     const phoneOtp = this.genRandomOtp();
