@@ -11,9 +11,7 @@ import { SmsService } from 'src/utils/sms.service';
 
 @Module({
   imports: [
-    PassportModule.register({
-      defaultStrategy: ['jwt'],
-    }),
+    PassportModule,
     // JwtModule.register({
     //   secret: process.env.JWT_SECRET, // this did not work because the .env filr hadn't yet been read
     //   signOptions: {
