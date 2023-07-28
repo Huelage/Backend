@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
-  Logger,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,7 +18,7 @@ import { UpdatePhoneDto } from './dto/update-phone.dto';
 
 @Injectable()
 export class UserService {
-  private logger = new Logger('UserService');
+  // private logger = new Logger('UserService');
   private otpLifeSpan = 1800000; // 30 minutes
 
   private genRandomOtp = (): string => {
@@ -47,10 +46,6 @@ export class UserService {
       password: hashedPassword,
     });
 
-    this.smsService.sendSms(
-      user.phoneNumber,
-      `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
-    );
     try {
       await this.userRepository.save(user);
     } catch (error) {
@@ -61,11 +56,9 @@ export class UserService {
 
         if (emailExists) inUse = 'Email';
         if (phoneExists) inUse = 'Phone Number';
-
         throw new ConflictException(`${inUse} already in use`);
       } else {
-        this.logger.error(error.message);
-        throw new InternalServerErrorException('An unexpected error occured');
+        throw new InternalServerErrorException('Unexpected error');
       }
     }
 
@@ -88,12 +81,7 @@ export class UserService {
     user.phoneNumber = phoneNumber;
     user.phoneOtp = phoneOtp;
 
-    try {
-      await this.userRepository.save(user);
-    } catch (error) {
-      this.logger.error(error.message);
-      throw new InternalServerErrorException('An unexpected error occured');
-    }
+    await this.userRepository.save(user);
 
     this.smsService.sendSms(
       user.phoneNumber,
@@ -119,12 +107,7 @@ export class UserService {
     const accessToken = await this.jwtService.sign(payload);
 
     user.isVerified = true;
-    try {
-      await this.userRepository.save(user);
-    } catch (error) {
-      this.logger.error(error.message);
-      throw new InternalServerErrorException('An unexpected error occured');
-    }
+    await this.userRepository.save(user);
 
     return { ...user, accessToken };
   }
