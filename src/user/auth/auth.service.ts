@@ -62,7 +62,6 @@ export class AuthService {
       phoneOtp,
       password: hashedPassword,
     });
-
     await this.userRepository.save(user);
 
     this.smsService.sendSms(
@@ -117,7 +116,7 @@ export class AuthService {
     if (!user)
       throw new NotFoundException('No user with this phone number exists');
 
-    const isExpired = user.updatedAt.getTime() - Date.now() > this.otpLifeSpan;
+    const isExpired = Date.now() - user.updatedAt.getTime() > this.otpLifeSpan;
     const notMatch = user.phoneOtp !== phoneOtp;
 
     if (isExpired || notMatch)
