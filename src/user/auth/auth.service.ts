@@ -11,10 +11,11 @@ import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SmsService } from 'src/utils/sms.service';
-import { hash } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { VerifyPhoneDto } from './dto/verify-phone.dto';
 import { UpdatePhoneDto } from './dto/update-phone.dto';
+import { AuthenticateUserDto } from './dto/authenticate-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -36,30 +37,33 @@ export class AuthService {
     const { firstName, lastName, phoneNumber, password, email } = createUserDto;
     const hashedPassword = await hash(password, 10);
 
-    const user = await this.userRepository.create({
+    const userExists = await this.userRepository.findOne({
+      where: [{ email: email }, { phoneNumber }],
+    });
+
+    if (userExists) {
+      let inUse;
+      const emailExists = email === userExists.email;
+      const phoneExists = phoneNumber === userExists.phoneNumber;
+      if (emailExists && phoneExists) {
+        inUse = 'Email and Phone number';
+      } else if (emailExists) {
+        inUse = 'Email';
+      } else {
+        inUse = 'Phone number';
+      }
+      throw new ConflictException(`${inUse} already in use.`);
+    }
+    const user = this.userRepository.create({
       firstName,
       lastName,
       phoneNumber,
-      email: email.toLowerCase(),
+      email,
       phoneOtp,
       password: hashedPassword,
     });
 
-    try {
-      await this.userRepository.save(user);
-    } catch (error) {
-      if (error.code === 'ER_DUP_ENTRY') {
-        let inUse;
-        const emailExists = error.message.includes(email);
-        const phoneExists = error.message.includes(phoneNumber);
-
-        if (emailExists) inUse = 'Email';
-        if (phoneExists) inUse = 'Phone Number';
-        throw new ConflictException(`${inUse} already in use`);
-      } else {
-        throw new InternalServerErrorException('Unexpected error');
-      }
-    }
+    await this.userRepository.save(user);
 
     this.smsService.sendSms(
       user.phoneNumber,
@@ -68,11 +72,28 @@ export class AuthService {
     return user;
   }
 
+  async signIn(authenticateUserDto: AuthenticateUserDto) {
+    const { email, password } = authenticateUserDto;
+    const user = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    if (!user) throw new UnauthorizedException('Invalid username or password.');
+    const matches = await compare(password, user.password);
+    if (!matches)
+      throw new UnauthorizedException('Invalid username or password.');
+
+    if (user.isVerified)
+      user.accessToken = await this.jwtService.sign({ id: user.id });
+
+    return user;
+  }
+
   async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<User> {
     const { email, phoneNumber } = updatePhoneDto;
 
     const user = await this.userRepository.findOneBy({
-      email: email.toLowerCase(),
+      email: email,
     });
     if (!user) throw new NotFoundException('No user with this email exists');
 

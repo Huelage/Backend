@@ -6,7 +6,9 @@ async function bootstrap() {
   const logger = new Logger('bootstrap');
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
-    new ValidationPipe(),
+    new ValidationPipe({
+      transform: true,
+    }),
   ); /** A Global Pipe for input validation*/
 
   const port = process.env.PORT || 3000;

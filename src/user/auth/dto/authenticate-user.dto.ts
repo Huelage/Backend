@@ -2,14 +2,14 @@ import { Field, InputType } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
 import { IsString } from 'class-validator';
 
-@InputType('UpdatePhoneInput')
-export class UpdatePhoneDto {
-  @IsString()
-  @Field()
-  phoneNumber: string;
-
+@InputType('AuthenticateUserInput')
+export class AuthenticateUserDto {
   @IsString()
   @Field()
   @Transform(({ value }) => value.toLowerCase())
   email: string;
+
+  @IsString()
+  @Field()
+  password: string;
 }

@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsEmail, IsAlpha, MinLength } from 'class-validator';
 
 @InputType('CreateUserInput')
@@ -13,6 +14,7 @@ export class CreateUserDto {
 
   @IsEmail()
   @Field()
+  @Transform(({ value }) => value.toLowerCase())
   email: string;
 
   @Field()
