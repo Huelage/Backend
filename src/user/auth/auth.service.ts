@@ -17,8 +17,7 @@ import { VerifyPhoneDto } from './dto/verify-phone.dto';
 import { UpdatePhoneDto } from './dto/update-phone.dto';
 
 @Injectable()
-export class UserService {
-  // private logger = new Logger('UserService');
+export class AuthService {
   private otpLifeSpan = 1800000; // 30 minutes
 
   private genRandomOtp = (): string => {
@@ -26,7 +25,7 @@ export class UserService {
   };
 
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly smsService: SmsService,
     private readonly jwtService: JwtService,
   ) {}

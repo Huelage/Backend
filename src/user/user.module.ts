@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserResolver } from './user.resolver';
+import { AuthService } from './auth/auth.service';
+import { AuthResolver } from './auth/auth.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User } from './auth/entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -32,6 +32,6 @@ import { SmsService } from 'src/utils/sms.service';
     UtilsModule,
   ],
 
-  providers: [UserService, UserResolver, SmsService],
+  providers: [AuthService, AuthResolver, SmsService],
 })
 export class UserModule {}

@@ -26,12 +26,12 @@ type Query {
 }
 
 type Mutation {
-  userSignUp(createUserDto: CreateUserDto!): User!
-  updatePhone(updatePhoneDto: UpdatePhoneDto!): User!
-  verifyPhone(verifyPhoneDto: VerifyPhoneDto!): User!
+  signUpUser(input: CreateUserInput!): User!
+  updatePhone(input: UpdatePhoneInput!): User!
+  verifyPhone(input: VerifyPhoneInput!): User!
 }
 
-input CreateUserDto {
+input CreateUserInput {
   firstName: String!
   lastName: String!
   email: String!
@@ -39,12 +39,12 @@ input CreateUserDto {
   password: String!
 }
 
-input UpdatePhoneDto {
+input UpdatePhoneInput {
   phoneNumber: String!
   email: String!
 }
 
-input VerifyPhoneDto {
+input VerifyPhoneInput {
   phoneNumber: String!
   phoneOtp: String!
 }
