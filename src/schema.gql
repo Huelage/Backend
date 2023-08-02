@@ -38,6 +38,7 @@ input CreateUserInput {
   email: String!
   phoneNumber: String!
   password: String!
+  confirmPassword: String!
 }
 
 input AuthenticateUserInput {

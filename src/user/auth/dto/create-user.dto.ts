@@ -1,6 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsEmail, IsAlpha, MinLength } from 'class-validator';
+import { MatchesWith } from 'src/common/decorators/matches-with.decorator';
 
 @InputType('CreateUserInput')
 export class CreateUserDto {
@@ -24,4 +25,11 @@ export class CreateUserDto {
   @MinLength(8)
   @Field()
   password: string;
+
+  @IsNotEmpty()
+  @MatchesWith('password', {
+    message: 'password and confirmPassword field do not match',
+  })
+  @Field()
+  confirmPassword: string;
 }
