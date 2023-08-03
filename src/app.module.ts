@@ -1,38 +1,21 @@
 import { Module } from '@nestjs/common';
 
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
-import { GraphQLError, GraphQLFormattedError } from 'graphql';
-
-interface OriginalError {
-  message: string;
-}
+import { VendorModule } from './vendor/vendor.module';
+// import { typeOrmConfig } from './config/typeorm.config';
+import { graphqlConfig } from './config/graphql.config';
+import { ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      formatError: (err: GraphQLError) => {
-        // console.log(err.message);
-
-        const graphQLFormattedError: GraphQLFormattedError = {
-          message:
-            (err.extensions.originalError as OriginalError)?.message ||
-            err?.message,
-        };
-
-        return graphQLFormattedError;
-      },
-    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>(graphqlConfig),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -46,6 +29,7 @@ interface OriginalError {
     }),
     UserModule,
     UtilsModule,
+    VendorModule,
   ],
 })
 export class AppModule {}
