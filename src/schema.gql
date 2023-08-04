@@ -21,6 +21,19 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Vendor {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String
+  accessToken: String
+  isVerified: Boolean!
+  emailIsVerified: Boolean!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
 type Query {
   sayHello: String!
 }
@@ -28,8 +41,10 @@ type Query {
 type Mutation {
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
-  updatePhone(input: UpdatePhoneInput!): User!
-  verifyPhone(input: VerifyPhoneInput!): User!
+  updatePhone(input: UpdatePhoneInput!): Vendor!
+  verifyPhone(input: VerifyPhoneInput!): Vendor!
+  signUpVendor(input: CreateVendorInput!): Vendor!
+  signInVendor(input: AuthenticateVendorInput!): Vendor!
 }
 
 input CreateUserInput {
@@ -54,4 +69,18 @@ input UpdatePhoneInput {
 input VerifyPhoneInput {
   phoneNumber: String!
   phoneOtp: String!
+}
+
+input CreateVendorInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String!
+  password: String!
+  confirmPassword: String!
+}
+
+input AuthenticateVendorInput {
+  email: String!
+  password: String!
 }
