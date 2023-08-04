@@ -5,20 +5,20 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { Vendor } from '../vendor.entity';
+import { Vendor } from './vendor.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SmsService } from 'src/utils/sms.service';
 import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { VerifyPhoneDto } from '../../user/auth/dto/verify-phone.dto';
-import { UpdatePhoneDto } from '../../user/auth/dto/update-phone.dto';
-import { CreateVendorDto } from './dto/create-vendor.dto';
-import { UpdateVendorDto } from './dto/update-vendor.dto';
-import { AuthenticateVendorDto } from './dto/authenticate-vendor.dto';
+import { UpdatePhoneDto } from '../dtos/update-phone.dto';
+import { CreateVendorDto } from '../dtos/create-user.dto';
+import { UpdateVendorDto } from '../../consumers/dtos/update-vendor.dto';
+import { AuthenticateVendorDto } from '../dtos/authenticate-user.dto';
+import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 
 @Injectable()
-export class AuthService {
+export class VendorService {
   private otpLifeSpan = 1800000; // 30 minutes
 
   private genRandomOtp = (): string => {
@@ -35,14 +35,13 @@ export class AuthService {
   async create(createVendorDto: CreateVendorDto) {
     const phoneOtp = this.genRandomOtp();
 
-    const { firstName, lastName, phoneNumber, password, email } =
+    const { firstName, lastName, phoneNumber, password, email, businessName } =
       createVendorDto;
     const hashedPassword = await hash(password, 10);
 
     const vendorExists = await this.vendorRepository.findOne({
       where: [{ email: email }, { phoneNumber }],
     });
-
     if (vendorExists) {
       let inUse;
       const emailExists = email === vendorExists.email;
@@ -60,6 +59,7 @@ export class AuthService {
       firstName,
       lastName,
       phoneNumber,
+      businessName,
       email,
       phoneOtp,
       password: hashedPassword,

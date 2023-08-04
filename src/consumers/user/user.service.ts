@@ -4,20 +4,21 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from '../user.entity';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
+import { UpdatePhoneDto } from '../dtos/update-phone.dto';
+import { AuthenticateUserDto } from '../dtos/authenticate-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
+import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SmsService } from 'src/utils/sms.service';
 import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { VerifyPhoneDto } from './dto/verify-phone.dto';
-import { UpdatePhoneDto } from './dto/update-phone.dto';
-import { AuthenticateUserDto } from './dto/authenticate-user.dto';
+// import { AuthenticateUserDto } from './dto/authenticate-user.dto';
 
 @Injectable()
-export class AuthService {
+export class UserService {
   private otpLifeSpan = 1800000; // 30 minutes
 
   private genRandomOtp = (): string => {

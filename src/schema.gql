@@ -25,6 +25,7 @@ type Vendor {
   id: Int!
   firstName: String!
   lastName: String!
+  businessName: String!
   email: String!
   phoneNumber: String
   accessToken: String
@@ -78,6 +79,7 @@ input CreateVendorInput {
   phoneNumber: String!
   password: String!
   confirmPassword: String!
+  businessName: String!
 }
 
 input AuthenticateVendorInput {

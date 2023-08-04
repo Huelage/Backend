@@ -13,3 +13,6 @@ export class AuthenticateUserDto {
   @Field()
   password: string;
 }
+
+@InputType('AuthenticateVendorInput')
+export class AuthenticateVendorDto extends AuthenticateUserDto {}
