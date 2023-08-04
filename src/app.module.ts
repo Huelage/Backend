@@ -26,9 +26,7 @@ import { ConsumersModule } from './consumers/consumers.module';
       synchronize: true,
       entities: ['dist/**/*.entity{.ts,.js}'],
     }),
-    ,
     UtilsModule,
-    ,
     ConsumersModule,
   ],
 })

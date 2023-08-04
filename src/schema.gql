@@ -2,25 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: Int!
-  firstName: String!
-  lastName: String!
-  email: String!
-  phoneNumber: String
-  isSocialAuth: Boolean!
-  accessToken: String
-  isVerified: Boolean!
-  emailIsVerified: Boolean!
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Vendor {
   id: Int!
   firstName: String!
@@ -35,29 +16,49 @@ type Vendor {
   updatedAt: DateTime
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phoneNumber: String
+  isSocialAuth: Boolean!
+  accessToken: String
+  isVerified: Boolean!
+  emailIsVerified: Boolean!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
 type Query {
   sayHello: String!
 }
 
 type Mutation {
-  signUpUser(input: CreateUserInput!): User!
-  signInUser(input: AuthenticateUserInput!): User!
-  updatePhone(input: UpdatePhoneInput!): Vendor!
-  verifyPhone(input: VerifyPhoneInput!): Vendor!
   signUpVendor(input: CreateVendorInput!): Vendor!
   signInVendor(input: AuthenticateVendorInput!): Vendor!
+  updatePhone(input: UpdatePhoneInput!): User!
+  verifyPhone(input: VerifyPhoneInput!): User!
+  signUpUser(input: CreateUserInput!): User!
+  signInUser(input: AuthenticateUserInput!): User!
 }
 
-input CreateUserInput {
+input CreateVendorInput {
   firstName: String!
   lastName: String!
   email: String!
   phoneNumber: String!
   password: String!
   confirmPassword: String!
+  businessName: String!
 }
 
-input AuthenticateUserInput {
+input AuthenticateVendorInput {
   email: String!
   password: String!
 }
@@ -72,17 +73,16 @@ input VerifyPhoneInput {
   phoneOtp: String!
 }
 
-input CreateVendorInput {
+input CreateUserInput {
   firstName: String!
   lastName: String!
   email: String!
   phoneNumber: String!
   password: String!
   confirmPassword: String!
-  businessName: String!
 }
 
-input AuthenticateVendorInput {
+input AuthenticateUserInput {
   email: String!
   password: String!
 }
