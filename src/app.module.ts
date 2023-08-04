@@ -3,9 +3,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './consumers/user/user.module';
 import { UtilsModule } from './utils/utils.module';
-import { VendorModule } from './consumers/vendor/vendor.module';
 // import { typeOrmConfig } from './config/typeorm.config';
 import { graphqlConfig } from './config/graphql.config';
 import { ApolloDriverConfig } from '@nestjs/apollo';
@@ -28,9 +26,9 @@ import { ConsumersModule } from './consumers/consumers.module';
       synchronize: true,
       entities: ['dist/**/*.entity{.ts,.js}'],
     }),
-    UserModule,
+    ,
     UtilsModule,
-    VendorModule,
+    ,
     ConsumersModule,
   ],
 })
