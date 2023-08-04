@@ -36,9 +36,8 @@ export class Vendor {
   @Column({ nullable: true }) // it can be empty (the social signup).
   password: string;
 
-  @Column({ default: false }) // set to true for social signup
-  @Field()
-  isSocialAuth: boolean;
+  @Column()
+  vendorId: string;
 
   @Field({ nullable: true })
   accessToken: string;
