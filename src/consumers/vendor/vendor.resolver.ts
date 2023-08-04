@@ -1,10 +1,10 @@
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { VendorService } from './vendor.service';
 import { Vendor } from './vendor.entity';
-import { CreateVendorDto } from '../dtos/create-user.dto';
+import { CreateVendorDto } from '../dtos/create-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
-import { AuthenticateVendorDto } from '../dtos/authenticate-user.dto';
+import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 
 @Resolver()
 export class VendorResolver {

@@ -12,9 +12,9 @@ import { SmsService } from 'src/utils/sms.service';
 import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
-import { CreateVendorDto } from '../dtos/create-user.dto';
-import { UpdateVendorDto } from '../../consumers/dtos/update-vendor.dto';
-import { AuthenticateVendorDto } from '../dtos/authenticate-user.dto';
+import { CreateVendorDto } from '../dtos/create-account.dto';
+import { UpdateVendorDto } from '../dtos/update-account.dto';
+import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 
 @Injectable()

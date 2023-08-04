@@ -4,11 +4,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserDto } from '../dtos/create-user.dto';
+import { CreateUserDto } from '../dtos/create-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
-import { AuthenticateUserDto } from '../dtos/authenticate-user.dto';
-import { UpdateUserDto } from '../dtos/update-user.dto';
+import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
+import { UpdateUserDto } from '../dtos/update-account.dto';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

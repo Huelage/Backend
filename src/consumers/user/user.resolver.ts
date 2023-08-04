@@ -1,11 +1,11 @@
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateUserDto } from '../dtos/create-user.dto';
+import { CreateUserDto } from '../dtos/create-account.dto';
 // import { CreateUserDto } from './auth/dto/create-user.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
-import { AuthenticateUserDto } from '../dtos/authenticate-user.dto';
+import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
 
 @Resolver()
 export class UserResolver {
