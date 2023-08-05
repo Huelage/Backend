@@ -94,6 +94,15 @@ export class UserService {
     });
     if (!user) throw new NotFoundException('No user with this email exists');
 
+    /**
+     * Make sure the chosen phone number does not already exist.
+     * Even if it does, it should be this user that owns it.
+     * i.e, they can 'change' their phone number to the same thing
+     */
+    const exists = await this.repository.checkPhone({ where: { phoneNumber } });
+    if (exists && user.phoneNumber !== phoneNumber)
+      throw new ConflictException(`Phone number already in use.`);
+
     const phoneOtp = genRandomOtp();
     user.phoneNumber = phoneNumber;
     user.phoneOtp = phoneOtp;

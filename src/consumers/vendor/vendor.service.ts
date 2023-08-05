@@ -82,7 +82,7 @@ export class VendorService {
       throw new UnauthorizedException('Invalid username or password.');
     const matches = await compare(password, vendor.password);
     if (!matches)
-      throw new UnauthorizedException('Invalid vendorname or password.');
+      throw new UnauthorizedException('Invalid username or password.');
 
     if (vendor.isVerified)
       vendor.accessToken = await this.jwtService.sign({ id: vendor.id });
