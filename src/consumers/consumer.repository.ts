@@ -15,7 +15,9 @@ export class ConsumerRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async findEmailOrPhone(params: { where: ConsumerWhereOptions }) {
+  async checkEmailAndPhone(params: {
+    where: [{ email: string }, { phoneNumber: string }];
+  }) {
     const { where } = params;
     const [{ email }, { phoneNumber }] = where;
     const existingVendor = await this.vendorRepository.findOneBy(where);
@@ -33,5 +35,19 @@ export class ConsumerRepository {
       };
     }
     return null;
+  }
+
+  async checkPhone(params: {
+    where: { phoneNumber: string };
+  }): Promise<boolean> {
+    const { where } = params;
+
+    const existingVendor = await this.vendorRepository.findOneBy(where);
+    const existingUser = await this.userRepository.findOneBy(where);
+
+    if (existingVendor || existingUser) {
+      return true;
+    }
+    return false;
   }
 }

@@ -39,10 +39,9 @@ export class VendorService {
       createVendorDto;
     const hashedPassword = await hash(password, 10);
 
-    const exists = await this.repository.findEmailOrPhone({
+    const exists = await this.repository.checkEmailAndPhone({
       where: [{ email }, { phoneNumber }],
     });
-    console.log(exists);
 
     if (exists) {
       let inUse;
@@ -97,8 +96,13 @@ export class VendorService {
     const vendor = await this.vendorRepository.findOneBy({
       email: email,
     });
+
     if (!vendor)
       throw new NotFoundException('No vendor with this email exists');
+
+    const exists = await this.repository.checkPhone({ where: { phoneNumber } });
+    if (exists && vendor.phoneNumber !== phoneNumber)
+      throw new ConflictException(`Phone number already in use.`);
 
     const phoneOtp = genRandomOtp();
     vendor.phoneNumber = phoneNumber;

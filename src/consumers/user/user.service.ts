@@ -18,6 +18,7 @@ import { UpdateUserDto } from '../dtos/update-account.dto';
 import { User } from './user.entity';
 import { SmsService } from '../../utils/sms.service';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
+import { ConsumerRepository } from '../consumer.repository';
 
 @Injectable()
 export class UserService {
@@ -25,6 +26,7 @@ export class UserService {
 
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly repository: ConsumerRepository,
     private readonly smsService: SmsService,
     private readonly jwtService: JwtService,
   ) {}
@@ -35,17 +37,15 @@ export class UserService {
     const { firstName, lastName, phoneNumber, password, email } = createUserDto;
     const hashedPassword = await hash(password, 10);
 
-    const userExists = await this.userRepository.findOne({
-      where: [{ email: email }, { phoneNumber }],
+    const exists = await this.repository.checkEmailAndPhone({
+      where: [{ email }, { phoneNumber }],
     });
 
-    if (userExists) {
+    if (exists) {
       let inUse;
-      const emailExists = email === userExists.email;
-      const phoneExists = phoneNumber === userExists.phoneNumber;
-      if (emailExists && phoneExists) {
+      if (exists.emailExists && exists.phoneExists) {
         inUse = 'Email and Phone number';
-      } else if (emailExists) {
+      } else if (exists.emailExists) {
         inUse = 'Email';
       } else {
         inUse = 'Phone number';
