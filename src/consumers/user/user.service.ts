@@ -4,26 +4,24 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+
+import { compare, hash } from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateUserDto } from '../dtos/create-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
 import { UpdateUserDto } from '../dtos/update-account.dto';
 import { User } from './user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { SmsService } from 'src/utils/sms.service';
-import { compare, hash } from 'bcryptjs';
-import { JwtService } from '@nestjs/jwt';
-// import { AuthenticateUserDto } from './dto/authenticate-user.dto';
+import { genRandomOtp } from 'src/common/helpers/gen-otp.helper';
 
 @Injectable()
 export class UserService {
   private otpLifeSpan = 1800000; // 30 minutes
-
-  private genRandomOtp = (): string => {
-    return Math.floor(1000 + Math.random() * 9000).toString();
-  };
 
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
@@ -32,7 +30,7 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const phoneOtp = this.genRandomOtp();
+    const phoneOtp = genRandomOtp();
 
     const { firstName, lastName, phoneNumber, password, email } = createUserDto;
     const hashedPassword = await hash(password, 10);
@@ -96,7 +94,7 @@ export class UserService {
     });
     if (!user) throw new NotFoundException('No user with this email exists');
 
-    const phoneOtp = this.genRandomOtp();
+    const phoneOtp = genRandomOtp();
     user.phoneNumber = phoneNumber;
     user.phoneOtp = phoneOtp;
 

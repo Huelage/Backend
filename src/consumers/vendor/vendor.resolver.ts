@@ -1,4 +1,5 @@
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+
 import { VendorService } from './vendor.service';
 import { Vendor } from './vendor.entity';
 import { CreateVendorDto } from '../dtos/create-account.dto';

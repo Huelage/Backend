@@ -1,6 +1,7 @@
+import { join } from 'path';
+
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
 
 interface OriginalError {
   message: string;

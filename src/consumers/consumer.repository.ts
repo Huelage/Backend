@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Vendor } from './vendor/vendor.entity';
 import { Repository } from 'typeorm';
+
+import { Vendor } from './vendor/vendor.entity';
 import { User } from './user/user.entity';
 import {
+  Consumer,
   ConsumerRepositoryType,
   ConsumerWhereOptions,
 } from './consumer.repository.types';
@@ -20,7 +22,7 @@ export class ConsumerRepository {
   async findOne(params: {
     where: ConsumerWhereOptions;
     reposistory: ConsumerRepositoryType;
-  }) {
+  }): Promise<Consumer> {
     const { where, reposistory } = params;
     return this[reposistory].findOneBy(where);
   }

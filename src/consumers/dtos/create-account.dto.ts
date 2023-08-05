@@ -1,6 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsEmail, IsAlpha, MinLength } from 'class-validator';
+
 import { MatchesWith } from 'src/common/decorators/matches-with.decorator';
 
 @InputType('CreateUserInput')
