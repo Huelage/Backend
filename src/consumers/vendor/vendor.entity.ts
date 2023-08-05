@@ -27,17 +27,15 @@ export class Vendor {
   @Field()
   businessName: string;
 
-  @Unique(['email'])
-  @Column()
+  @Column({ unique: true })
   @Field()
   email: string;
 
-  @Unique(['phoneNumber'])
-  @Column({ nullable: true })
+  @Column({ unique: true })
   @Field({ nullable: true })
   phoneNumber?: string;
 
-  @Column({ nullable: true }) // it can be empty (the social signup).
+  @Column() // it can be empty (the social signup).
   password: string;
 
   @Column({ default: 'penny and dime.' })

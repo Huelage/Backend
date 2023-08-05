@@ -24,17 +24,15 @@ export class User {
   @Field()
   lastName: string;
 
-  @Unique(['email'])
   @Column()
   @Field()
   email: string;
 
-  @Unique(['phoneNumber'])
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true }) // it can be empty (the social signup).
   @Field({ nullable: true })
   phoneNumber?: string;
 
-  @Column({ nullable: true }) // it can be empty (the social signup).
+  @Column({ nullable: true, unique: true }) // it can be empty (the social signup).
   password: string;
 
   @Column({ default: false }) // set to true for social signup
