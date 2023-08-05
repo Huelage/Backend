@@ -9,7 +9,7 @@ interface OriginalError {
 
 export const graphqlConfig: ApolloDriverConfig = {
   driver: ApolloDriver,
-  autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+  autoSchemaFile: join(process.cwd(), '../schema.gql'),
   formatError: (err: GraphQLError) => {
     const graphQLFormattedError: GraphQLFormattedError = {
       message:
