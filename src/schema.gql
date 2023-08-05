@@ -42,10 +42,12 @@ type Query {
 type Mutation {
   signUpVendor(input: CreateVendorInput!): Vendor!
   signInVendor(input: AuthenticateVendorInput!): Vendor!
-  updatePhone(input: UpdatePhoneInput!): User!
-  verifyPhone(input: VerifyPhoneInput!): User!
+  updateVendorPhone(input: UpdatePhoneInput!): Vendor!
+  verifyVendorPhone(input: VerifyPhoneInput!): Vendor!
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
+  updateUserPhone(input: UpdatePhoneInput!): User!
+  verifyUserPhone(input: VerifyPhoneInput!): User!
 }
 
 input CreateVendorInput {

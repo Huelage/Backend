@@ -31,14 +31,14 @@ export class VendorResolver {
   }
 
   @Mutation(() => Vendor)
-  async updatePhone(
+  async updateVendorPhone(
     @Args('input') updatePhoneDto: UpdatePhoneDto,
   ): Promise<Vendor> {
     return await this.vendorService.updatePhone(updatePhoneDto);
   }
 
   @Mutation(() => Vendor)
-  async verifyPhone(
+  async verifyVendorPhone(
     @Args('input') verifyPhoneDto: VerifyPhoneDto,
   ): Promise<Vendor> {
     return await this.vendorService.verifyPhone(verifyPhoneDto);

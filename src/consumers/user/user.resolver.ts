@@ -29,14 +29,14 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async updatePhone(
+  async updateUserPhone(
     @Args('input') updatePhoneDto: UpdatePhoneDto,
   ): Promise<User> {
     return await this.userService.updatePhone(updatePhoneDto);
   }
 
   @Mutation(() => User)
-  async verifyPhone(
+  async verifyUserPhone(
     @Args('input') verifyPhoneDto: VerifyPhoneDto,
   ): Promise<User> {
     return await this.userService.verifyPhone(verifyPhoneDto);
