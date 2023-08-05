@@ -16,17 +16,17 @@ import { CreateVendorDto } from '../dtos/create-account.dto';
 import { UpdateVendorDto } from '../dtos/update-account.dto';
 import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
-import { ConsumerRepository } from '../consumer.repository';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
+import { ConsumerRepository } from '../consumer.repository';
 
 @Injectable()
 export class VendorService {
   private otpLifeSpan = 1800000; // 30 minutes
 
   constructor(
-    private readonly repository: ConsumerRepository,
     @InjectRepository(Vendor)
     private readonly vendorRepository: Repository<Vendor>,
+    private readonly repository: ConsumerRepository,
     private readonly smsService: SmsService,
     private readonly jwtService: JwtService,
   ) {}
@@ -39,17 +39,16 @@ export class VendorService {
       createVendorDto;
     const hashedPassword = await hash(password, 10);
 
-    const vendorExists = await this.repository.findOne({
-      reposistory: 'vendorRepository',
-      where: [{ email: email }, { phoneNumber }],
+    const exists = await this.repository.findEmailOrPhone({
+      where: [{ email }, { phoneNumber }],
     });
-    if (vendorExists) {
+    console.log(exists);
+
+    if (exists) {
       let inUse;
-      const emailExists = email === vendorExists.email;
-      const phoneExists = phoneNumber === vendorExists.phoneNumber;
-      if (emailExists && phoneExists) {
+      if (exists.emailExists && exists.phoneExists) {
         inUse = 'Email and Phone number';
-      } else if (emailExists) {
+      } else if (exists.emailExists) {
         inUse = 'Email';
       } else {
         inUse = 'Phone number';

@@ -1,14 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { Vendor } from './vendor/vendor.entity';
 import { User } from './user/user.entity';
-import {
-  Consumer,
-  ConsumerRepositoryType,
-  ConsumerWhereOptions,
-} from './consumer.repository.types';
+import { ConsumerWhereOptions } from './consumer.repository.types';
 
 @Injectable()
 export class ConsumerRepository {
@@ -19,11 +15,23 @@ export class ConsumerRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async findOne(params: {
-    where: ConsumerWhereOptions;
-    reposistory: ConsumerRepositoryType;
-  }): Promise<Consumer> {
-    const { where, reposistory } = params;
-    return this[reposistory].findOneBy(where);
+  async findEmailOrPhone(params: { where: ConsumerWhereOptions }) {
+    const { where } = params;
+    const [{ email }, { phoneNumber }] = where;
+    const existingVendor = await this.vendorRepository.findOneBy(where);
+    const existingUser = await this.userRepository.findOneBy(where);
+
+    if (existingVendor) {
+      return {
+        emailExists: existingVendor.email === email ? true : false,
+        phoneExists: existingVendor.phoneNumber === phoneNumber ? true : false,
+      };
+    } else if (existingUser) {
+      return {
+        emailExists: existingUser.email === email ? true : false,
+        phoneExists: existingUser.phoneNumber === phoneNumber ? true : false,
+      };
+    }
+    return null;
   }
 }

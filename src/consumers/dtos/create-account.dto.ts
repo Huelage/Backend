@@ -1,6 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsEmail, IsAlpha, MinLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsEmail,
+  IsAlpha,
+  MinLength,
+  IsString,
+} from 'class-validator';
 
 import { MatchesWith } from '../../common/decorators/matches-with.decorator';
 
@@ -37,7 +43,8 @@ export class CreateUserDto {
 
 @InputType('CreateVendorInput')
 export class CreateVendorDto extends CreateUserDto {
-  @IsAlpha()
+  @IsNotEmpty()
+  @IsString()
   @Field()
   businessName: string;
 }
