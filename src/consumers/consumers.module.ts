@@ -10,6 +10,7 @@ import { SmsService } from '../utils/sms.service';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UserResolver } from './user/user.resolver';
+import { ConsumerRepository } from './consumer.repository';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UserResolver } from './user/user.resolver';
     SmsService,
     UserService,
     UserResolver,
+    ConsumerRepository,
   ],
 })
 export class ConsumersModule {}

@@ -24,8 +24,8 @@ export class VendorService {
   private otpLifeSpan = 1800000; // 30 minutes
 
   constructor(
-    @InjectRepository(Vendor)
     private readonly repository: ConsumerRepository,
+    @InjectRepository(Vendor)
     private readonly vendorRepository: Repository<Vendor>,
     private readonly smsService: SmsService,
     private readonly jwtService: JwtService,
