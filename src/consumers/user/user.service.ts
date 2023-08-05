@@ -16,8 +16,8 @@ import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
 import { UpdateUserDto } from '../dtos/update-account.dto';
 import { User } from './user.entity';
-import { SmsService } from 'src/utils/sms.service';
-import { genRandomOtp } from 'src/common/helpers/gen-otp.helper';
+import { SmsService } from '../../utils/sms.service';
+import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 
 @Injectable()
 export class UserService {
