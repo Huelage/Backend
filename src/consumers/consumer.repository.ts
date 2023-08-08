@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Vendor } from './vendor/vendor.entity';
 import { User } from './user/user.entity';
-import { ConsumerWhereOptions } from './consumer.repository.types';
 
 @Injectable()
 export class ConsumerRepository {
