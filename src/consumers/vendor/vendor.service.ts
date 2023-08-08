@@ -144,7 +144,7 @@ export class VendorService {
     return `This action returns a #${id} vendor`;
   }
 
-  update(id: number, updateVendorDto: UpdateVendorDto) {
+  update(id: number, _updateVendorDto: UpdateVendorDto) {
     return `This action updates a #${id} vendor`;
   }
 

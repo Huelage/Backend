@@ -12,7 +12,7 @@ import {
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @Column()
@@ -46,11 +46,11 @@ export class User {
   refreshToken: string;
 
   @Column({ default: false }) // if phone number is verified it changes to true
-  @Field((type) => Boolean)
+  @Field(() => Boolean)
   isVerified: boolean;
 
   @Column({ default: false })
-  @Field((type) => Boolean)
+  @Field(() => Boolean)
   emailIsVerified: boolean;
 
   @Column({ nullable: true })
