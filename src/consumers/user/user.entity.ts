@@ -38,8 +38,12 @@ export class User {
   @Field()
   isSocialAuth: boolean;
 
-  @Field({ nullable: true })
+  @Field({ nullable: true }) // not stored in the database.
   accessToken: string;
+
+  @Column({ nullable: true })
+  @Field({ nullable: true }) //this is stored in the database.
+  refreshToken: string;
 
   @Column({ default: false }) // if phone number is verified it changes to true
   @Field((type) => Boolean)

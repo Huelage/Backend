@@ -34,14 +34,18 @@ export class Vendor {
   @Field({ nullable: true })
   phoneNumber?: string;
 
-  @Column() // it can be empty (the social signup).
+  @Column()
   password: string;
 
   @Column({ default: 'penny and dime.' })
   vendorId: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: true }) //this is not stored in the database.
   accessToken: string;
+
+  @Column({ nullable: true })
+  @Field({ nullable: true }) //this is stored in the database.
+  refreshToken: string;
 
   @Column({ default: false }) // if phone number is verified it changes to true
   @Field((type) => Boolean)
