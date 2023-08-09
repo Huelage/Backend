@@ -18,6 +18,7 @@ import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { ConsumerRepository } from '../consumer.repository';
 import { AuthService } from 'src/auth/auth.service';
+import { ConsumerType } from 'src/common/enums/consumer-type.enum';
 
 @Injectable()
 export class VendorService {
@@ -87,6 +88,7 @@ export class VendorService {
     if (vendor.isVerified) {
       const { accessToken, refreshToken } = await this.authService.getTokens(
         vendor.id,
+        ConsumerType.VENDOR,
       );
       vendor.refreshToken = refreshToken;
       await this.vendorRepository.save(vendor);
@@ -139,6 +141,7 @@ export class VendorService {
 
     const { accessToken, refreshToken } = await this.authService.getTokens(
       vendor.id,
+      ConsumerType.VENDOR,
     );
 
     vendor.isVerified = true;

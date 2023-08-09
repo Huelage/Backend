@@ -19,6 +19,7 @@ import { SmsService } from '../../utils/sms.service';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { ConsumerRepository } from '../consumer.repository';
 import { AuthService } from 'src/auth/auth.service';
+import { ConsumerType } from 'src/common/enums/consumer-type.enum';
 
 @Injectable()
 export class UserService {
@@ -83,6 +84,7 @@ export class UserService {
     if (user.isVerified) {
       const { refreshToken, accessToken } = await this.authService.getTokens(
         user.id,
+        ConsumerType.USER,
       );
       user.refreshToken = refreshToken;
       await this.userRepository.save(user);
@@ -136,6 +138,7 @@ export class UserService {
 
     const { accessToken, refreshToken } = await this.authService.getTokens(
       user.id,
+      ConsumerType.USER,
     );
 
     user.isVerified = true;

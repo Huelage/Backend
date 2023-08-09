@@ -9,7 +9,6 @@ import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UserResolver } from './user/user.resolver';
 import { ConsumerRepository } from './consumer.repository';
-import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Vendor, User])],

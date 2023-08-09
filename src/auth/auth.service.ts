@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConsumerType } from 'src/common/enums/consumer-type.enum';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
 
-  async getTokens(userId: number) {
+  async getTokens(id: number, type: ConsumerType) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
-          id: userId,
+          id,
+          type,
         },
         {
           secret: process.env.JWT_ACCESS_SECRET,
@@ -18,7 +20,7 @@ export class AuthService {
       ),
       this.jwtService.signAsync(
         {
-          id: userId,
+          id,
         },
         {
           secret: process.env.JWT_REFRESH_SECRET,
