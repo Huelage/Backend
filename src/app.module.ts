@@ -9,6 +9,7 @@ import { ApolloDriverConfig } from '@nestjs/apollo';
 import { UtilsModule } from './utils/utils.module';
 import { graphqlConfig } from './config/graphql.config';
 import { ConsumersModule } from './consumers/consumers.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ConsumersModule } from './consumers/consumers.module';
     }),
     UtilsModule,
     ConsumersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

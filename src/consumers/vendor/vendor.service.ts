@@ -10,7 +10,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SmsService } from '../../utils/sms.service';
 import { compare, hash } from 'bcryptjs';
-import { JwtService } from '@nestjs/jwt';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { CreateVendorDto } from '../dtos/create-account.dto';
 import { UpdateVendorDto } from '../dtos/update-account.dto';
@@ -18,6 +17,7 @@ import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { ConsumerRepository } from '../consumer.repository';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class VendorService {
@@ -28,7 +28,7 @@ export class VendorService {
     private readonly vendorRepository: Repository<Vendor>,
     private readonly repository: ConsumerRepository,
     private readonly smsService: SmsService,
-    private readonly jwtService: JwtService,
+    private readonly authService: AuthService,
   ) {}
 
   async create(createVendorDto: CreateVendorDto) {
@@ -84,8 +84,14 @@ export class VendorService {
     if (!matches)
       throw new UnauthorizedException('Invalid username or password.');
 
-    if (vendor.isVerified)
-      vendor.accessToken = await this.jwtService.sign({ id: vendor.id });
+    if (vendor.isVerified) {
+      const { accessToken, refreshToken } = await this.authService.getTokens(
+        vendor.id,
+      );
+      vendor.refreshToken = refreshToken;
+      await this.vendorRepository.save(vendor);
+      vendor.accessToken = accessToken;
+    }
 
     return vendor;
   }
@@ -131,10 +137,12 @@ export class VendorService {
     if (isExpired || notMatch)
       throw new UnauthorizedException('The otp is invalid');
 
-    const payload = { id: vendor.id };
-    const accessToken = await this.jwtService.sign(payload);
+    const { accessToken, refreshToken } = await this.authService.getTokens(
+      vendor.id,
+    );
 
     vendor.isVerified = true;
+    vendor.refreshToken = refreshToken;
     await this.vendorRepository.save(vendor);
 
     return { ...vendor, accessToken };

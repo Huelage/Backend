@@ -10,6 +10,7 @@ type Vendor {
   email: String!
   phoneNumber: String
   accessToken: String
+  refreshToken: String
   isVerified: Boolean!
   emailIsVerified: Boolean!
   createdAt: DateTime
@@ -29,6 +30,7 @@ type User {
   phoneNumber: String
   isSocialAuth: Boolean!
   accessToken: String
+  refreshToken: String
   isVerified: Boolean!
   emailIsVerified: Boolean!
   createdAt: DateTime

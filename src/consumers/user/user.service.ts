@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 
 import { compare, hash } from 'bcryptjs';
-import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -19,6 +18,7 @@ import { User } from './user.entity';
 import { SmsService } from '../../utils/sms.service';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { ConsumerRepository } from '../consumer.repository';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -28,7 +28,7 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly repository: ConsumerRepository,
     private readonly smsService: SmsService,
-    private readonly jwtService: JwtService,
+    private readonly authService: AuthService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -80,9 +80,14 @@ export class UserService {
     if (!matches)
       throw new UnauthorizedException('Invalid username or password.');
 
-    if (user.isVerified)
-      user.accessToken = await this.jwtService.sign({ id: user.id });
-
+    if (user.isVerified) {
+      const { refreshToken, accessToken } = await this.authService.getTokens(
+        user.id,
+      );
+      user.refreshToken = refreshToken;
+      await this.userRepository.save(user);
+      user.accessToken = accessToken;
+    }
     return user;
   }
 
@@ -129,10 +134,12 @@ export class UserService {
     if (isExpired || notMatch)
       throw new UnauthorizedException('The otp is invalid');
 
-    const payload = { id: user.id };
-    const accessToken = await this.jwtService.sign(payload);
+    const { accessToken, refreshToken } = await this.authService.getTokens(
+      user.id,
+    );
 
     user.isVerified = true;
+    user.refreshToken = refreshToken;
     await this.userRepository.save(user);
 
     return { ...user, accessToken };
