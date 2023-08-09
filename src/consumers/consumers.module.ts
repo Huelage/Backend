@@ -9,9 +9,13 @@ import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UserResolver } from './user/user.resolver';
 import { ConsumerRepository } from './consumer.repository';
+import { AuthService } from './auth/auth.service';
+import { RefreshTokenStrategy } from './auth/strategies/refresh-token.strategy';
+import { AccessTokenStrategy } from './auth/strategies/acess-token.strategy';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Vendor, User])],
+  imports: [TypeOrmModule.forFeature([Vendor, User]), JwtModule.register({})],
   providers: [
     VendorService,
     VendorResolver,
@@ -19,6 +23,17 @@ import { ConsumerRepository } from './consumer.repository';
     UserService,
     UserResolver,
     ConsumerRepository,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+    AuthService,
   ],
 })
 export class ConsumersModule {}
+
+// @Global()
+// @Module({
+//   imports: [JwtModule.register({}), TypeOrmModule.forFeature([Vendor, User])],
+//   providers: [AccessTokenStrategy, RefreshTokenStrategy, AuthService],
+//   exports: [AuthService],
+// })
+// export class AuthModule {}
