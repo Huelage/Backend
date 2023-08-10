@@ -34,4 +34,9 @@ export class AuthService {
       refreshToken,
     };
   }
+
+  async refreshTokens(userId: string, refreshToken: string) {
+    console.log(refreshToken);
+    return refreshToken;
+  }
 }

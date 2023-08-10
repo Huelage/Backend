@@ -90,9 +90,11 @@ export class VendorService {
         vendor.id,
         ConsumerType.VENDOR,
       );
-      vendor.refreshToken = refreshToken;
+      vendor.hashedRefreshToken = await hash(refreshToken, 10);
       await this.vendorRepository.save(vendor);
+
       vendor.accessToken = accessToken;
+      vendor.refreshToken = refreshToken;
     }
 
     return vendor;
@@ -145,10 +147,10 @@ export class VendorService {
     );
 
     vendor.isVerified = true;
-    vendor.refreshToken = refreshToken;
+    vendor.hashedRefreshToken = await hash(refreshToken, 10);
     await this.vendorRepository.save(vendor);
 
-    return { ...vendor, accessToken };
+    return { ...vendor, accessToken, refreshToken };
   }
 
   findOne(id: number) {

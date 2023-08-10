@@ -86,9 +86,11 @@ export class UserService {
         user.id,
         ConsumerType.USER,
       );
-      user.refreshToken = refreshToken;
+      user.hashedRefreshToken = await hash(refreshToken, 10);
       await this.userRepository.save(user);
+
       user.accessToken = accessToken;
+      user.refreshToken = refreshToken;
     }
     return user;
   }
@@ -142,10 +144,10 @@ export class UserService {
     );
 
     user.isVerified = true;
-    user.refreshToken = refreshToken;
+    user.hashedRefreshToken = await hash(refreshToken, 10);
     await this.userRepository.save(user);
 
-    return { ...user, accessToken };
+    return { ...user, accessToken, refreshToken };
   }
 
   findOne(id: number) {

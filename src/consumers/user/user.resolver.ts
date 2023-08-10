@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 
 import { UserService } from './user.service';
 import { User } from './user.entity';
@@ -6,10 +6,16 @@ import { CreateUserDto } from '../dtos/create-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
+import { AuthService } from '../auth/auth.service';
+import { Req, UseGuards } from '@nestjs/common';
+import { RefreshTokenGuard } from 'src/common/guards/refresh-token.guard';
 
 @Resolver()
 export class UserResolver {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+  ) {}
 
   @Query(() => String)
   sayHello(): string {
@@ -40,5 +46,11 @@ export class UserResolver {
     @Args('input') verifyPhoneDto: VerifyPhoneDto,
   ): Promise<User> {
     return await this.userService.verifyPhone(verifyPhoneDto);
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Mutation(() => Boolean)
+  async refreshUserToken(@Context('req') req) {
+    return true;
   }
 }

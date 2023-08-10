@@ -41,8 +41,10 @@ export class User {
   @Field({ nullable: true }) // not stored in the database.
   accessToken: string;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true }) //this is stored in the database.
+  @Column({ nullable: true }) //this is stored in the database.
+  hashedRefreshToken: string;
+
+  @Field({ nullable: true }) //this is returned
   refreshToken: string;
 
   @Column({ default: false }) // if phone number is verified it changes to true

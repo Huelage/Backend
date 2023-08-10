@@ -50,6 +50,7 @@ type Mutation {
   signInUser(input: AuthenticateUserInput!): User!
   updateUserPhone(input: UpdatePhoneInput!): User!
   verifyUserPhone(input: VerifyPhoneInput!): User!
+  refreshUserToken: Boolean!
 }
 
 input CreateVendorInput {
