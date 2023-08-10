@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,8 @@ import { Repository } from 'typeorm';
 import { ConsumerType } from '../../common/enums/consumer-type.enum';
 import { Vendor } from '../vendor/vendor.entity';
 import { User } from '../user/user.entity';
+import { RefreshTokenDto } from '../dtos/refresh-token.dto';
+import { compare } from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -48,8 +50,17 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(userId: string, refreshToken: string) {
-    console.log(refreshToken);
-    return refreshToken;
+  async refreshToken(refreshTokenDto: RefreshTokenDto) {
+    const { id, type, refreshToken } = refreshTokenDto;
+
+    const repository =
+      type === ConsumerType.USER ? 'userRepository' : 'vendorRepository';
+    const consumer = await this[repository].findOneBy({ id });
+    if (!consumer) throw new UnauthorizedException();
+
+    const matches = await compare(refreshToken, consumer.hashedRefreshToken);
+    if (!matches) throw new UnauthorizedException();
+
+    return matches;
   }
 }

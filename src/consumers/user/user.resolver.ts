@@ -51,8 +51,6 @@ export class UserResolver {
   @UseGuards(RefreshTokenGuard)
   @Mutation(() => Boolean)
   async refreshUserToken(@Context('req') req) {
-    console.log(req.user);
-
-    return true;
+    return await this.authService.refreshToken(req.user);
   }
 }
