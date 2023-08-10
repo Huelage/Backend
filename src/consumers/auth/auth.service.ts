@@ -61,6 +61,9 @@ export class AuthService {
     const matches = await compare(refreshToken, consumer.hashedRefreshToken);
     if (!matches) throw new UnauthorizedException();
 
-    return matches;
+    return this.jwtService.sign(
+      { id, type },
+      { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '3d' },
+    );
   }
 }

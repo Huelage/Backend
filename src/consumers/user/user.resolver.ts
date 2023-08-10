@@ -7,7 +7,7 @@ import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
 import { AuthService } from '../auth/auth.service';
-import { Req, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from 'src/common/guards/refresh-token.guard';
 
 @Resolver()
@@ -49,7 +49,7 @@ export class UserResolver {
   }
 
   @UseGuards(RefreshTokenGuard)
-  @Mutation(() => Boolean)
+  @Mutation(() => String)
   async refreshUserToken(@Context('req') req) {
     return await this.authService.refreshToken(req.user);
   }

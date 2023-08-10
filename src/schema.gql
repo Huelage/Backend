@@ -46,11 +46,12 @@ type Mutation {
   signInVendor(input: AuthenticateVendorInput!): Vendor!
   updateVendorPhone(input: UpdatePhoneInput!): Vendor!
   verifyVendorPhone(input: VerifyPhoneInput!): Vendor!
+  refreshVendorToken: String!
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
   updateUserPhone(input: UpdatePhoneInput!): User!
   verifyUserPhone(input: VerifyPhoneInput!): User!
-  refreshUserToken: Boolean!
+  refreshUserToken: String!
 }
 
 input CreateVendorInput {

@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 
 import { VendorService } from './vendor.service';
 import { Vendor } from './vendor.entity';
@@ -6,10 +6,16 @@ import { CreateVendorDto } from '../dtos/create-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
+import { UseGuards } from '@nestjs/common';
+import { RefreshTokenGuard } from 'src/common/guards/refresh-token.guard';
+import { AuthService } from '../auth/auth.service';
 
 @Resolver()
 export class VendorResolver {
-  constructor(private vendorService: VendorService) {}
+  constructor(
+    private vendorService: VendorService,
+    private authService: AuthService,
+  ) {}
 
   @Query(() => String)
   sayHello(): string {
@@ -42,5 +48,11 @@ export class VendorResolver {
     @Args('input') verifyPhoneDto: VerifyPhoneDto,
   ): Promise<Vendor> {
     return await this.vendorService.verifyPhone(verifyPhoneDto);
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Mutation(() => String)
+  async refreshVendorToken(@Context('req') req) {
+    return await this.authService.refreshToken(req.user);
   }
 }
