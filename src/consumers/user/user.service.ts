@@ -115,6 +115,7 @@ export class UserService {
     const phoneOtp = genRandomOtp();
     user.phoneNumber = phoneNumber;
     user.phoneOtp = phoneOtp;
+    user.isVerified = false;
 
     await this.userRepository.save(user);
 

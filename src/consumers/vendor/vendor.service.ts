@@ -19,6 +19,7 @@ import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { ConsumerRepository } from '../consumer.repository';
 import { AuthService } from 'src/consumers/auth/auth.service';
 import { ConsumerType } from 'src/common/enums/consumer-type.enum';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class VendorService {
@@ -62,6 +63,7 @@ export class VendorService {
       businessName,
       email,
       phoneOtp,
+      vendorId: v4(),
       password: hashedPassword,
     });
     await this.vendorRepository.save(vendor);
@@ -74,16 +76,18 @@ export class VendorService {
   }
 
   async signIn(authenticateVendorDto: AuthenticateVendorDto) {
-    const { email, password } = authenticateVendorDto;
+    const { email, password, vendorId } = authenticateVendorDto;
     const vendor = await this.vendorRepository.findOne({
       where: { email },
     });
 
-    if (!vendor)
-      throw new UnauthorizedException('Invalid username or password.');
+    if (!vendor) throw new UnauthorizedException('Invalid credentials');
+
+    if (vendor.vendorId !== vendorId)
+      throw new UnauthorizedException('Invalid credentials');
+
     const matches = await compare(password, vendor.password);
-    if (!matches)
-      throw new UnauthorizedException('Invalid username or password.');
+    if (!matches) throw new UnauthorizedException('Invalid credentials');
 
     if (vendor.isVerified) {
       const { accessToken, refreshToken } = await this.authService.getTokens(
@@ -117,6 +121,7 @@ export class VendorService {
     const phoneOtp = genRandomOtp();
     vendor.phoneNumber = phoneNumber;
     vendor.phoneOtp = phoneOtp;
+    vendor.isVerified = false;
 
     await this.vendorRepository.save(vendor);
 

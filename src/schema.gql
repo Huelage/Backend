@@ -67,6 +67,7 @@ input CreateVendorInput {
 input AuthenticateVendorInput {
   email: String!
   password: String!
+  vendorId: String!
 }
 
 input UpdatePhoneInput {

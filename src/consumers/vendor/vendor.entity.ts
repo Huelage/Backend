@@ -37,7 +37,7 @@ export class Vendor {
   @Column()
   password: string;
 
-  @Column({ default: 'penny and dime.' })
+  @Column()
   vendorId: string;
 
   @Field({ nullable: true }) //this is not stored in the database.
