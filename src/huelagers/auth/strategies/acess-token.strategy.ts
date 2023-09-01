@@ -3,9 +3,9 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Vendor } from 'src/consumers/vendor/vendor.entity';
+import { Vendor } from 'src/huelagers/vendor/vendor.entity';
 import { Repository } from 'typeorm';
-import { User } from 'src/consumers/user/user.entity';
+import { User } from 'src/huelagers/user/user.entity';
 import { ConsumerType } from 'src/common/enums/consumer-type.enum';
 
 @Injectable()

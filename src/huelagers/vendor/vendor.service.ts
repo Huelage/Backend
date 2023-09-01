@@ -16,8 +16,8 @@ import { UpdateVendorDto } from '../dtos/update-account.dto';
 import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
-import { ConsumerRepository } from '../consumer.repository';
-import { AuthService } from 'src/consumers/auth/auth.service';
+import { ConsumerRepository } from '../huelager.repository';
+import { AuthService } from 'src/huelagers/auth/auth.service';
 import { ConsumerType } from 'src/common/enums/consumer-type.enum';
 import { v4 } from 'uuid';
 

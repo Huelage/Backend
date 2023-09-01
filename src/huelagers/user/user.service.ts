@@ -17,8 +17,8 @@ import { UpdateUserDto } from '../dtos/update-account.dto';
 import { User } from './user.entity';
 import { SmsService } from '../../utils/sms.service';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
-import { ConsumerRepository } from '../consumer.repository';
-import { AuthService } from 'src/consumers/auth/auth.service';
+import { ConsumerRepository } from '../huelager.repository';
+import { AuthService } from 'src/huelagers/auth/auth.service';
 import { ConsumerType } from 'src/common/enums/consumer-type.enum';
 
 @Injectable()

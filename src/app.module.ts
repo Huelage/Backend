@@ -8,7 +8,7 @@ import { ApolloDriverConfig } from '@nestjs/apollo';
 
 import { UtilsModule } from './utils/utils.module';
 import { graphqlConfig } from './config/graphql.config';
-import { ConsumersModule } from './consumers/consumers.module';
+import { ConsumersModule } from './huelagers/huelagers.module';
 
 @Module({
   imports: [
