@@ -7,56 +7,61 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+/**
+ * The parameters decorated with the 'Field' decorator are the parametrers that will be returned as output for graphql.
+ * The 'Column' decorator is for the database.
+ */
+
+@Entity({ name: 'Entity' })
 @ObjectType()
 export class Huelager {
-  @PrimaryGeneratedColumn()
-  @Field(() => Int)
-  entity_id: number;
-
-  @Column()
+  @PrimaryGeneratedColumn('uuid', { name: 'entity_id' })
   @Field()
-  wallet_id: number;
+  entityId: string;
 
-  @Column()
+  @Column({ name: 'wallet_id' }) /***** */
+  @Field()
+  walletId: string;
+
+  @Column({ unique: true, type: 'varchar', length: 256 })
   @Field()
   email: string;
 
   @Column({ unique: true })
-  @Field({ nullable: true })
-  phone?: string;
+  @Field()
+  phone: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 24 })
   password: string;
 
-  @Column()
+  @Column({ name: 'hashed_refresh_token' })
+  hashedRefreshToken: string;
+
+  @Column({ name: 'is_verified', type: 'boolean' })
+  isVerified: boolean;
+
   @Field()
-  hashed_refresh_token: string;
+  @Column({ name: 'email_is_verified', type: 'boolean', default: false })
+  emailIsVerified: boolean;
 
-  @Column()
-  is_verified: string;
-
-  @Field({ nullable: true }) //this is not stored in the database.
-  email_is_verified: string;
-
-  @Field({ nullable: true }) //this is strictly for graphql; not to be stopred in the database
-  refresh_token: string;
-
-  @Column({ nullable: true })
-  phone_otp: string;
+  @Column({ name: 'phone_otp', nullable: true, type: 'smallint', length: 4 })
+  phoneOtp: string;
 
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  @Field({ nullable: true })
-  created_at: Date;
+  @Field({ name: 'created_at' })
+  createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
-  @Field({ nullable: true })
-  updated_at: Date;
+  @Field({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @Field({ nullable: true }) //this is strictly for graphql; not to be stopred in the database
+  refreshToken: string;
 }
