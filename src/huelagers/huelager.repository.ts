@@ -6,7 +6,7 @@ import { Vendor } from './vendor/vendor.entity';
 import { User } from './user/user.entity';
 
 @Injectable()
-export class ConsumerRepository {
+export class HuelagerRepository {
   constructor(
     @InjectRepository(Vendor)
     private readonly vendorRepository: Repository<Vendor>,

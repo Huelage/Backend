@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { ConsumerType } from '../../common/enums/consumer-type.enum';
+import { HuelagerType } from '../../common/enums/huelager-type.enum';
 import { Vendor } from '../vendor/vendor.entity';
 import { User } from '../user/user.entity';
 import { RefreshTokenDto } from '../dtos/refresh-token.dto';
@@ -20,7 +20,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getTokens(id: number, type: ConsumerType) {
+  async getTokens(id: number, type: HuelagerType) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -54,11 +54,11 @@ export class AuthService {
     const { id, type, refreshToken } = refreshTokenDto;
 
     const repository =
-      type === ConsumerType.USER ? 'userRepository' : 'vendorRepository';
-    const consumer = await this[repository].findOneBy({ id });
-    if (!consumer) throw new UnauthorizedException();
+      type === HuelagerType.USER ? 'userRepository' : 'vendorRepository';
+    const huelager = await this[repository].findOneBy({ id });
+    if (!huelager) throw new UnauthorizedException();
 
-    const matches = await compare(refreshToken, consumer.hashedRefreshToken);
+    const matches = await compare(refreshToken, huelager.hashedRefreshToken);
     if (!matches) throw new UnauthorizedException();
 
     return this.jwtService.sign(

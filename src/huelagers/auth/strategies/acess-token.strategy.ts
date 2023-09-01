@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Vendor } from 'src/huelagers/vendor/vendor.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/huelagers/user/user.entity';
-import { ConsumerType } from 'src/common/enums/consumer-type.enum';
+import { HuelagerType } from 'src/common/enums/huelager-type.enum';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -25,14 +25,14 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
     const { id, type } = payload;
     if (!id || !type) throw new UnauthorizedException();
     const repository =
-      type === ConsumerType.VENDOR ? 'vendorRepository' : 'userRepository';
+      type === HuelagerType.VENDOR ? 'vendorRepository' : 'userRepository';
 
-    const consumer = await this[repository].findOneBy({ id });
+    const huelager = await this[repository].findOneBy({ id });
 
-    if (!consumer) {
+    if (!huelager) {
       throw new UnauthorizedException();
     }
 
-    return consumer;
+    return huelager;
   }
 }

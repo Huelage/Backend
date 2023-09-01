@@ -8,7 +8,7 @@ import { SmsService } from '../utils/sms.service';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UserResolver } from './user/user.resolver';
-import { ConsumerRepository } from './huelager.repository';
+import { HuelagerRepository } from './huelager.repository';
 import { AuthService } from './auth/auth.service';
 import { RefreshTokenStrategy } from './auth/strategies/refresh-token.strategy';
 import { AccessTokenStrategy } from './auth/strategies/acess-token.strategy';
@@ -22,13 +22,13 @@ import { JwtModule } from '@nestjs/jwt';
     SmsService,
     UserService,
     UserResolver,
-    ConsumerRepository,
+    HuelagerRepository,
     AccessTokenStrategy,
     RefreshTokenStrategy,
     AuthService,
   ],
 })
-export class ConsumersModule {}
+export class HuelagersModule {}
 
 // @Global()
 // @Module({

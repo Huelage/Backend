@@ -1,6 +1,6 @@
-import { ConsumerType } from 'src/common/enums/consumer-type.enum';
+import { HuelagerType } from 'src/common/enums/huelager-type.enum';
 
 export interface JwtPayload {
   id: number;
-  type: ConsumerType;
+  type: HuelagerType;
 }

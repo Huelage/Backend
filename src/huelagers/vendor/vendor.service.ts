@@ -16,9 +16,9 @@ import { UpdateVendorDto } from '../dtos/update-account.dto';
 import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
-import { ConsumerRepository } from '../huelager.repository';
+import { HuelagerRepository } from '../huelager.repository';
 import { AuthService } from 'src/huelagers/auth/auth.service';
-import { ConsumerType } from 'src/common/enums/consumer-type.enum';
+import { HuelagerType } from 'src/common/enums/huelager-type.enum';
 import { v4 } from 'uuid';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class VendorService {
   constructor(
     @InjectRepository(Vendor)
     private readonly vendorRepository: Repository<Vendor>,
-    private readonly repository: ConsumerRepository,
+    private readonly repository: HuelagerRepository,
     private readonly smsService: SmsService,
     private readonly authService: AuthService,
   ) {}
@@ -92,7 +92,7 @@ export class VendorService {
     if (vendor.isVerified) {
       const { accessToken, refreshToken } = await this.authService.getTokens(
         vendor.id,
-        ConsumerType.VENDOR,
+        HuelagerType.VENDOR,
       );
       vendor.hashedRefreshToken = await hash(refreshToken, 10);
       await this.vendorRepository.save(vendor);
@@ -148,7 +148,7 @@ export class VendorService {
 
     const { accessToken, refreshToken } = await this.authService.getTokens(
       vendor.id,
-      ConsumerType.VENDOR,
+      HuelagerType.VENDOR,
     );
 
     vendor.isVerified = true;

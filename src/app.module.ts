@@ -8,7 +8,7 @@ import { ApolloDriverConfig } from '@nestjs/apollo';
 
 import { UtilsModule } from './utils/utils.module';
 import { graphqlConfig } from './config/graphql.config';
-import { ConsumersModule } from './huelagers/huelagers.module';
+import { HuelagersModule } from './huelagers/huelagers.module';
 
 @Module({
   imports: [
@@ -28,7 +28,7 @@ import { ConsumersModule } from './huelagers/huelagers.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
     }),
     UtilsModule,
-    ConsumersModule,
+    HuelagersModule,
   ],
 })
 export class AppModule {}

@@ -17,9 +17,9 @@ import { UpdateUserDto } from '../dtos/update-account.dto';
 import { User } from './user.entity';
 import { SmsService } from '../../utils/sms.service';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
-import { ConsumerRepository } from '../huelager.repository';
+import { HuelagerRepository } from '../huelager.repository';
 import { AuthService } from 'src/huelagers/auth/auth.service';
-import { ConsumerType } from 'src/common/enums/consumer-type.enum';
+import { HuelagerType } from 'src/common/enums/huelager-type.enum';
 
 @Injectable()
 export class UserService {
@@ -27,7 +27,7 @@ export class UserService {
 
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    private readonly repository: ConsumerRepository,
+    private readonly repository: HuelagerRepository,
     private readonly smsService: SmsService,
     private readonly authService: AuthService,
   ) {}
@@ -84,7 +84,7 @@ export class UserService {
     if (user.isVerified) {
       const { refreshToken, accessToken } = await this.authService.getTokens(
         user.id,
-        ConsumerType.USER,
+        HuelagerType.USER,
       );
       user.hashedRefreshToken = await hash(refreshToken, 10);
       await this.userRepository.save(user);
@@ -141,7 +141,7 @@ export class UserService {
 
     const { accessToken, refreshToken } = await this.authService.getTokens(
       user.id,
-      ConsumerType.USER,
+      HuelagerType.USER,
     );
 
     user.isVerified = true;
