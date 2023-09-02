@@ -17,7 +17,7 @@ export enum HuelagerType {
   USER = 'user',
 }
 
-@Entity({ name: 'Entity' })
+@Entity({ name: 'entity' })
 @ObjectType()
 export class Huelager {
   @PrimaryGeneratedColumn('uuid', { name: 'entity_id' })

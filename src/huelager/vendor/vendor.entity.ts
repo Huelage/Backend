@@ -2,12 +2,12 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { Huelager } from '../entities/huelager.entity';
 
-@Entity()
+@Entity({ name: 'vendor' })
 @ObjectType()
 export class Vendor {
   @OneToOne(() => Huelager)
-  @JoinColumn({ name: 'entity_id', referencedColumnName: 'entity_id' })
-  entityId: string;
+  @JoinColumn({ name: 'vendor_id', referencedColumnName: 'entity_id' })
+  vendorId: string;
 
   @Column({ name: 'business_name', type: 'varchar', length: 256 })
   @Field()
