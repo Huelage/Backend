@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -11,6 +11,11 @@ import {
  * The parameters decorated with the 'Field' decorator are the parametrers that will be returned as output for graphql.
  * The 'Column' decorator is for the database.
  */
+
+export enum HuelagerType {
+  VENDOR = 'vendor',
+  USER = 'user',
+}
 
 @Entity({ name: 'Entity' })
 @ObjectType()
@@ -27,17 +32,17 @@ export class Huelager {
   @Field()
   email: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, type: 'varchar', length: 20 })
   @Field()
   phone: string;
 
   @Column({ type: 'varchar', length: 24 })
   password: string;
 
-  @Column({ name: 'hashed_refresh_token' })
+  @Column({ name: 'hashed_refresh_token', nullable: true })
   hashedRefreshToken: string;
 
-  @Column({ name: 'is_verified', type: 'boolean' })
+  @Column({ name: 'is_verified', type: 'boolean', default: false })
   isVerified: boolean;
 
   @Field()
@@ -48,19 +53,34 @@ export class Huelager {
   phoneOtp: string;
 
   @CreateDateColumn({
+    name: 'created_at',
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  @Field({ name: 'created_at' })
+  @Field()
   createdAt: Date;
 
   @UpdateDateColumn({
+    name: 'updated_at',
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
-  @Field({ name: 'updated_at' })
+  @Field()
   updatedAt: Date;
+
+  @Column({
+    name: 'entity_type',
+    type: 'enum',
+    enum: HuelagerType,
+    default: HuelagerType.USER,
+  })
+  @Field()
+  entityType: HuelagerType;
+
+  @Column({ name: 'img_url', nullable: true, type: 'text' })
+  @Field({ nullable: true })
+  imgUrl: string;
 
   @Field({ nullable: true }) //this is strictly for graphql; not to be stopred in the database
   refreshToken: string;

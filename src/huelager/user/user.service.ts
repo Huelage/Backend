@@ -18,7 +18,7 @@ import { User } from './user.entity';
 import { SmsService } from '../../utils/sms.service';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { HuelagerRepository } from '../huelager.repository';
-import { AuthService } from 'src/huelagers/auth/auth.service';
+import { AuthService } from 'src/huelager/auth/auth.service';
 import { HuelagerType } from 'src/common/enums/huelager-type.enum';
 
 @Injectable()

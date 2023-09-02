@@ -17,7 +17,7 @@ import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { HuelagerRepository } from '../huelager.repository';
-import { AuthService } from 'src/huelagers/auth/auth.service';
+import { AuthService } from 'src/huelager/auth/auth.service';
 import { HuelagerType } from 'src/common/enums/huelager-type.enum';
 import { v4 } from 'uuid';
 
