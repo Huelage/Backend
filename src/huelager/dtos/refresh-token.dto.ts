@@ -1,4 +1,4 @@
-import { HuelagerType } from 'src/common/enums/huelager-type.enum';
+import { HuelagerType } from '../../common/enums/huelager-type.enum';
 
 export class RefreshTokenDto {
   id: number;

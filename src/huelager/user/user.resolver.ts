@@ -8,7 +8,7 @@ import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
 import { AuthService } from '../auth/auth.service';
 import { UseGuards } from '@nestjs/common';
-import { RefreshTokenGuard } from 'src/common/guards/refresh-token.guard';
+import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
 
 @Resolver()
 export class UserResolver {

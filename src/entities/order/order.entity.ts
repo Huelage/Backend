@@ -1,6 +1,6 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { User } from 'src/huelager/user/user.entity';
-import { Vendor } from 'src/huelager/vendor/vendor.entity';
+import { User } from '../../huelager/user/user.entity';
+import { Vendor } from '../../huelager/vendor/vendor.entity';
 import {
   Column,
   CreateDateColumn,

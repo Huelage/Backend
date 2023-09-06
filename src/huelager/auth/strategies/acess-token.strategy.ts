@@ -3,10 +3,10 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Vendor } from 'src/huelager/vendor/vendor.entity';
+import { Vendor } from '../../../huelager/vendor/vendor.entity';
 import { Repository } from 'typeorm';
-import { User } from 'src/huelager/user/user.entity';
-import { HuelagerType } from 'src/common/enums/huelager-type.enum';
+import { User } from '../../../huelager/user/user.entity';
+import { HuelagerType } from '../../../common/enums/huelager-type.enum';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {

@@ -7,7 +7,7 @@ import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { UseGuards } from '@nestjs/common';
-import { RefreshTokenGuard } from 'src/common/guards/refresh-token.guard';
+import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
 import { AuthService } from '../auth/auth.service';
 
 @Resolver()

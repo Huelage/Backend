@@ -1,5 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Vendor } from 'src/huelager/vendor/vendor.entity';
+import { Vendor } from '../huelager/vendor/vendor.entity';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 enum ProductType {
