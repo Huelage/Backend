@@ -3,7 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Huelager } from './huelager.entity';
@@ -15,9 +15,9 @@ export class Biometric {
   @Field()
   biometricId: string;
 
-  @OneToOne(() => Huelager)
+  @ManyToOne(() => Huelager, (huelager) => huelager.biometrics)
   @JoinColumn({ name: 'entity_id', referencedColumnName: 'entity_id' })
-  entityId: string;
+  entity: string;
 
   @Column({ type: 'text' })
   @Field()

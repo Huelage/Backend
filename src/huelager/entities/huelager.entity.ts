@@ -3,9 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Wallet } from './huenit_wallet.entity';
+import { Biometric } from './biometric.entity';
 
 /**
  * The parameters decorated with the 'Field' decorator are the parametrers that will be returned as output for graphql.
@@ -24,9 +29,10 @@ export class Huelager {
   @Field()
   entityId: string;
 
-  @Column({ name: 'wallet_id' }) /***** */
   @Field()
-  walletId: string;
+  @OneToOne(() => Wallet, (wallet) => wallet.entity)
+  @JoinColumn()
+  wallet: Wallet;
 
   @Column({ unique: true, type: 'varchar', length: 256 })
   @Field()
@@ -51,6 +57,9 @@ export class Huelager {
 
   @Column({ name: 'phone_otp', nullable: true, type: 'smallint', length: 4 })
   phoneOtp: string;
+
+  @OneToMany(() => Biometric, (biometric) => biometric.entity)
+  biometrics: Biometric[];
 
   @CreateDateColumn({
     name: 'created_at',

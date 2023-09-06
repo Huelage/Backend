@@ -2,7 +2,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   Entity,
-  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -11,18 +10,17 @@ import { Huelager } from './huelager.entity';
 
 @Entity({ name: 'huenit_wallet' })
 @ObjectType()
-export class Biometric {
+export class Wallet {
   @PrimaryGeneratedColumn('uuid', { name: 'wallet_id' })
   @Field()
   walletId: string;
 
-  @OneToOne(() => Huelager)
-  @JoinColumn({ name: 'entity_id', referencedColumnName: 'entity_id' })
-  entityId: string;
+  @OneToOne(() => Huelager, (huelager) => huelager.wallet)
+  entity: Huelager;
 
   @Column({ type: 'decimal', scale: 2, default: 0 })
   @Field()
-  balamce: number;
+  balance: number;
 
   @UpdateDateColumn({
     name: 'updated_at',
