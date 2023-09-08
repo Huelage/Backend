@@ -9,6 +9,7 @@ import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
 import { AuthService } from '../auth/auth.service';
 import { UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
+import { Huelager } from '../entities/huelager.entity';
 
 @Resolver()
 export class UserResolver {
@@ -30,21 +31,21 @@ export class UserResolver {
   @Mutation(() => User)
   async signInUser(
     @Args('input') authenticateUserDto: AuthenticateUserDto,
-  ): Promise<User> {
+  ): Promise<User | Huelager> {
     return await this.userService.signIn(authenticateUserDto);
   }
 
-  @Mutation(() => User)
+  @Mutation(() => Huelager)
   async updateUserPhone(
     @Args('input') updatePhoneDto: UpdatePhoneDto,
-  ): Promise<User> {
+  ): Promise<Huelager> {
     return await this.userService.updatePhone(updatePhoneDto);
   }
 
-  @Mutation(() => User)
+  @Mutation(() => Huelager)
   async verifyUserPhone(
     @Args('input') verifyPhoneDto: VerifyPhoneDto,
-  ): Promise<User> {
+  ): Promise<Huelager> {
     return await this.userService.verifyPhone(verifyPhoneDto);
   }
 

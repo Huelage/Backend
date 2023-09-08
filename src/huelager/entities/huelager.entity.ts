@@ -93,4 +93,7 @@ export class Huelager {
 
   @Field({ nullable: true }) //this is strictly for graphql; not to be stopred in the database
   refreshToken: string;
+
+  @Field({ nullable: true }) //this is strictly for graphql; not to be stopred in the database
+  accessToken: string;
 }

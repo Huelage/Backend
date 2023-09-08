@@ -26,7 +26,7 @@ export class CreateUserDto {
   email: string;
 
   @Field()
-  phoneNumber: string;
+  phone: string;
 
   @IsNotEmpty()
   @MinLength(8)
@@ -47,4 +47,9 @@ export class CreateVendorDto extends CreateUserDto {
   @IsString()
   @Field()
   businessName: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Field()
+  businessAddress: string;
 }

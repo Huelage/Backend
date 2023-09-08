@@ -22,6 +22,10 @@ export class Vendor {
   @Field()
   repName: string;
 
+  @Column({ name: 'vendor_id', type: 'uuid' })
+  @Field()
+  vendorId: string;
+
   @Column({ name: 'opening_hours', type: 'time', nullable: true })
   @Field()
   openingHours: Date;

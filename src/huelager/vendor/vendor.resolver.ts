@@ -9,6 +9,7 @@ import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
 import { AuthService } from '../auth/auth.service';
+import { Huelager } from '../entities/huelager.entity';
 
 @Resolver()
 export class VendorResolver {
@@ -36,17 +37,17 @@ export class VendorResolver {
     return await this.vendorService.signIn(VendorenticateVendorDto);
   }
 
-  @Mutation(() => Vendor)
+  @Mutation(() => Huelager)
   async updateVendorPhone(
     @Args('input') updatePhoneDto: UpdatePhoneDto,
-  ): Promise<Vendor> {
+  ): Promise<Huelager> {
     return await this.vendorService.updatePhone(updatePhoneDto);
   }
 
-  @Mutation(() => Vendor)
+  @Mutation(() => Huelager)
   async verifyVendorPhone(
     @Args('input') verifyPhoneDto: VerifyPhoneDto,
-  ): Promise<Vendor> {
+  ): Promise<Huelager> {
     return await this.vendorService.verifyPhone(verifyPhoneDto);
   }
 

@@ -1,4 +1,4 @@
-import { HuelagerType } from '../../../common/enums/huelager-type.enum';
+import { HuelagerType } from '../../entities/huelager.entity';
 
 export interface JwtPayload {
   id: number;

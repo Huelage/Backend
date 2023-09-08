@@ -19,7 +19,7 @@ import { SmsService } from '../../utils/sms.service';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { HuelagerRepository } from '../huelager.repository';
 import { AuthService } from '../../huelager/auth/auth.service';
-import { HuelagerType } from '../../common/enums/huelager-type.enum';
+import { Huelager, HuelagerType } from '../entities/huelager.entity';
 
 @Injectable()
 export class UserService {
@@ -35,11 +35,11 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     const phoneOtp = genRandomOtp();
 
-    const { firstName, lastName, phoneNumber, password, email } = createUserDto;
+    const { firstName, lastName, phone, password, email } = createUserDto;
     const hashedPassword = await hash(password, 10);
 
     const exists = await this.repository.checkEmailAndPhone({
-      where: [{ email }, { phoneNumber }],
+      where: [{ email }, { phone }],
     });
 
     if (exists) {
@@ -53,18 +53,22 @@ export class UserService {
       }
       throw new ConflictException(`${inUse} already in use.`);
     }
-    const user = this.userRepository.create({
-      firstName,
-      lastName,
-      phoneNumber,
+    const entity = await this.repository.createHuelager({
+      phone,
       email,
       phoneOtp,
       password: hashedPassword,
+      entityType: HuelagerType.USER,
+    });
+    const user = this.userRepository.create({
+      firstName,
+      lastName,
+      entity,
     });
     await this.userRepository.save(user);
 
     this.smsService.sendSms(
-      user.phoneNumber,
+      entity.phone,
       `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
     );
     return user;
@@ -72,8 +76,8 @@ export class UserService {
 
   async signIn(authenticateUserDto: AuthenticateUserDto) {
     const { email, password } = authenticateUserDto;
-    const user = await this.userRepository.findOne({
-      where: { email },
+    const user = await this.repository.findHuelager({
+      where: { email, entityType: HuelagerType.USER },
     });
 
     if (!user) throw new UnauthorizedException('Invalid username or password.');
@@ -83,11 +87,11 @@ export class UserService {
 
     if (user.isVerified) {
       const { refreshToken, accessToken } = await this.authService.getTokens(
-        user.id,
+        user.entityId,
         HuelagerType.USER,
       );
       user.hashedRefreshToken = await hash(refreshToken, 10);
-      await this.userRepository.save(user);
+      await this.repository.save(user);
 
       user.accessToken = accessToken;
       user.refreshToken = refreshToken;
@@ -95,60 +99,12 @@ export class UserService {
     return user;
   }
 
-  async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<User> {
-    const { email, phoneNumber } = updatePhoneDto;
-
-    const user = await this.userRepository.findOneBy({
-      email: email,
-    });
-    if (!user) throw new NotFoundException('No user with this email exists');
-
-    /**
-     * Make sure the chosen phone number does not already exist.
-     * Even if it does, it should be this user that owns it.
-     * i.e, they can 'change' their phone number to the same thing
-     */
-    const exists = await this.repository.checkPhone({ where: { phoneNumber } });
-    if (exists && user.phoneNumber !== phoneNumber)
-      throw new ConflictException(`Phone number already in use.`);
-
-    const phoneOtp = genRandomOtp();
-    user.phoneNumber = phoneNumber;
-    user.phoneOtp = phoneOtp;
-    user.isVerified = false;
-
-    await this.userRepository.save(user);
-
-    this.smsService.sendSms(
-      user.phoneNumber,
-      `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
-    );
-    return user;
+  async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<Huelager> {
+    return this.authService.updatePhone(updatePhoneDto);
   }
 
-  async verifyPhone(verifyPhoneDto: VerifyPhoneDto): Promise<User> {
-    const { phoneNumber, phoneOtp } = verifyPhoneDto;
-
-    const user = await this.userRepository.findOneBy({ phoneNumber });
-    if (!user)
-      throw new NotFoundException('No user with this phone number exists');
-
-    const isExpired = Date.now() - user.updatedAt.getTime() > this.otpLifeSpan;
-    const notMatch = user.phoneOtp !== phoneOtp;
-
-    if (isExpired || notMatch)
-      throw new UnauthorizedException('The otp is invalid');
-
-    const { accessToken, refreshToken } = await this.authService.getTokens(
-      user.id,
-      HuelagerType.USER,
-    );
-
-    user.isVerified = true;
-    user.hashedRefreshToken = await hash(refreshToken, 10);
-    await this.userRepository.save(user);
-
-    return { ...user, accessToken, refreshToken };
+  async verifyPhone(verifyPhoneDto: VerifyPhoneDto): Promise<Huelager> {
+    return this.authService.verifyPhone(verifyPhoneDto);
   }
 
   findOne(id: number) {

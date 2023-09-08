@@ -18,8 +18,8 @@ import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { HuelagerRepository } from '../huelager.repository';
 import { AuthService } from '../../huelager/auth/auth.service';
-import { HuelagerType } from '../../common/enums/huelager-type.enum';
 import { v4 } from 'uuid';
+import { Huelager, HuelagerType } from '../entities/huelager.entity';
 
 @Injectable()
 export class VendorService {
@@ -35,14 +35,13 @@ export class VendorService {
 
   async create(createVendorDto: CreateVendorDto) {
     const phoneOtp = genRandomOtp();
-    // const
 
-    const { firstName, lastName, phoneNumber, password, email, businessName } =
+    const { businessAddress, phone, password, email, businessName } =
       createVendorDto;
     const hashedPassword = await hash(password, 10);
 
     const exists = await this.repository.checkEmailAndPhone({
-      where: [{ email }, { phoneNumber }],
+      where: [{ email }, { phone }],
     });
 
     if (exists) {
@@ -56,21 +55,25 @@ export class VendorService {
       }
       throw new ConflictException(`${inUse} already in use.`);
     }
-    const vendor = this.vendorRepository.create({
-      firstName,
-      lastName,
-      phoneNumber,
-      businessName,
+
+    const entity = await this.repository.createHuelager({
+      phone,
       email,
       phoneOtp,
-      vendorId: v4(),
       password: hashedPassword,
+      entityType: HuelagerType.VENDOR,
+    });
+    const vendor = this.vendorRepository.create({
+      businessName,
+      businessAddress,
+      vendorId: v4(),
+      entity,
     });
     await this.vendorRepository.save(vendor);
 
     this.smsService.sendSms(
-      vendor.phoneNumber,
-      `Welcome to huelage ${vendor.firstName}, here is your OTP: ${phoneOtp} `,
+      vendor.entity.phone,
+      `Welcome to huelage ${vendor.businessName}, here is your OTP: ${phoneOtp} `,
     );
     return vendor;
   }
@@ -78,7 +81,7 @@ export class VendorService {
   async signIn(authenticateVendorDto: AuthenticateVendorDto) {
     const { email, password, vendorId } = authenticateVendorDto;
     const vendor = await this.vendorRepository.findOne({
-      where: { email },
+      where: { entity: { email } },
     });
 
     if (!vendor) throw new UnauthorizedException('Invalid credentials');
@@ -86,76 +89,30 @@ export class VendorService {
     if (vendor.vendorId !== vendorId)
       throw new UnauthorizedException('Invalid credentials');
 
-    const matches = await compare(password, vendor.password);
+    const matches = await compare(password, vendor.entity.password);
     if (!matches) throw new UnauthorizedException('Invalid credentials');
 
-    if (vendor.isVerified) {
+    if (vendor.entity.isVerified) {
       const { accessToken, refreshToken } = await this.authService.getTokens(
-        vendor.id,
+        vendor.entity.entityId,
         HuelagerType.VENDOR,
       );
-      vendor.hashedRefreshToken = await hash(refreshToken, 10);
+      vendor.entity.hashedRefreshToken = await hash(refreshToken, 10);
       await this.vendorRepository.save(vendor);
 
-      vendor.accessToken = accessToken;
-      vendor.refreshToken = refreshToken;
+      vendor.entity.accessToken = accessToken;
+      vendor.entity.refreshToken = refreshToken;
     }
 
     return vendor;
   }
 
-  async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<Vendor> {
-    const { email, phoneNumber } = updatePhoneDto;
-
-    const vendor = await this.vendorRepository.findOneBy({
-      email: email,
-    });
-
-    if (!vendor)
-      throw new NotFoundException('No vendor with this email exists');
-
-    const exists = await this.repository.checkPhone({ where: { phoneNumber } });
-    if (exists && vendor.phoneNumber !== phoneNumber)
-      throw new ConflictException(`Phone number already in use.`);
-
-    const phoneOtp = genRandomOtp();
-    vendor.phoneNumber = phoneNumber;
-    vendor.phoneOtp = phoneOtp;
-    vendor.isVerified = false;
-
-    await this.vendorRepository.save(vendor);
-
-    this.smsService.sendSms(
-      vendor.phoneNumber,
-      `Welcome to huelage ${vendor.firstName}, here is your OTP: ${phoneOtp} `,
-    );
-    return vendor;
+  async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<Huelager> {
+    return this.authService.updatePhone(updatePhoneDto);
   }
 
-  async verifyPhone(verifyPhoneDto: VerifyPhoneDto): Promise<Vendor> {
-    const { phoneNumber, phoneOtp } = verifyPhoneDto;
-
-    const vendor = await this.vendorRepository.findOneBy({ phoneNumber });
-    if (!vendor)
-      throw new NotFoundException('No vendor with this phone number exists');
-
-    const isExpired =
-      Date.now() - vendor.updatedAt.getTime() > this.otpLifeSpan;
-    const notMatch = vendor.phoneOtp !== phoneOtp;
-
-    if (isExpired || notMatch)
-      throw new UnauthorizedException('The otp is invalid');
-
-    const { accessToken, refreshToken } = await this.authService.getTokens(
-      vendor.id,
-      HuelagerType.VENDOR,
-    );
-
-    vendor.isVerified = true;
-    vendor.hashedRefreshToken = await hash(refreshToken, 10);
-    await this.vendorRepository.save(vendor);
-
-    return { ...vendor, accessToken, refreshToken };
+  async verifyPhone(verifyPhoneDto: VerifyPhoneDto): Promise<Huelager> {
+    return this.authService.verifyPhone(verifyPhoneDto);
   }
 
   findOne(id: number) {

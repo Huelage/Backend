@@ -18,9 +18,9 @@ export class User {
   @Field()
   lastName: string;
 
-  @Column({ name: 'delivery_addr', type: 'text' })
-  @Field()
-  deliveryAddress: string;
+  // @Column({ name: 'delivery_addr', type: 'text' })
+  // @Field()
+  // deliveryAddress: string;
 
   @Column({ name: 'is_social_auth', type: 'boolean', default: false })
   @Field()

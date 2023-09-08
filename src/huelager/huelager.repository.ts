@@ -1,52 +1,64 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 
-import { Vendor } from './vendor/vendor.entity';
-import { User } from './user/user.entity';
+import { Huelager } from './entities/huelager.entity';
+import { Wallet } from './entities/huenit_wallet.entity';
 
 @Injectable()
 export class HuelagerRepository {
   constructor(
-    @InjectRepository(Vendor)
-    private readonly vendorRepository: Repository<Vendor>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(Huelager)
+    private readonly repository: Repository<Huelager>,
   ) {}
 
   async checkEmailAndPhone(params: {
-    where: [{ email: string }, { phoneNumber: string }];
+    where: [{ email: string }, { phone: string }];
   }) {
     const { where } = params;
-    const [{ email }, { phoneNumber }] = where;
-    const existingVendor = await this.vendorRepository.findOneBy(where);
-    const existingUser = await this.userRepository.findOneBy(where);
-
-    if (existingVendor) {
+    const [{ email }, { phone }] = where;
+    const existingHuelager = await this.repository.findOneBy(where);
+    if (existingHuelager) {
       return {
-        emailExists: existingVendor.email === email ? true : false,
-        phoneExists: existingVendor.phoneNumber === phoneNumber ? true : false,
-      };
-    } else if (existingUser) {
-      return {
-        emailExists: existingUser.email === email ? true : false,
-        phoneExists: existingUser.phoneNumber === phoneNumber ? true : false,
+        emailExists: existingHuelager.email === email ? true : false,
+        phoneExists: existingHuelager.phone === phone ? true : false,
       };
     }
     return null;
   }
 
-  async checkPhone(params: {
-    where: { phoneNumber: string };
-  }): Promise<boolean> {
+  async checkPhone(params: { where: { phone: string } }): Promise<boolean> {
     const { where } = params;
+    const existingHuelager = await this.repository.findOneBy(where);
 
-    const existingVendor = await this.vendorRepository.findOneBy(where);
-    const existingUser = await this.userRepository.findOneBy(where);
-
-    if (existingVendor || existingUser) {
+    if (existingHuelager) {
       return true;
     }
     return false;
+  }
+
+  async findHuelagerById(entityId) {
+    return this.repository.findOneBy({ entityId });
+  }
+
+  async findHuelager(params: { where: FindOptionsWhere<Huelager> }) {
+    const { where } = params;
+    return this.repository.findOneBy(where);
+  }
+
+  async findHuelagers(params: { where: FindOptionsWhere<Huelager>[] }) {
+    const { where } = params;
+    return this.repository.find({ where });
+  }
+
+  async createHuelager(createHuelagerInfo: DeepPartial<Huelager>) {
+    const wallet = new Wallet();
+    const huelager = await this.repository.create(createHuelagerInfo);
+    huelager.wallet = wallet;
+    return huelager;
+  }
+
+  async save(entity: Huelager) {
+    this.repository.save(entity);
   }
 }

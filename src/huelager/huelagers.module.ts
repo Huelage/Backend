@@ -13,9 +13,13 @@ import { AuthService } from './auth/auth.service';
 import { RefreshTokenStrategy } from './auth/strategies/refresh-token.strategy';
 import { AccessTokenStrategy } from './auth/strategies/acess-token.strategy';
 import { JwtModule } from '@nestjs/jwt';
+import { Huelager } from './entities/huelager.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Vendor, User]), JwtModule.register({})],
+  imports: [
+    TypeOrmModule.forFeature([Vendor, User, Huelager]),
+    JwtModule.register({}),
+  ],
   providers: [
     VendorService,
     VendorResolver,

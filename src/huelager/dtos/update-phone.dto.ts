@@ -1,15 +1,20 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
+import { HuelagerType } from '../entities/huelager.entity';
 
 @InputType('UpdatePhoneInput')
 export class UpdatePhoneDto {
   @IsString()
   @Field()
-  phoneNumber: string;
+  phone: string;
 
   @IsString()
   @Field()
   @Transform(({ value }) => value.toLowerCase())
   email: string;
+
+  @IsEnum(HuelagerType)
+  @Field(() => HuelagerType)
+  entityType: HuelagerType;
 }
