@@ -7,12 +7,14 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { Transaction } from './transaction.entity';
-import { Wallet } from '../huelager/entities/huenit_wallet.entity';
+import { Wallet } from '../entities/huenit_wallet.entity';
 
 @Entity({ name: 'wallet_transaction' })
 @ObjectType()
 export class WalletTransaction {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'uuid', name: 'transaction_id' })
+  transactionId: string;
+
   @OneToOne(() => Transaction)
   @JoinColumn()
   transaction: Transaction;

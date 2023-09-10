@@ -1,5 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Huelager } from '../huelager/entities/huelager.entity';
+import { Huelager } from '../entities/huelager.entity';
 import {
   Column,
   Entity,

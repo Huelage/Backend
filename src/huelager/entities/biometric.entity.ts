@@ -16,8 +16,8 @@ export class Biometric {
   biometricId: string;
 
   @ManyToOne(() => Huelager, (huelager) => huelager.biometrics)
-  @JoinColumn({ name: 'entity_id', referencedColumnName: 'entity_id' })
-  entity: string;
+  @JoinColumn()
+  entity: Huelager;
 
   @Column({ type: 'text' })
   @Field()

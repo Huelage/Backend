@@ -1,11 +1,14 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
 import { Order } from './order.entity';
-import { Vendor } from '../../huelager/vendor/vendor.entity';
+import { Vendor } from '../../vendor/vendor.entity';
 
 @Entity({ name: 'canceled_order' })
 @ObjectType()
 export class CanceledOrder {
+  @PrimaryColumn({ type: 'uuid', name: 'order_id' })
+  orderId: string;
+
   @OneToOne(() => Order)
   @Field()
   order: Order;

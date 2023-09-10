@@ -2,32 +2,22 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Vendor } from '../../../huelager/vendor/vendor.entity';
-import { Repository } from 'typeorm';
-import { User } from '../../../huelager/user/user.entity';
 import { HuelagerType } from '../../../common/enums/huelager-type.enum';
+import { HuelagerRepository } from 'src/huelager/huelager.repository';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(
-    @InjectRepository(Vendor)
-    private readonly vendorRepository: Repository<Vendor>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-  ) {
+  constructor(private readonly repository: HuelagerRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.JWT_ACCESS_SECRET,
     });
   }
   async validate(payload: JwtPayload) {
-    const { id, type } = payload;
-    if (!id || !type) throw new UnauthorizedException();
-    const repository =
-      type === HuelagerType.VENDOR ? 'vendorRepository' : 'userRepository';
+    const { entityId } = payload;
+    if (!entityId) throw new UnauthorizedException();
 
-    const huelager = await this[repository].findOneBy({ id });
+    const huelager = await this.repository.findHuelagerById(entityId);
 
     if (!huelager) {
       throw new UnauthorizedException();

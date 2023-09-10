@@ -9,6 +9,7 @@ import { ApolloDriverConfig } from '@nestjs/apollo';
 import { UtilsModule } from './utils/utils.module';
 import { graphqlConfig } from './config/graphql.config';
 import { HuelagersModule } from './huelager/huelagers.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -25,8 +26,9 @@ import { HuelagersModule } from './huelager/huelagers.module';
       database: process.env.DB_NAME, //database name replace with your database name but it should be 'root'
       autoLoadEntities: true,
       synchronize: true,
-      entities: ['dist/**/*.entity{.ts,.js}'],
+      entities: [join(__dirname, '**', '*.entity.{ts,js}')],
     }),
+
     UtilsModule,
     HuelagersModule,
   ],

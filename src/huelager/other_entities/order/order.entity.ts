@@ -1,10 +1,11 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { User } from '../../huelager/user/user.entity';
-import { Vendor } from '../../huelager/vendor/vendor.entity';
+import { User } from '../../user/user.entity';
+import { Vendor } from '../../vendor/vendor.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryColumn,
@@ -40,9 +41,10 @@ export class Order {
   @Field(() => Vendor)
   vendor: Vendor;
 
-  @OneToOne(() => Transaction)
-  @Field(() => Transaction)
-  transaction: Transaction;
+  // @OneToOne(() => Transaction)
+  // @JoinColumn()
+  // @Field(() => Transaction)
+  // transaction: Transaction;
 
   @Column({ type: 'enum', enum: OrderStatus })
   @Field(() => OrderStatus)

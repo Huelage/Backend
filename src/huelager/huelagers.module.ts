@@ -14,10 +14,34 @@ import { RefreshTokenStrategy } from './auth/strategies/refresh-token.strategy';
 import { AccessTokenStrategy } from './auth/strategies/acess-token.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { Huelager } from './entities/huelager.entity';
+import { Wallet } from './entities/huenit_wallet.entity';
+import { Biometric } from './entities/biometric.entity';
+import { Review } from './entities/review.entity';
+import { Food } from '../huelager/other_entities/food.entity';
+import { Product } from '../huelager/other_entities/product.entity';
+import { Transaction } from '../huelager/other_entities/transaction.entity';
+import { WalletTransaction } from '../huelager/other_entities/wallet_transaction.entity';
+import { Order } from '../huelager/other_entities/order/order.entity';
+import { OrderItem } from '../huelager/other_entities/order/order_item.entity';
+import { CanceledOrder } from '../huelager/other_entities/order/canceled_order.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Vendor, User, Huelager]),
+    TypeOrmModule.forFeature([
+      Vendor,
+      User,
+      Huelager,
+      Wallet,
+      Biometric,
+      Review,
+      Food,
+      Product,
+      Transaction,
+      WalletTransaction,
+      Order,
+      OrderItem,
+      CanceledOrder,
+    ]),
     JwtModule.register({}),
   ],
   providers: [

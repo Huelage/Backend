@@ -1,5 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
 import { Product } from './product.entity';
 
 enum Availability {
@@ -28,6 +28,9 @@ registerEnumType(FoodCategory);
 @Entity({ name: 'food' })
 @ObjectType()
 export class Food {
+  @PrimaryColumn({ type: 'uuid', name: 'product_id' })
+  productId: string;
+
   @OneToOne(() => Product)
   @Field(() => Product)
   product: Product;

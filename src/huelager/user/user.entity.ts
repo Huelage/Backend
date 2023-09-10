@@ -5,7 +5,9 @@ import { Huelager } from '../entities/huelager.entity';
 @Entity({ name: 'user' })
 @ObjectType()
 export class User {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'uuid', name: 'entity_id' })
+  entityId: string;
+
   @OneToOne(() => Huelager)
   @JoinColumn()
   entity: Huelager;

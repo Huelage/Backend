@@ -55,7 +55,7 @@ export class Huelager {
   @Column({ name: 'email_is_verified', type: 'boolean', default: false })
   emailIsVerified: boolean;
 
-  @Column({ name: 'phone_otp', nullable: true, type: 'smallint', length: 4 })
+  @Column({ name: 'phone_otp', nullable: true, type: 'smallint' })
   phoneOtp: string;
 
   @OneToMany(() => Biometric, (biometric) => biometric.entity)

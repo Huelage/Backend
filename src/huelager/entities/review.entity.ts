@@ -6,7 +6,6 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Vendor } from '../vendor/vendor.entity';
 import { User } from '../user/user.entity';
