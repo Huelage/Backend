@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { PaymentMethod } from './order/order.entity';
 
-enum Status {
+enum TransactionStatus {
   COMPLETED = 'completed',
   PENDING = 'pending',
   FAILED = 'failed',
@@ -20,7 +20,7 @@ enum TransactionType {
   WITHDRAWAL = 'withdrawal',
 }
 
-registerEnumType(Status);
+registerEnumType(TransactionStatus);
 registerEnumType(PaymentMethod);
 registerEnumType(TransactionType);
 
@@ -35,17 +35,17 @@ export class Transaction {
   @JoinColumn()
   entity: Huelager;
 
-  @Column({ type: 'enum', enum: TransactionType })
+  @Column({ type: 'enum', enum: TransactionType, name: 'transaction_type' })
   @Field(() => TransactionType)
-  transaction_type: TransactionType;
+  transactionType: TransactionType;
 
   @Column({ type: 'decimal' })
   @Field()
   amount: number;
 
-  @Column({ type: 'enum', enum: TransactionType, name: 'transaction_type' })
-  @Field(() => Status)
-  transactionType: Status;
+  @Column({ type: 'enum', enum: TransactionStatus })
+  @Field(() => TransactionStatus)
+  status: TransactionStatus;
 
   @Column({ type: 'text' })
   @Field()
@@ -61,8 +61,8 @@ export class Transaction {
 
   @Column({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
   @Field()
   timestamp: Date;
