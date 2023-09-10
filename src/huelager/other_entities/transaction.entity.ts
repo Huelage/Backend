@@ -60,9 +60,9 @@ export class Transaction {
   pgTransactionId: string;
 
   @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   @Field()
   timestamp: Date;

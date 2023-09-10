@@ -77,7 +77,7 @@ export class Order {
   @CreateDateColumn({
     name: 'created_at',
     type: 'datetime',
-    default: () => 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   @Field()
   createdAt: Date;
