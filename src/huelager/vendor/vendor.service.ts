@@ -82,6 +82,7 @@ export class VendorService {
     const { email, password, vendorId } = authenticateVendorDto;
     const vendor = await this.vendorRepository.findOne({
       where: { entity: { email } },
+      relations: { entity: true },
     });
 
     if (!vendor) throw new UnauthorizedException('Invalid credentials');

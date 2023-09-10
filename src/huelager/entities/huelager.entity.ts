@@ -43,17 +43,18 @@ export class Huelager {
   @Field()
   phone: string;
 
-  @Column({ type: 'varchar', length: 24 })
+  @Column({ type: 'varchar', length: 255 })
   password: string;
 
   @Column({ name: 'hashed_refresh_token', nullable: true })
   hashedRefreshToken: string;
 
   @Column({ name: 'is_verified', type: 'boolean', default: false })
+  @Field()
   isVerified: boolean;
 
-  @Field()
   @Column({ name: 'email_is_verified', type: 'boolean', default: false })
+  @Field()
   emailIsVerified: boolean;
 
   @Column({ name: 'phone_otp', nullable: true, type: 'smallint' })

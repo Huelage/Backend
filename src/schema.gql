@@ -19,6 +19,7 @@ type Huelager {
   wallet: Wallet!
   email: String!
   phone: String!
+  isVerified: Boolean!
   emailIsVerified: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!

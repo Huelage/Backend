@@ -1,12 +1,19 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Huelager } from '../entities/huelager.entity';
-import { v4 } from 'uuid';
+// import { v4 } from 'uuid';
 
 @Entity({ name: 'user' })
 @ObjectType()
 export class User {
-  @PrimaryColumn({ type: 'uuid', name: 'entity_id' })
+  @PrimaryGeneratedColumn('uuid', { name: 'entity_id' })
   entityId: string;
 
   @OneToOne(() => Huelager)

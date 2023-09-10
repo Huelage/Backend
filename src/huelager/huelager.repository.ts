@@ -10,6 +10,8 @@ export class HuelagerRepository {
   constructor(
     @InjectRepository(Huelager)
     private readonly repository: Repository<Huelager>,
+    @InjectRepository(Wallet)
+    private readonly walletRepository: Repository<Wallet>,
   ) {}
 
   async checkEmailAndPhone(params: {
@@ -53,8 +55,12 @@ export class HuelagerRepository {
 
   async createHuelager(createHuelagerInfo: DeepPartial<Huelager>) {
     const wallet = new Wallet();
+    // console.log(await this.walletRepository.save(wallet));
     const huelager = await this.repository.create(createHuelagerInfo);
     huelager.wallet = wallet;
+
+    await this.repository.save(huelager);
+
     return huelager;
   }
 

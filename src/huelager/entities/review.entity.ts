@@ -19,7 +19,7 @@ enum Rating {
 }
 registerEnumType(Rating, { name: 'Rating' });
 
-@Entity({ name: 'huenit_wallet' })
+@Entity({ name: 'review' })
 @ObjectType()
 export class Review {
   @PrimaryGeneratedColumn('uuid', { name: 'review_id' })

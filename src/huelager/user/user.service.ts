@@ -75,28 +75,32 @@ export class UserService {
     return user;
   }
 
-  async signIn(authenticateUserDto: AuthenticateUserDto) {
+  async signIn(authenticateUserDto: AuthenticateUserDto): Promise<User> {
     const { email, password } = authenticateUserDto;
-    const user = await this.repository.findHuelager({
-      where: { email, entityType: HuelagerType.USER },
+    const user = await this.userRepository.findOne({
+      where: { entity: { email } },
+      relations: { entity: true },
     });
 
     if (!user) throw new UnauthorizedException('Invalid username or password.');
-    const matches = await compare(password, user.password);
+
+    const matches = await compare(password, user.entity.password);
     if (!matches)
       throw new UnauthorizedException('Invalid username or password.');
 
-    if (user.isVerified) {
+    if (user.entity.isVerified) {
       const { refreshToken, accessToken } = await this.authService.getTokens(
         user.entityId,
         HuelagerType.USER,
       );
-      user.hashedRefreshToken = await hash(refreshToken, 10);
-      await this.repository.save(user);
+      user.entity.hashedRefreshToken = await hash(refreshToken, 10);
+      await this.userRepository.save(user);
 
-      user.accessToken = accessToken;
-      user.refreshToken = refreshToken;
+      user.entity.accessToken = accessToken;
+      user.entity.refreshToken = refreshToken;
     }
+    console.log(user);
+
     return user;
   }
 
