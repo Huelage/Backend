@@ -22,8 +22,8 @@ enum FoodPricing {
   FIXED = 'fixed',
 }
 
-registerEnumType(Availability);
-registerEnumType(FoodCategory);
+registerEnumType(Availability, { name: 'Availability' });
+registerEnumType(FoodCategory, { name: 'FoodCategory' });
 
 @Entity({ name: 'food' })
 @ObjectType()

@@ -2,6 +2,7 @@ import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Huelager } from '../entities/huelager.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -20,9 +21,9 @@ enum TransactionType {
   WITHDRAWAL = 'withdrawal',
 }
 
-registerEnumType(TransactionStatus);
-registerEnumType(PaymentMethod);
-registerEnumType(TransactionType);
+registerEnumType(TransactionStatus, { name: 'TransactionStatus' });
+registerEnumType(PaymentMethod, { name: 'PaymentMethod' });
+registerEnumType(TransactionType, { name: 'TransactionType' });
 
 @Entity({ name: 'transaction' })
 @ObjectType()
@@ -59,7 +60,7 @@ export class Transaction {
   @Field()
   pgTransactionId: string;
 
-  @Column({
+  @CreateDateColumn({
     type: 'datetime',
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',

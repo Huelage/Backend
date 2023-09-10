@@ -24,8 +24,8 @@ export enum PaymentMethod {
   WALLET_BALANCE = 'wallet_balance',
 }
 
-registerEnumType(OrderStatus);
-registerEnumType(PaymentMethod);
+registerEnumType(OrderStatus, { name: 'OrderStatus' });
+registerEnumType(PaymentMethod, { name: 'PaymentMethod' });
 
 @Entity({ name: 'order' })
 @ObjectType()

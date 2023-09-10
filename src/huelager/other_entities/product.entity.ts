@@ -8,7 +8,7 @@ enum ProductType {
   STATIONERY = 'stationery',
 }
 
-registerEnumType(ProductType);
+registerEnumType(ProductType, { name: 'ProductType' });
 
 @Entity({ name: 'product' })
 @ObjectType()
