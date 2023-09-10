@@ -9,6 +9,7 @@ export class Vendor {
   entityId: string;
 
   @OneToOne(() => Huelager)
+  @Field(() => Huelager)
   @JoinColumn()
   entity: Huelager;
 

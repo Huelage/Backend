@@ -17,7 +17,7 @@ enum Rating {
   FOUR = 4,
   FIVE = 5,
 }
-registerEnumType(Rating);
+registerEnumType(Rating, { name: 'Rating' });
 
 @Entity({ name: 'huenit_wallet' })
 @ObjectType()
@@ -27,12 +27,14 @@ export class Review {
   reviewId: string;
 
   @OneToOne(() => Vendor)
+  @Field(() => Vendor)
   @JoinColumn()
-  vendorId: Vendor;
+  vendor: Vendor;
 
   @OneToOne(() => User)
+  @Field(() => User)
   @JoinColumn()
-  userId: User;
+  user: User;
 
   @Column({ type: 'enum', enum: Rating })
   @Field(() => Rating)

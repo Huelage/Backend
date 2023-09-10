@@ -16,7 +16,7 @@ export class Wallet {
   walletId: string;
 
   @OneToOne(() => Huelager, (huelager) => huelager.wallet)
-  @Field()
+  @Field(() => Huelager)
   entity: Huelager;
 
   @Column({ type: 'decimal', scale: 2, default: 0 })

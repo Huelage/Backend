@@ -29,8 +29,8 @@ export class Huelager {
   @Field()
   entityId: string;
 
-  @Field()
   @OneToOne(() => Wallet, (wallet) => wallet.entity)
+  @Field(() => Wallet)
   @JoinColumn()
   wallet: Wallet;
 

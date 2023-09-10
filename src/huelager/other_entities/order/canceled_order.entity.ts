@@ -10,7 +10,7 @@ export class CanceledOrder {
   orderId: string;
 
   @OneToOne(() => Order)
-  @Field()
+  @Field(() => Order)
   order: Order;
 
   @ManyToOne(() => Vendor)

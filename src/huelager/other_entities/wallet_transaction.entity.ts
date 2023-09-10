@@ -1,4 +1,4 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
   Entity,
   JoinColumn,
@@ -16,6 +16,7 @@ export class WalletTransaction {
   transactionId: string;
 
   @OneToOne(() => Transaction)
+  @Field(() => Transaction)
   @JoinColumn()
   transaction: Transaction;
 
