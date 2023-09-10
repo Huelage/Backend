@@ -60,10 +60,10 @@ export class Food {
   availability: Availability;
 
   @Column({ name: 'package_sizes', type: 'json', nullable: true })
-  @Field({ nullable: true })
-  packagesSizes: object;
+  @Field(() => JSON, { nullable: true })
+  packagesSizes: any;
 
   @Column({ type: 'json', nullable: true })
-  @Field({ nullable: true })
-  sides: object;
+  @Field(() => JSON, { nullable: true })
+  sides: any;
 }

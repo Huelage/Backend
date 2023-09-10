@@ -27,6 +27,6 @@ export class OrderItem {
   quantity: number;
 
   @Column({ type: 'json', nullable: true })
-  @Field()
-  extras: object;
+  @Field(() => JSON, { nullable: true })
+  extras: any;
 }

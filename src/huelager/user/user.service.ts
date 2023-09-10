@@ -64,6 +64,7 @@ export class UserService {
       firstName,
       lastName,
       entity,
+      entityId: entity.entityId,
     });
     await this.userRepository.save(user);
 

@@ -25,7 +25,7 @@ import { join } from 'path';
       password: process.env.DB_PASS,
       database: process.env.DB_NAME, //database name replace with your database name but it should be 'root'
       autoLoadEntities: true,
-      synchronize: true,
+      // synchronize: true,
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
     }),
 

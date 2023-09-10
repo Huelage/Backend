@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -21,6 +21,7 @@ export enum HuelagerType {
   VENDOR = 'vendor',
   USER = 'user',
 }
+registerEnumType(HuelagerType, { name: 'HuelagerType' });
 
 @Entity({ name: 'entity' })
 @ObjectType()
@@ -82,7 +83,7 @@ export class Huelager {
     enum: HuelagerType,
     default: HuelagerType.USER,
   })
-  @Field()
+  @Field(() => HuelagerType)
   entityType: HuelagerType;
 
   @Column({ name: 'img_url', nullable: true, type: 'text' })
