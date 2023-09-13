@@ -178,8 +178,8 @@ type Huelager {
   imgUrl: String
   refreshToken: String
   accessToken: String
-  user: User!
-  vendor: Vendor!
+  user: User
+  vendor: Vendor
   transaction: Transaction!
 }
 
@@ -211,7 +211,7 @@ type Mutation {
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
   updatePhone(input: UpdatePhoneInput!): Huelager!
-  verifyVendorPhone(input: VerifyPhoneInput!): Huelager!
+  verifyPhone(input: VerifyPhoneInput!): Huelager!
   refreshToken: String!
   generateRSAKey: String!
 }
@@ -255,6 +255,5 @@ input UpdatePhoneInput {
 
 input VerifyPhoneInput {
   phone: String!
-  phoneOtp: String!
-  entityType: HuelagerType!
+  phoneOtp: Float!
 }

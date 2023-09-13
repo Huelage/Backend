@@ -3,7 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -60,7 +59,7 @@ export class Huelager {
   emailIsVerified: boolean;
 
   @Column({ name: 'phone_otp', nullable: true, type: 'smallint' })
-  phoneOtp: string;
+  phoneOtp: number;
 
   @OneToMany(() => Biometric, (biometric) => biometric.entity)
   biometrics: Biometric[];
@@ -100,11 +99,11 @@ export class Huelager {
   accessToken: string;
 
   @OneToOne(() => User, (user) => user.entity)
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   user: User;
 
   @OneToOne(() => Vendor, (vendor) => vendor.entity)
-  @Field(() => Vendor)
+  @Field(() => Vendor, { nullable: true })
   vendor: Vendor;
 
   @OneToMany(() => Transaction, (transaction) => transaction.entity)

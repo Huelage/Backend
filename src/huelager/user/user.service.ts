@@ -1,7 +1,6 @@
 import {
   Injectable,
   ConflictException,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 

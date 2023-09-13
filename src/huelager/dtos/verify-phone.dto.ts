@@ -1,6 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsEnum, IsString } from 'class-validator';
-import { HuelagerType } from '../entities/huelager.entity';
+import { IsNumber, IsString } from 'class-validator';
 
 @InputType('VerifyPhoneInput')
 export class VerifyPhoneDto {
@@ -8,11 +7,7 @@ export class VerifyPhoneDto {
   @Field()
   phone: string;
 
-  @IsString()
+  @IsNumber()
   @Field()
-  phoneOtp: string;
-
-  @IsEnum(HuelagerType)
-  @Field(() => HuelagerType)
-  entityType: HuelagerType;
+  phoneOtp: number;
 }

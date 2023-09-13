@@ -24,7 +24,7 @@ export class HuelagerResolver {
   }
 
   @Mutation(() => Huelager)
-  async verifyVendorPhone(
+  async verifyPhone(
     @Args('input') verifyPhoneDto: VerifyPhoneDto,
   ): Promise<Huelager> {
     return await this.authService.verifyPhone(verifyPhoneDto);

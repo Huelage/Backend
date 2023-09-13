@@ -117,6 +117,9 @@ export class AuthService {
     const isExpired =
       Date.now() - huelager.updatedAt.getTime() > this.otpLifeSpan;
     const notMatch = huelager.phoneOtp !== phoneOtp;
+    console.log(huelager);
+
+    console.log(notMatch, isExpired);
 
     if (isExpired || notMatch)
       throw new UnauthorizedException('The otp is invalid');
