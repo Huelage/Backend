@@ -38,7 +38,7 @@ export class HuelagerResolver {
    */
   @UseGuards(RefreshTokenGuard)
   @Mutation(() => String)
-  async refreshToken(@Context('req') req) {
+  async refreshAccessToken(@Context('req') req) {
     return await this.huelagerService.refreshToken(req.user);
   }
 

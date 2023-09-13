@@ -212,7 +212,7 @@ type Mutation {
   signInUser(input: AuthenticateUserInput!): User!
   updatePhone(input: UpdatePhoneInput!): Huelager!
   verifyPhone(input: VerifyPhoneInput!): Huelager!
-  refreshToken: String!
+  refreshAccessToken: String!
   generateRSAKey: String!
 }
 
