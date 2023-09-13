@@ -6,7 +6,7 @@ import { CreateUserDto } from '../dtos/create-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../hulager.service';
 import { UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
 import { Huelager } from '../entities/huelager.entity';
@@ -17,11 +17,6 @@ export class UserResolver {
     private userService: UserService,
     private authService: AuthService,
   ) {}
-
-  @Query(() => String)
-  sayHello(): string {
-    return 'Hello World!';
-  }
 
   @Mutation(() => User)
   async signUpUser(@Args('input') createUserDto: CreateUserDto): Promise<User> {

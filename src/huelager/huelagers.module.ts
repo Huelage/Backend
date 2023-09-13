@@ -9,7 +9,7 @@ import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UserResolver } from './user/user.resolver';
 import { HuelagerRepository } from './huelager.repository';
-import { AuthService } from './auth.service';
+import { AuthService } from './hulager.service';
 import { RefreshTokenStrategy } from './auth/strategies/refresh-token.strategy';
 import { AccessTokenStrategy } from './auth/strategies/acess-token.strategy';
 import { JwtModule } from '@nestjs/jwt';
@@ -24,6 +24,7 @@ import { WalletTransaction } from '../huelager/other_entities/wallet_transaction
 import { Order } from '../huelager/other_entities/order/order.entity';
 import { OrderItem } from '../huelager/other_entities/order/order_item.entity';
 import { CanceledOrder } from '../huelager/other_entities/order/canceled_order.entity';
+import { HuelagerResolver } from '../huelager/huelager.resolver';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { CanceledOrder } from '../huelager/other_entities/order/canceled_order.e
     AccessTokenStrategy,
     RefreshTokenStrategy,
     AuthService,
+    HuelagerResolver,
   ],
 })
 export class HuelagersModule {}
