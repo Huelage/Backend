@@ -7,14 +7,16 @@ import {
 
 import { JwtService } from '@nestjs/jwt';
 
-import { RefreshTokenDto } from '../dtos/refresh-token.dto';
+import { RefreshTokenDto } from './dtos/refresh-token.dto';
 import { compare, hash } from 'bcryptjs';
-import { Huelager, HuelagerType } from '../entities/huelager.entity';
-import { HuelagerRepository } from '../huelager.repository';
-import { UpdatePhoneDto } from '../dtos/update-phone.dto';
-import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
+import { Huelager, HuelagerType } from './entities/huelager.entity';
+import { HuelagerRepository } from './huelager.repository';
+import { UpdatePhoneDto } from './dtos/update-phone.dto';
+import { genRandomOtp } from '../common/helpers/gen-otp.helper';
 import { SmsService } from 'src/utils/sms.service';
-import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
+import { VerifyPhoneDto } from './dtos/verify-phone.dto';
+import { generateKeyPair } from 'crypto';
+import { User } from './user/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -131,5 +133,36 @@ export class AuthService {
     await this.repository.save(huelager);
 
     return huelager;
+  }
+
+  async generateRSAKey(user: User) {
+    let keys: { publicKey: string; privateKey: string };
+    generateKeyPair(
+      'rsa',
+      {
+        modulusLength: 512,
+        publicKeyEncoding: {
+          type: 'spki',
+          format: 'pem',
+        },
+        privateKeyEncoding: {
+          type: 'pkcs8',
+          format: 'pem',
+          cipher: 'aes-256-cbc',
+          passphrase: 'top secret',
+        },
+      },
+      (err, publicKey, privateKey) => {
+        // Handle errors and use the generated key pair.
+        keys = { publicKey, privateKey };
+      },
+    );
+
+    await this.repository.addBiometrics({
+      entityId: user.entityId,
+      key: keys.privateKey,
+    });
+
+    return keys.publicKey;
   }
 }

@@ -20,11 +20,11 @@ export class WalletTransaction {
   @JoinColumn()
   transaction: Transaction;
 
-  @ManyToOne(() => Wallet)
+  @ManyToOne(() => Wallet, { cascade: true })
   @JoinColumn({ name: 'sender_wallet' })
   senderWallet: Wallet;
 
-  @ManyToOne(() => Wallet)
+  @ManyToOne(() => Wallet, { cascade: true })
   @JoinColumn({ name: 'receiver_wallet' })
   receiverWallet: Wallet;
 }

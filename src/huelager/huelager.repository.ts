@@ -4,14 +4,15 @@ import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 
 import { Huelager } from './entities/huelager.entity';
 import { Wallet } from './entities/huenit_wallet.entity';
+import { Biometric } from './entities/biometric.entity';
 
 @Injectable()
 export class HuelagerRepository {
   constructor(
     @InjectRepository(Huelager)
     private readonly repository: Repository<Huelager>,
-    @InjectRepository(Wallet)
-    private readonly walletRepository: Repository<Wallet>,
+    @InjectRepository(Biometric)
+    private readonly biometricRepository: Repository<Biometric>,
   ) {}
 
   async checkEmailAndPhone(params: {
@@ -55,7 +56,6 @@ export class HuelagerRepository {
 
   async createHuelager(createHuelagerInfo: DeepPartial<Huelager>) {
     const wallet = new Wallet();
-    // console.log(await this.walletRepository.save(wallet));
     const huelager = await this.repository.create(createHuelagerInfo);
     huelager.wallet = wallet;
 
@@ -66,5 +66,10 @@ export class HuelagerRepository {
 
   async save(entity: Huelager) {
     this.repository.save(entity);
+  }
+
+  async addBiometrics(params: { entityId: string; key: string }) {
+    const { entityId, key } = params;
+    await this.biometricRepository.create({ key, entity: { entityId } });
   }
 }

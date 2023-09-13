@@ -10,7 +10,7 @@ export class OrderItem {
   @Field()
   orderItemnId: string;
 
-  @ManyToOne(() => Order)
+  @ManyToOne(() => Order, { cascade: true })
   @Field(() => Order)
   order: Order;
 

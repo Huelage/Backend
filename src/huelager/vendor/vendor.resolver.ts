@@ -8,7 +8,7 @@ import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth.service';
 import { Huelager } from '../entities/huelager.entity';
 
 @Resolver()

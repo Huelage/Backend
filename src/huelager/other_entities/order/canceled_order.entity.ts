@@ -13,7 +13,7 @@ export class CanceledOrder {
   @Field(() => Order)
   order: Order;
 
-  @ManyToOne(() => Vendor)
+  @ManyToOne(() => Vendor, { cascade: true })
   @Field(() => Vendor)
   vendor: Vendor;
 

@@ -33,11 +33,11 @@ export class Order {
   @PrimaryColumn('uuid', { name: 'order_id' })
   orderId: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { cascade: true })
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => Vendor)
+  @ManyToOne(() => Vendor, { cascade: true })
   @Field(() => Vendor)
   vendor: Vendor;
 

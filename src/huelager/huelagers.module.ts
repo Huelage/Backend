@@ -9,7 +9,7 @@ import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UserResolver } from './user/user.resolver';
 import { HuelagerRepository } from './huelager.repository';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './auth.service';
 import { RefreshTokenStrategy } from './auth/strategies/refresh-token.strategy';
 import { AccessTokenStrategy } from './auth/strategies/acess-token.strategy';
 import { JwtModule } from '@nestjs/jwt';
