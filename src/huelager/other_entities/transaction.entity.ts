@@ -6,9 +6,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { PaymentMethod } from './order/order.entity';
+import { WalletTransaction } from './wallet_transaction.entity';
+import { Order, PaymentMethod } from './order/order.entity';
 
 enum TransactionStatus {
   COMPLETED = 'completed',
@@ -22,7 +24,6 @@ enum TransactionType {
 }
 
 registerEnumType(TransactionStatus, { name: 'TransactionStatus' });
-registerEnumType(PaymentMethod, { name: 'PaymentMethod' });
 registerEnumType(TransactionType, { name: 'TransactionType' });
 
 @Entity({ name: 'transaction' })
@@ -32,10 +33,11 @@ export class Transaction {
   @Field()
   transactionId: string;
 
-  @ManyToOne(() => Huelager, (huelager) => huelager.biometrics, {
+  @ManyToOne(() => Huelager, (huelager) => huelager.transaction, {
     cascade: true,
+    nullable: false,
   })
-  @JoinColumn()
+  @JoinColumn({ name: 'entity_id' })
   entity: Huelager;
 
   @Column({ type: 'enum', enum: TransactionType, name: 'transaction_type' })
@@ -54,7 +56,11 @@ export class Transaction {
   @Field()
   description: string;
 
-  @Column({ name: 'payment_method', type: 'enum', enum: PaymentMethod })
+  @Column({
+    name: 'payment_method',
+    type: 'enum',
+    enum: ['pay_on_delivery', 'wallet_balance'],
+  })
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
 
@@ -69,6 +75,17 @@ export class Transaction {
   })
   @Field()
   timestamp: Date;
+
+  @OneToOne(
+    () => WalletTransaction,
+    (walletTransaction) => walletTransaction.transaction,
+  )
+  @Field(() => WalletTransaction)
+  walletTransaction: WalletTransaction;
+
+  @OneToOne(() => Order, (order) => order.transaction)
+  @Field(() => Order)
+  order: Order;
 }
 
 //penny and dime.

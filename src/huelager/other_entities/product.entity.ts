@@ -1,6 +1,15 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Vendor } from '../vendor/vendor.entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Food } from './food.entity';
+import { OrderItem } from './order/order_item.entity';
 
 enum ProductType {
   FOOD = 'food',
@@ -17,7 +26,11 @@ export class Product {
   @Field()
   productId: string;
 
-  @OneToOne(() => Vendor)
+  @ManyToOne(() => Vendor, (vendor) => vendor.product, {
+    cascade: true,
+    nullable: false,
+  })
+  @JoinColumn({ name: 'vendor_id' })
   @Field(() => Vendor)
   vendor: Vendor;
 
@@ -36,4 +49,12 @@ export class Product {
   @Column({ type: 'enum', enum: ProductType, default: ProductType.FOOD })
   @Field(() => ProductType)
   type: ProductType;
+
+  @OneToOne(() => Food, (food) => food.product)
+  @Field(() => Food)
+  food: Food;
+
+  @OneToOne(() => OrderItem, (orderItem) => orderItem.product)
+  @Field(() => OrderItem)
+  orderItem: OrderItem;
 }

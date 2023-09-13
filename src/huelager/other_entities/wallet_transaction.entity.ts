@@ -15,16 +15,19 @@ export class WalletTransaction {
   @PrimaryColumn({ type: 'uuid', name: 'transaction_id' })
   transactionId: string;
 
-  @OneToOne(() => Transaction)
+  @OneToOne(() => Transaction, (transaction) => transaction.walletTransaction, {
+    nullable: false,
+    cascade: true,
+  })
   @Field(() => Transaction)
-  @JoinColumn()
+  @JoinColumn({ name: 'transaction_id' })
   transaction: Transaction;
 
-  @ManyToOne(() => Wallet, { cascade: true })
-  @JoinColumn({ name: 'sender_wallet' })
+  @ManyToOne(() => Wallet, { cascade: true, nullable: false })
+  @JoinColumn({ name: 'sender_wallet_id' })
   senderWallet: Wallet;
 
-  @ManyToOne(() => Wallet, { cascade: true })
-  @JoinColumn({ name: 'receiver_wallet' })
+  @ManyToOne(() => Wallet, { cascade: true, nullable: false })
+  @JoinColumn({ name: 'receiver_wallet_id' })
   receiverWallet: Wallet;
 }

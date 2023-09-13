@@ -14,6 +14,157 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Review {
+  reviewId: String!
+  vendor: Vendor!
+  user: User!
+  rating: Rating!
+  date: DateTime!
+  message: String!
+}
+
+enum Rating {
+  ONE
+  TWO
+  THREE
+  FOUR
+  FIVE
+}
+
+type WalletTransaction {
+  transaction: Transaction!
+}
+
+type Transaction {
+  transactionId: String!
+  transactionType: TransactionType!
+  amount: Float!
+  status: TransactionStatus!
+  description: String!
+  paymentMethod: PaymentMethod!
+  pgTransactionId: String!
+  timestamp: DateTime!
+  walletTransaction: WalletTransaction!
+  order: Order!
+}
+
+enum TransactionType {
+  TOP_UP
+  WITHDRAWAL
+}
+
+enum TransactionStatus {
+  COMPLETED
+  PENDING
+  FAILED
+}
+
+enum PaymentMethod {
+  PAY_ON_DELIVERY
+  WALLET_BALANCE
+}
+
+type CanceledOrder {
+  order: Order!
+  reason: String!
+  refunded: Boolean!
+}
+
+type Food {
+  product: Product!
+  category: FoodCategory!
+  pricingMethod: FoodPricing!
+  portionPrice: Float
+  minPrice: Float
+  fixedPrice: Float
+  availability: Availability!
+  packagesSizes: JSON
+  sides: JSON
+}
+
+enum FoodCategory {
+  SNACKS
+  DRINKS
+  PROTEIN
+  CARBOHYDRATE
+}
+
+enum FoodPricing {
+  PRICE
+  PORTION
+  PACKAGE
+  FIXED
+}
+
+enum Availability {
+  AVAILABLE
+  TEMPORARILY_UNAVAILABLE
+  UNAVAILABLE
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Product {
+  productId: String!
+  vendor: Vendor!
+  name: String!
+  description: String!
+  imgUrl: String!
+  type: ProductType!
+  food: Food!
+  orderItem: OrderItem!
+}
+
+enum ProductType {
+  FOOD
+  BOOK
+  STATIONERY
+}
+
+type OrderItem {
+  orderItemnId: String!
+  order: Order!
+  product: Product!
+  pricePerItem: Float!
+  quantity: Float!
+  extras: JSON
+}
+
+type Order {
+  user: User!
+  vendor: Vendor!
+  transaction: Transaction!
+  status: OrderStatus!
+  deliveryAddress: String!
+  subtotal: Float!
+  deliveryFee: Float!
+  totalAmount: Float!
+  paymentMethod: PaymentMethod!
+  paymentStatus: Boolean!
+  createdAt: DateTime!
+  canceledOrder: CanceledOrder!
+  orderItem: OrderItem!
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  IN_DELIVERY
+  DELIEVERED
+}
+
+type User {
+  entity: Huelager!
+  firstName: String!
+  lastName: String!
+  isSocialAuth: Boolean!
+  review: Review!
+  order: Order!
+}
+
 type Huelager {
   entityId: String!
   wallet: Wallet!
@@ -27,6 +178,9 @@ type Huelager {
   imgUrl: String
   refreshToken: String
   accessToken: String
+  user: User!
+  vendor: Vendor!
+  transaction: Transaction!
 }
 
 enum HuelagerType {
@@ -42,75 +196,9 @@ type Vendor {
   vendorId: String!
   openingHours: DateTime!
   closingHours: DateTime!
-}
-
-type User {
-  entity: Huelager!
-  firstName: String!
-  lastName: String!
-  isSocialAuth: Boolean!
-}
-
-type Product {
-  productId: String!
-  vendor: Vendor!
-  name: String!
-  description: String!
-  imgUrl: String!
-  type: ProductType!
-}
-
-enum ProductType {
-  FOOD
-  BOOK
-  STATIONERY
-}
-
-type Order {
-  user: User!
-  vendor: Vendor!
-  status: OrderStatus!
-  deliveryAddress: String!
-  subtotal: Float!
-  deliveryFee: Float!
-  totalAmount: Float!
-  paymentMethod: PaymentMethod!
-  paymentStatus: Boolean!
-  createdAt: DateTime!
-}
-
-enum OrderStatus {
-  PENDING
-  CONFIRMED
-  IN_DELIVERY
-  DELIEVERED
-}
-
-enum PaymentMethod {
-  PAY_ON_DELIVERY
-  WALLET_BALANCE
-}
-
-type Transaction {
-  transactionId: String!
-  transactionType: TransactionType!
-  amount: Float!
-  status: TransactionStatus!
-  description: String!
-  paymentMethod: PaymentMethod!
-  pgTransactionId: String!
-  timestamp: DateTime!
-}
-
-enum TransactionType {
-  TOP_UP
-  WITHDRAWAL
-}
-
-enum TransactionStatus {
-  COMPLETED
-  PENDING
-  FAILED
+  review: Review!
+  product: Product!
+  order: Order!
 }
 
 type Query {
@@ -120,14 +208,12 @@ type Query {
 type Mutation {
   signUpVendor(input: CreateVendorInput!): Vendor!
   signInVendor(input: AuthenticateVendorInput!): Vendor!
-  updateVendorPhone(input: UpdatePhoneInput!): Huelager!
-  verifyVendorPhone(input: VerifyPhoneInput!): Huelager!
-  refreshVendorToken: String!
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
-  updateUserPhone(input: UpdatePhoneInput!): Huelager!
-  verifyUserPhone(input: VerifyPhoneInput!): Huelager!
-  refreshUserToken: String!
+  updatePhone(input: UpdatePhoneInput!): Huelager!
+  verifyVendorPhone(input: VerifyPhoneInput!): Huelager!
+  refreshToken: String!
+  generateRSAKey: String!
 }
 
 input CreateVendorInput {
@@ -147,18 +233,6 @@ input AuthenticateVendorInput {
   vendorId: String!
 }
 
-input UpdatePhoneInput {
-  phone: String!
-  email: String!
-  entityType: HuelagerType!
-}
-
-input VerifyPhoneInput {
-  phone: String!
-  phoneOtp: String!
-  entityType: HuelagerType!
-}
-
 input CreateUserInput {
   firstName: String!
   lastName: String!
@@ -171,4 +245,16 @@ input CreateUserInput {
 input AuthenticateUserInput {
   email: String!
   password: String!
+}
+
+input UpdatePhoneInput {
+  phone: String!
+  email: String!
+  entityType: HuelagerType!
+}
+
+input VerifyPhoneInput {
+  phone: String!
+  phoneOtp: String!
+  entityType: HuelagerType!
 }

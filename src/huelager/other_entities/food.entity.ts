@@ -1,6 +1,7 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { Product } from './product.entity';
+import { GraphQLJSON } from 'graphql-type-json';
 
 enum Availability {
   AVAILABLE = 'available',
@@ -24,6 +25,7 @@ enum FoodPricing {
 
 registerEnumType(Availability, { name: 'Availability' });
 registerEnumType(FoodCategory, { name: 'FoodCategory' });
+registerEnumType(FoodPricing, { name: 'FoodPricing' });
 
 @Entity({ name: 'food' })
 @ObjectType()
@@ -31,7 +33,11 @@ export class Food {
   @PrimaryColumn({ type: 'uuid', name: 'product_id' })
   productId: string;
 
-  @OneToOne(() => Product)
+  @OneToOne(() => Product, (product) => product.food, {
+    cascade: true,
+    nullable: false,
+  })
+  @JoinColumn({ name: 'product_id' })
   @Field(() => Product)
   product: Product;
 
@@ -60,10 +66,10 @@ export class Food {
   availability: Availability;
 
   @Column({ name: 'package_sizes', type: 'json', nullable: true })
-  @Field(() => JSON, { nullable: true })
+  @Field(() => GraphQLJSON, { nullable: true })
   packagesSizes: any;
 
   @Column({ type: 'json', nullable: true })
-  @Field(() => JSON, { nullable: true })
+  @Field(() => GraphQLJSON, { nullable: true })
   sides: any;
 }

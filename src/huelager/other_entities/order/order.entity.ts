@@ -1,16 +1,20 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { User } from '../../user/user.entity';
 import { Vendor } from '../../vendor/vendor.entity';
+import { Transaction } from '../../other_entities/transaction.entity';
+
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
-  Transaction,
 } from 'typeorm';
+import { CanceledOrder } from './canceled_order.entity';
+import { OrderItem } from './order_item.entity';
 
 enum OrderStatus {
   PENDING = 'pending',
@@ -33,18 +37,31 @@ export class Order {
   @PrimaryColumn('uuid', { name: 'order_id' })
   orderId: string;
 
-  @ManyToOne(() => User, { cascade: true })
+  @ManyToOne(() => User, (user) => user.order, {
+    cascade: true,
+    nullable: false,
+  })
+  @JoinColumn({ name: 'user_id' })
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => Vendor, { cascade: true })
+  @ManyToOne(() => Vendor, (vendor) => vendor.order, {
+    cascade: true,
+    nullable: false,
+  })
+  @JoinColumn({ name: 'vendor_id' })
   @Field(() => Vendor)
   vendor: Vendor;
 
-  // @OneToOne(() => Transaction)
-  // @JoinColumn()
-  // @Field(() => Transaction)
-  // transaction: Transaction;
+  /**
+   * It can be nullable because the transaction only takes place after the order has been fanilized
+   */
+  @OneToOne(() => Transaction, (transaction) => transaction.order, {
+    cascade: true,
+  })
+  @JoinColumn({ name: 'transction_id' })
+  @Field(() => Transaction)
+  transaction: Transaction;
 
   @Column({ type: 'enum', enum: OrderStatus })
   @Field(() => OrderStatus)
@@ -66,7 +83,11 @@ export class Order {
   @Field()
   totalAmount: number;
 
-  @Column({ type: 'enum', enum: PaymentMethod, name: 'payment_method' })
+  @Column({
+    type: 'enum',
+    enum: ['pay_on_delivery', 'wallet_balance'],
+    name: 'payment_method',
+  })
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
 
@@ -81,6 +102,14 @@ export class Order {
   })
   @Field()
   createdAt: Date;
+
+  @OneToOne(() => CanceledOrder, (canceledOrder) => canceledOrder.order)
+  @Field(() => CanceledOrder)
+  canceledOrder: CanceledOrder;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  @Field(() => OrderItem)
+  orderItem: OrderItem;
 }
 
 ('If you find a child playing with a knife, rather than forcefully collecting it, offer it a candy.');

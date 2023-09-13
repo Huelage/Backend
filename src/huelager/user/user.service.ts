@@ -60,11 +60,11 @@ export class UserService {
       password: hashedPassword,
       entityType: HuelagerType.USER,
     });
+
     const user = this.userRepository.create({
       firstName,
       lastName,
       entity,
-      entityId: entity.entityId,
     });
     await this.userRepository.save(user);
 
@@ -99,7 +99,6 @@ export class UserService {
       user.entity.accessToken = accessToken;
       user.entity.refreshToken = refreshToken;
     }
-    console.log(user);
 
     return user;
   }

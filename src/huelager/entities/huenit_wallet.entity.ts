@@ -2,6 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -15,7 +16,11 @@ export class Wallet {
   @Field()
   walletId: string;
 
-  @OneToOne(() => Huelager, (huelager) => huelager.wallet)
+  @OneToOne(() => Huelager, (huelager) => huelager.wallet, {
+    nullable: false,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'entity_id' })
   @Field(() => Huelager)
   entity: Huelager;
 

@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -26,14 +27,20 @@ export class Review {
   @Field()
   reviewId: string;
 
-  @OneToOne(() => Vendor)
+  @ManyToOne(() => Vendor, (vendor) => vendor.review, {
+    cascade: true,
+    nullable: false,
+  })
   @Field(() => Vendor)
-  @JoinColumn()
+  @JoinColumn({ name: 'vendor_id' })
   vendor: Vendor;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User, (user) => user.review, {
+    cascade: true,
+    nullable: false,
+  })
   @Field(() => User)
-  @JoinColumn()
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @Column({ type: 'enum', enum: Rating })

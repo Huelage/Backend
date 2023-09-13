@@ -1,5 +1,13 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import { GraphQLJSON } from 'graphql-type-json';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from '../product.entity';
 
@@ -10,11 +18,16 @@ export class OrderItem {
   @Field()
   orderItemnId: string;
 
-  @ManyToOne(() => Order, { cascade: true })
+  @ManyToOne(() => Order, { cascade: true, nullable: false })
+  @JoinColumn({ name: 'order_id' })
   @Field(() => Order)
   order: Order;
 
-  @OneToOne(() => Product)
+  @OneToOne(() => Product, (product) => product.orderItem, {
+    nullable: false,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'product_id' })
   @Field(() => Product)
   product: Product;
 
@@ -27,6 +40,6 @@ export class OrderItem {
   quantity: number;
 
   @Column({ type: 'json', nullable: true })
-  @Field(() => JSON, { nullable: true })
+  @Field(() => GraphQLJSON, { nullable: true })
   extras: any;
 }

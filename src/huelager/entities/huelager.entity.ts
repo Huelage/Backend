@@ -11,6 +11,9 @@ import {
 } from 'typeorm';
 import { Wallet } from './huenit_wallet.entity';
 import { Biometric } from './biometric.entity';
+import { User } from '../user/user.entity';
+import { Vendor } from '../vendor/vendor.entity';
+import { Transaction } from '../other_entities/transaction.entity';
 
 /**
  * The parameters decorated with the 'Field' decorator are the parametrers that will be returned as output for graphql.
@@ -32,7 +35,6 @@ export class Huelager {
 
   @OneToOne(() => Wallet, (wallet) => wallet.entity)
   @Field(() => Wallet)
-  @JoinColumn()
   wallet: Wallet;
 
   @Column({ unique: true, type: 'varchar', length: 256 })
@@ -96,4 +98,16 @@ export class Huelager {
 
   @Field({ nullable: true }) //this is strictly for graphql; not to be stopred in the database
   accessToken: string;
+
+  @OneToOne(() => User, (user) => user.entity)
+  @Field(() => User)
+  user: User;
+
+  @OneToOne(() => Vendor, (vendor) => vendor.entity)
+  @Field(() => Vendor)
+  vendor: Vendor;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.entity)
+  @Field(() => Transaction)
+  transaction: Transaction;
 }

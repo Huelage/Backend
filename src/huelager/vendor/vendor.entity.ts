@@ -1,6 +1,16 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { Huelager } from '../entities/huelager.entity';
+import { Review } from '../entities/review.entity';
+import { Product } from '../other_entities/product.entity';
+import { Order } from '../other_entities/order/order.entity';
 
 @Entity({ name: 'vendor' })
 @ObjectType()
@@ -8,9 +18,12 @@ export class Vendor {
   @PrimaryColumn({ type: 'uuid', name: 'entity_id' })
   entityId: string;
 
-  @OneToOne(() => Huelager)
+  @OneToOne(() => Huelager, (huelager) => huelager.vendor, {
+    nullable: false,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'entity_id' })
   @Field(() => Huelager)
-  @JoinColumn()
   entity: Huelager;
 
   @Column({ name: 'business_name', type: 'varchar', length: 256 })
@@ -36,4 +49,16 @@ export class Vendor {
   @Column({ name: 'closing_hours', type: 'time', nullable: true })
   @Field()
   closingHours: Date;
+
+  @OneToMany(() => Review, (review) => review.vendor)
+  @Field(() => Review)
+  review: Review;
+
+  @OneToMany(() => Product, (product) => product.vendor)
+  @Field(() => Product)
+  product: Product;
+
+  @OneToMany(() => Order, (order) => order.vendor)
+  @Field(() => Order)
+  order: Order;
 }

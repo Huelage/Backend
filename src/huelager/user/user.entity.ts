@@ -3,11 +3,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Huelager } from '../entities/huelager.entity';
+import { Review } from '../entities/review.entity';
+import { Order } from '../other_entities/order/order.entity';
 // import { v4 } from 'uuid';
 
 @Entity({ name: 'user' })
@@ -16,9 +18,12 @@ export class User {
   @PrimaryGeneratedColumn('uuid', { name: 'entity_id' })
   entityId: string;
 
-  @OneToOne(() => Huelager)
+  @OneToOne(() => Huelager, (huelager) => huelager.user, {
+    nullable: false,
+    cascade: true,
+  })
   @Field(() => Huelager)
-  @JoinColumn()
+  @JoinColumn({ name: 'entity_id' })
   entity: Huelager;
 
   @Column({ name: 'first_name', type: 'varchar', length: 30 })
@@ -36,4 +41,12 @@ export class User {
   @Column({ name: 'is_social_auth', type: 'boolean', default: false })
   @Field()
   isSocialAuth: boolean;
+
+  @OneToMany(() => Review, (review) => review.user)
+  @Field(() => Review)
+  review: Review;
+
+  @OneToMany(() => Order, (order) => order.user)
+  @Field(() => Order)
+  order: Order;
 }
