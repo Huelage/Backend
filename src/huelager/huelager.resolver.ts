@@ -31,6 +31,11 @@ export class HuelagerResolver {
     return await this.huelagerService.verifyPhone(verifyPhoneDto);
   }
 
+  /**
+   *The refresh token strategy does not return the whole 'huelager' object like the access token
+   * @param req
+   * @returns accessToken-string
+   */
   @UseGuards(RefreshTokenGuard)
   @Mutation(() => String)
   async refreshToken(@Context('req') req) {

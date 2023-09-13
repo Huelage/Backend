@@ -132,7 +132,7 @@ export class HuelagerService {
     return huelager;
   }
 
-  async generateRSAKey(user: User) {
+  async generateRSAKey(huelager: Huelager) {
     const { privateKey, publicKey } = generateKeyPairSync('rsa', {
       modulusLength: 512,
       publicKeyEncoding: {
@@ -146,9 +146,8 @@ export class HuelagerService {
         passphrase: 'top secret',
       },
     });
-
     await this.repository.addBiometrics({
-      entityId: user.entityId,
+      huelager,
       key: privateKey,
     });
 

@@ -59,6 +59,7 @@ export class HuelagerRepository {
   async createHuelager(createHuelagerInfo: DeepPartial<Huelager>) {
     const wallet = new Wallet();
     await this.walletRepository.save(wallet);
+
     const huelager = await this.repository.create({
       ...createHuelagerInfo,
       wallet,
@@ -72,8 +73,12 @@ export class HuelagerRepository {
     this.repository.save(entity);
   }
 
-  async addBiometrics(params: { entityId: string; key: string }) {
-    const { entityId, key } = params;
-    await this.biometricRepository.create({ key, entity: { entityId } });
+  async addBiometrics(params: { huelager: Huelager; key: string }) {
+    const { huelager, key } = params;
+
+    const biometric = new Biometric();
+    biometric.key = key;
+    biometric.entity = huelager;
+    await this.biometricRepository.save(biometric);
   }
 }

@@ -92,6 +92,7 @@ export class UserService {
     if (user.entity.isVerified) {
       const { refreshToken, accessToken } =
         await this.huelagerService.getTokens(user.entityId);
+
       user.entity.hashedRefreshToken = await hash(refreshToken, 10);
       await this.userRepository.save(user);
 
