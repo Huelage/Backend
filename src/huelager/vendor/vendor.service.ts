@@ -17,7 +17,7 @@ import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { HuelagerRepository } from '../huelager.repository';
-import { AuthService } from '../hulager.service';
+import { HuelagerService } from '../hulager.service';
 import { v4 } from 'uuid';
 import { Huelager, HuelagerType } from '../entities/huelager.entity';
 
@@ -30,7 +30,7 @@ export class VendorService {
     private readonly vendorRepository: Repository<Vendor>,
     private readonly repository: HuelagerRepository,
     private readonly smsService: SmsService,
-    private readonly authService: AuthService,
+    private readonly huelagerService: HuelagerService,
   ) {}
 
   async create(createVendorDto: CreateVendorDto) {
@@ -94,10 +94,9 @@ export class VendorService {
     if (!matches) throw new UnauthorizedException('Invalid credentials');
 
     if (vendor.entity.isVerified) {
-      const { accessToken, refreshToken } = await this.authService.getTokens(
-        vendor.entity.entityId,
-        HuelagerType.VENDOR,
-      );
+      const { accessToken, refreshToken } =
+        await this.huelagerService.getTokens(vendor.entity.entityId);
+
       vendor.entity.hashedRefreshToken = await hash(refreshToken, 10);
       await this.vendorRepository.save(vendor);
 
@@ -109,11 +108,11 @@ export class VendorService {
   }
 
   async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<Huelager> {
-    return this.authService.updatePhone(updatePhoneDto);
+    return this.huelagerService.updatePhone(updatePhoneDto);
   }
 
   async verifyPhone(verifyPhoneDto: VerifyPhoneDto): Promise<Huelager> {
-    return this.authService.verifyPhone(verifyPhoneDto);
+    return this.huelagerService.verifyPhone(verifyPhoneDto);
   }
 
   findOne(id: number) {

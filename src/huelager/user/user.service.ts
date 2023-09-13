@@ -17,7 +17,7 @@ import { User } from './user.entity';
 import { SmsService } from '../../utils/sms.service';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { HuelagerRepository } from '../huelager.repository';
-import { AuthService } from '../hulager.service';
+import { HuelagerService } from '../hulager.service';
 import { Huelager, HuelagerType } from '../entities/huelager.entity';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly repository: HuelagerRepository,
     private readonly smsService: SmsService,
-    private readonly authService: AuthService,
+    private readonly huelagerService: HuelagerService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -90,10 +90,8 @@ export class UserService {
       throw new UnauthorizedException('Invalid username or password.');
 
     if (user.entity.isVerified) {
-      const { refreshToken, accessToken } = await this.authService.getTokens(
-        user.entityId,
-        HuelagerType.USER,
-      );
+      const { refreshToken, accessToken } =
+        await this.huelagerService.getTokens(user.entityId);
       user.entity.hashedRefreshToken = await hash(refreshToken, 10);
       await this.userRepository.save(user);
 
@@ -105,11 +103,11 @@ export class UserService {
   }
 
   async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<Huelager> {
-    return this.authService.updatePhone(updatePhoneDto);
+    return this.huelagerService.updatePhone(updatePhoneDto);
   }
 
   async verifyPhone(verifyPhoneDto: VerifyPhoneDto): Promise<Huelager> {
-    return this.authService.verifyPhone(verifyPhoneDto);
+    return this.huelagerService.verifyPhone(verifyPhoneDto);
   }
 
   findOne(id: number) {

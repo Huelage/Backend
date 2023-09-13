@@ -51,13 +51,13 @@ export class Vendor {
 
   @OneToMany(() => Review, (review) => review.vendor)
   @Field(() => Review)
-  review: Review;
+  reviews: Review[];
 
   @OneToMany(() => Product, (product) => product.vendor)
   @Field(() => Product)
-  product: Product;
+  products: Product[];
 
   @OneToMany(() => Order, (order) => order.vendor)
   @Field(() => Order)
-  order: Order;
+  orders: Order[];
 }

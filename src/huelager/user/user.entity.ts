@@ -43,9 +43,9 @@ export class User {
 
   @OneToMany(() => Review, (review) => review.user)
   @Field(() => Review)
-  review: Review;
+  reviews: Review[];
 
   @OneToMany(() => Order, (order) => order.user)
   @Field(() => Order)
-  order: Order;
+  orders: Order[];
 }

@@ -9,17 +9,17 @@ import { JwtService } from '@nestjs/jwt';
 
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
 import { compare, hash } from 'bcryptjs';
-import { Huelager, HuelagerType } from './entities/huelager.entity';
+import { Huelager } from './entities/huelager.entity';
 import { HuelagerRepository } from './huelager.repository';
 import { UpdatePhoneDto } from './dtos/update-phone.dto';
 import { genRandomOtp } from '../common/helpers/gen-otp.helper';
 import { SmsService } from 'src/utils/sms.service';
 import { VerifyPhoneDto } from './dtos/verify-phone.dto';
-import { generateKeyPair } from 'crypto';
+import { generateKeyPairSync } from 'crypto';
 import { User } from './user/user.entity';
 
 @Injectable()
-export class AuthService {
+export class HuelagerService {
   private otpLifeSpan = 1800000; // 30 minutes
 
   constructor(
@@ -28,12 +28,11 @@ export class AuthService {
     private readonly smsService: SmsService,
   ) {}
 
-  async getTokens(id: string, type: HuelagerType) {
+  async getTokens(entityId: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
-          id,
-          type,
+          entityId,
         },
         {
           secret: process.env.JWT_ACCESS_SECRET,
@@ -42,8 +41,7 @@ export class AuthService {
       ),
       this.jwtService.signAsync(
         {
-          id,
-          type,
+          entityId,
         },
         {
           secret: process.env.JWT_REFRESH_SECRET,
@@ -117,16 +115,12 @@ export class AuthService {
     const isExpired =
       Date.now() - huelager.updatedAt.getTime() > this.otpLifeSpan;
     const notMatch = huelager.phoneOtp !== phoneOtp;
-    console.log(huelager);
-
-    console.log(notMatch, isExpired);
 
     if (isExpired || notMatch)
       throw new UnauthorizedException('The otp is invalid');
 
     const { accessToken, refreshToken } = await this.getTokens(
       huelager.entityId,
-      HuelagerType.USER,
     );
 
     huelager.accessToken = accessToken;
@@ -139,33 +133,25 @@ export class AuthService {
   }
 
   async generateRSAKey(user: User) {
-    let keys: { publicKey: string; privateKey: string };
-    generateKeyPair(
-      'rsa',
-      {
-        modulusLength: 512,
-        publicKeyEncoding: {
-          type: 'spki',
-          format: 'pem',
-        },
-        privateKeyEncoding: {
-          type: 'pkcs8',
-          format: 'pem',
-          cipher: 'aes-256-cbc',
-          passphrase: 'top secret',
-        },
+    const { privateKey, publicKey } = generateKeyPairSync('rsa', {
+      modulusLength: 512,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem',
       },
-      (err, publicKey, privateKey) => {
-        // Handle errors and use the generated key pair.
-        keys = { publicKey, privateKey };
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem',
+        cipher: 'aes-256-cbc',
+        passphrase: 'top secret',
       },
-    );
+    });
 
     await this.repository.addBiometrics({
       entityId: user.entityId,
-      key: keys.privateKey,
+      key: privateKey,
     });
 
-    return keys.publicKey;
+    return publicKey;
   }
 }

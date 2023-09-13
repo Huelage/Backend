@@ -33,7 +33,7 @@ export class Transaction {
   @Field()
   transactionId: string;
 
-  @ManyToOne(() => Huelager, (huelager) => huelager.transaction, {
+  @ManyToOne(() => Huelager, (huelager) => huelager.transactions, {
     cascade: true,
   })
   @JoinColumn({ name: 'entity_id' })

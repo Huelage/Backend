@@ -9,9 +9,9 @@ import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UserResolver } from './user/user.resolver';
 import { HuelagerRepository } from './huelager.repository';
-import { AuthService } from './hulager.service';
+import { HuelagerService } from './hulager.service';
 import { RefreshTokenStrategy } from './auth/strategies/refresh-token.strategy';
-import { AccessTokenStrategy } from './auth/strategies/acess-token.strategy';
+import { AccessTokenStrategy } from './auth/strategies/access-token.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { Huelager } from './entities/huelager.entity';
 import { Wallet } from './entities/huenit_wallet.entity';
@@ -54,7 +54,7 @@ import { HuelagerResolver } from '../huelager/huelager.resolver';
     HuelagerRepository,
     AccessTokenStrategy,
     RefreshTokenStrategy,
-    AuthService,
+    HuelagerService,
     HuelagerResolver,
   ],
 })
@@ -63,7 +63,7 @@ export class HuelagersModule {}
 // @Global()
 // @Module({
 //   imports: [JwtModule.register({}), TypeOrmModule.forFeature([Vendor, User])],
-//   providers: [AccessTokenStrategy, RefreshTokenStrategy, AuthService],
-//   exports: [AuthService],
+//   providers: [AccessTokenStrategy, RefreshTokenStrategy, HuelagerService],
+//   exports: [HuelagerService],
 // })
 // export class AuthModule {}

@@ -37,14 +37,14 @@ export class Order {
   @PrimaryColumn('uuid', { name: 'order_id' })
   orderId: string;
 
-  @ManyToOne(() => User, (user) => user.order, {
+  @ManyToOne(() => User, (user) => user.orders, {
     cascade: true,
   })
   @JoinColumn({ name: 'user_id' })
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => Vendor, (vendor) => vendor.order, {
+  @ManyToOne(() => Vendor, (vendor) => vendor.orders, {
     cascade: true,
   })
   @JoinColumn({ name: 'vendor_id' })
@@ -107,7 +107,7 @@ export class Order {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   @Field(() => OrderItem)
-  orderItem: OrderItem;
+  orderItems: OrderItem[];
 }
 
 ('If you find a child playing with a knife, rather than forcefully collecting it, offer it a candy.');
