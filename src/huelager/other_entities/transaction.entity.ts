@@ -35,7 +35,6 @@ export class Transaction {
 
   @ManyToOne(() => Huelager, (huelager) => huelager.transaction, {
     cascade: true,
-    nullable: false,
   })
   @JoinColumn({ name: 'entity_id' })
   entity: Huelager;

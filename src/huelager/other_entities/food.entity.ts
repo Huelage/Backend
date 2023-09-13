@@ -35,7 +35,6 @@ export class Food {
 
   @OneToOne(() => Product, (product) => product.food, {
     cascade: true,
-    nullable: false,
   })
   @JoinColumn({ name: 'product_id' })
   @Field(() => Product)

@@ -19,7 +19,6 @@ export class Vendor {
   entityId: string;
 
   @OneToOne(() => Huelager, (huelager) => huelager.vendor, {
-    nullable: false,
     cascade: true,
   })
   @JoinColumn({ name: 'entity_id' })

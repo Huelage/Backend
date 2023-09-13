@@ -29,7 +29,6 @@ export class Review {
 
   @ManyToOne(() => Vendor, (vendor) => vendor.review, {
     cascade: true,
-    nullable: false,
   })
   @Field(() => Vendor)
   @JoinColumn({ name: 'vendor_id' })
@@ -37,7 +36,6 @@ export class Review {
 
   @ManyToOne(() => User, (user) => user.review, {
     cascade: true,
-    nullable: false,
   })
   @Field(() => User)
   @JoinColumn({ name: 'user_id' })

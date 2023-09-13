@@ -19,7 +19,6 @@ export class User {
   entityId: string;
 
   @OneToOne(() => Huelager, (huelager) => huelager.user, {
-    nullable: false,
     cascade: true,
   })
   @Field(() => Huelager)

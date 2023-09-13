@@ -18,13 +18,12 @@ export class OrderItem {
   @Field()
   orderItemnId: string;
 
-  @ManyToOne(() => Order, { cascade: true, nullable: false })
+  @ManyToOne(() => Order, { cascade: true })
   @JoinColumn({ name: 'order_id' })
   @Field(() => Order)
   order: Order;
 
   @OneToOne(() => Product, (product) => product.orderItem, {
-    nullable: false,
     cascade: true,
   })
   @JoinColumn({ name: 'product_id' })

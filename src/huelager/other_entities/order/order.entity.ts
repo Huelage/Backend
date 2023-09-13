@@ -39,7 +39,6 @@ export class Order {
 
   @ManyToOne(() => User, (user) => user.order, {
     cascade: true,
-    nullable: false,
   })
   @JoinColumn({ name: 'user_id' })
   @Field(() => User)
@@ -47,7 +46,6 @@ export class Order {
 
   @ManyToOne(() => Vendor, (vendor) => vendor.order, {
     cascade: true,
-    nullable: false,
   })
   @JoinColumn({ name: 'vendor_id' })
   @Field(() => Vendor)

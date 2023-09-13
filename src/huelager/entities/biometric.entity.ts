@@ -17,7 +17,6 @@ export class Biometric {
 
   @ManyToOne(() => Huelager, (huelager) => huelager.biometrics, {
     cascade: true,
-    nullable: false,
   })
   @Field(() => Huelager)
   @JoinColumn({ name: 'entity_id' })

@@ -28,7 +28,6 @@ export class Product {
 
   @ManyToOne(() => Vendor, (vendor) => vendor.product, {
     cascade: true,
-    nullable: false,
   })
   @JoinColumn({ name: 'vendor_id' })
   @Field(() => Vendor)

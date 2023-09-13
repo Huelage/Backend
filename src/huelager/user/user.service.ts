@@ -53,6 +53,7 @@ export class UserService {
       }
       throw new ConflictException(`${inUse} already in use.`);
     }
+
     const entity = await this.repository.createHuelager({
       phone,
       email,
@@ -65,6 +66,7 @@ export class UserService {
       firstName,
       lastName,
       entity,
+      entityId: entity.entityId,
     });
     await this.userRepository.save(user);
 

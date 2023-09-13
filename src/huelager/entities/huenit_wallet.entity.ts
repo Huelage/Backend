@@ -17,7 +17,6 @@ export class Wallet {
   walletId: string;
 
   @OneToOne(() => Huelager, (huelager) => huelager.wallet, {
-    nullable: false,
     cascade: true,
   })
   @JoinColumn({ name: 'entity_id' })

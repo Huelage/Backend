@@ -16,7 +16,6 @@ export class WalletTransaction {
   transactionId: string;
 
   @OneToOne(() => Transaction, (transaction) => transaction.walletTransaction, {
-    nullable: false,
     cascade: true,
   })
   @Field(() => Transaction)
