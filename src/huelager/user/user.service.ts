@@ -2,6 +2,7 @@ import {
   Injectable,
   ConflictException,
   UnauthorizedException,
+  HttpException,
 } from '@nestjs/common';
 
 import { compare, hash } from 'bcryptjs';
@@ -67,12 +68,19 @@ export class UserService {
       entity,
       entityId: entity.entityId,
     });
-    await this.userRepository.save(user);
+
+    try {
+      await this.userRepository.save(user);
+    } catch (error) {
+      this.repository.removeHuelager(entity.entityId);
+      throw new HttpException(error, 422);
+    }
 
     this.smsService.sendSms(
       entity.phone,
       `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
     );
+
     return user;
   }
 
@@ -83,11 +91,10 @@ export class UserService {
       relations: { entity: true },
     });
 
-    if (!user) throw new UnauthorizedException('Invalid username or password.');
+    if (!user) throw new UnauthorizedException('Invalid email or password.');
 
     const matches = await compare(password, user.entity.password);
-    if (!matches)
-      throw new UnauthorizedException('Invalid username or password.');
+    if (!matches) throw new UnauthorizedException('Invalid email or password.');
 
     if (user.entity.isVerified) {
       const { refreshToken, accessToken } =
@@ -99,6 +106,7 @@ export class UserService {
       user.entity.accessToken = accessToken;
       user.entity.refreshToken = refreshToken;
     }
+    console.log(user);
 
     return user;
   }

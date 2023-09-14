@@ -1,8 +1,8 @@
 import {
   Injectable,
   ConflictException,
-  NotFoundException,
   UnauthorizedException,
+  HttpException,
 } from '@nestjs/common';
 
 import { Vendor } from './vendor.entity';
@@ -70,16 +70,21 @@ export class VendorService {
       entity,
       // repName,
     });
+
     try {
+      console.log(1);
+
       await this.vendorRepository.save(vendor);
     } catch (error) {
       this.repository.removeHuelager(entity.entityId);
+      throw new HttpException(error, 422);
     }
 
     this.smsService.sendSms(
       vendor.entity.phone,
       `Welcome to huelage ${vendor.businessName}, here is your OTP: ${phoneOtp} `,
     );
+
     return vendor;
   }
 
