@@ -36,7 +36,7 @@ export class VendorService {
   async create(createVendorDto: CreateVendorDto) {
     const phoneOtp = genRandomOtp();
 
-    const { businessAddress, phone, password, email, businessName } =
+    const { businessAddress, phone, password, email, businessName, repName } =
       createVendorDto;
     const hashedPassword = await hash(password, 10);
 
@@ -63,13 +63,18 @@ export class VendorService {
       password: hashedPassword,
       entityType: HuelagerType.VENDOR,
     });
+
     const vendor = this.vendorRepository.create({
       businessName,
       businessAddress,
-      vendorId: v4(),
       entity,
+      // repName,
     });
-    await this.vendorRepository.save(vendor);
+    try {
+      await this.vendorRepository.save(vendor);
+    } catch (error) {
+      this.repository.removeHuelager(entity.entityId);
+    }
 
     this.smsService.sendSms(
       vendor.entity.phone,
@@ -87,7 +92,7 @@ export class VendorService {
 
     if (!vendor) throw new UnauthorizedException('Invalid credentials');
 
-    if (vendor.vendorId !== vendorId)
+    if (vendor.entityId !== vendorId)
       throw new UnauthorizedException('Invalid credentials');
 
     const matches = await compare(password, vendor.entity.password);

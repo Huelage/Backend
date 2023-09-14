@@ -34,7 +34,7 @@ export class Transaction {
   transactionId: string;
 
   @ManyToOne(() => Huelager, (huelager) => huelager.transactions, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'entity_id' })
   entity: Huelager;

@@ -34,7 +34,7 @@ export class Food {
   productId: string;
 
   @OneToOne(() => Product, (product) => product.food, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'product_id' })
   @Field(() => Product)

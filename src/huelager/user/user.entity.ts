@@ -19,7 +19,7 @@ export class User {
   entityId: string;
 
   @OneToOne(() => Huelager, (huelager) => huelager.user, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @Field(() => Huelager)
   @JoinColumn({ name: 'entity_id' })

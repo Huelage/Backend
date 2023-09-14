@@ -19,7 +19,7 @@ export class Vendor {
   entityId: string;
 
   @OneToOne(() => Huelager, (huelager) => huelager.vendor, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'entity_id' })
   @Field(() => Huelager)
@@ -36,10 +36,6 @@ export class Vendor {
   @Column({ name: 'rep_name', type: 'text' })
   @Field()
   repName: string;
-
-  @Column({ name: 'vendor_id', type: 'uuid' })
-  @Field()
-  vendorId: string;
 
   @Column({ name: 'opening_hours', type: 'time', nullable: true })
   @Field()

@@ -81,4 +81,8 @@ export class HuelagerRepository {
     biometric.entity = huelager;
     await this.biometricRepository.save(biometric);
   }
+
+  async removeHuelager(entityId) {
+    await this.repository.delete({ entityId });
+  }
 }

@@ -16,7 +16,6 @@ import { genRandomOtp } from '../common/helpers/gen-otp.helper';
 import { SmsService } from 'src/utils/sms.service';
 import { VerifyPhoneDto } from './dtos/verify-phone.dto';
 import { generateKeyPairSync } from 'crypto';
-import { User } from './user/user.entity';
 
 @Injectable()
 export class HuelagerService {

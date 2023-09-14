@@ -9,7 +9,7 @@ export class CanceledOrder {
   orderId: string;
 
   @OneToOne(() => Order, (order) => order.canceledOrder, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'order_id' })
   @Field(() => Order)

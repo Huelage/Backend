@@ -27,7 +27,7 @@ export class Product {
   productId: string;
 
   @ManyToOne(() => Vendor, (vendor) => vendor.products, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'vendor_id' })
   @Field(() => Vendor)

@@ -28,14 +28,14 @@ export class Review {
   reviewId: string;
 
   @ManyToOne(() => Vendor, (vendor) => vendor.reviews, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @Field(() => Vendor)
   @JoinColumn({ name: 'vendor_id' })
   vendor: Vendor;
 
   @ManyToOne(() => User, (user) => user.reviews, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @Field(() => User)
   @JoinColumn({ name: 'user_id' })

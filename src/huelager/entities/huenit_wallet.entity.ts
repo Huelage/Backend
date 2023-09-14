@@ -17,7 +17,7 @@ export class Wallet {
   walletId: string;
 
   @OneToOne(() => Huelager, (huelager) => huelager.wallet, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'entity_id' })
   @Field(() => Huelager)

@@ -16,17 +16,17 @@ export class WalletTransaction {
   transactionId: string;
 
   @OneToOne(() => Transaction, (transaction) => transaction.walletTransaction, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   @Field(() => Transaction)
   @JoinColumn({ name: 'transaction_id' })
   transaction: Transaction;
 
-  @ManyToOne(() => Wallet, { cascade: true, nullable: false })
+  @ManyToOne(() => Wallet, { nullable: false })
   @JoinColumn({ name: 'sender_wallet_id' })
   senderWallet: Wallet;
 
-  @ManyToOne(() => Wallet, { cascade: true, nullable: false })
+  @ManyToOne(() => Wallet, { nullable: false })
   @JoinColumn({ name: 'receiver_wallet_id' })
   receiverWallet: Wallet;
 }

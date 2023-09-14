@@ -193,7 +193,6 @@ type Vendor {
   businessName: String!
   businessAddress: String!
   repName: String!
-  vendorId: String!
   openingHours: DateTime!
   closingHours: DateTime!
   reviews: Review!
@@ -217,12 +216,11 @@ type Mutation {
 }
 
 input CreateVendorInput {
-  firstName: String!
-  lastName: String!
   email: String!
   phone: String!
   password: String!
   confirmPassword: String!
+  repName: String!
   businessName: String!
   businessAddress: String!
 }
@@ -234,12 +232,12 @@ input AuthenticateVendorInput {
 }
 
 input CreateUserInput {
-  firstName: String!
-  lastName: String!
   email: String!
   phone: String!
   password: String!
   confirmPassword: String!
+  firstName: String!
+  lastName: String!
 }
 
 input AuthenticateUserInput {

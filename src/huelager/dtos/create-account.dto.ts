@@ -10,16 +10,8 @@ import {
 
 import { MatchesWith } from '../../common/decorators/matches-with.decorator';
 
-@InputType('CreateUserInput')
-export class CreateUserDto {
-  @IsAlpha()
-  @Field()
-  firstName: string;
-
-  @IsAlpha()
-  @Field()
-  lastName: string;
-
+@InputType('CreateEntityInput')
+class CreateEntityDto {
   @IsEmail()
   @Field()
   @Transform(({ value }) => value.toLowerCase())
@@ -41,8 +33,24 @@ export class CreateUserDto {
   confirmPassword: string;
 }
 
+@InputType('CreateUserInput')
+export class CreateUserDto extends CreateEntityDto {
+  @IsAlpha()
+  @Field()
+  firstName: string;
+
+  @IsAlpha()
+  @Field()
+  lastName: string;
+}
+
 @InputType('CreateVendorInput')
-export class CreateVendorDto extends CreateUserDto {
+export class CreateVendorDto extends CreateEntityDto {
+  @IsNotEmpty()
+  @IsString()
+  @Field()
+  repName: string;
+
   @IsNotEmpty()
   @IsString()
   @Field()
