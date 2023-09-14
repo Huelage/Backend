@@ -91,10 +91,10 @@ export class UserService {
       relations: { entity: true },
     });
 
-    if (!user) throw new UnauthorizedException('Invalid email or password.');
+    if (!user) throw new UnauthorizedException('Invalid credentials');
 
     const matches = await compare(password, user.entity.password);
-    if (!matches) throw new UnauthorizedException('Invalid email or password.');
+    if (!matches) throw new UnauthorizedException('Invalid credentials');
 
     if (user.entity.isVerified) {
       const { refreshToken, accessToken } =
@@ -106,7 +106,6 @@ export class UserService {
       user.entity.accessToken = accessToken;
       user.entity.refreshToken = refreshToken;
     }
-    console.log(user);
 
     return user;
   }

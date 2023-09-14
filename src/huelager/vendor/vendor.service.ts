@@ -68,12 +68,10 @@ export class VendorService {
       businessName,
       businessAddress,
       entity,
-      // repName,
+      repName,
     });
 
     try {
-      console.log(1);
-
       await this.vendorRepository.save(vendor);
     } catch (error) {
       this.repository.removeHuelager(entity.entityId);
@@ -113,6 +111,7 @@ export class VendorService {
       vendor.entity.accessToken = accessToken;
       vendor.entity.refreshToken = refreshToken;
     }
+    console.log(vendor);
 
     return vendor;
   }
