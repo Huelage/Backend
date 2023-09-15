@@ -16,7 +16,6 @@ export class ImageUploadResolver {
   async uploadImage(
     @Args('input', FileValidationPipe) uploadImageDto: UploadImageDto,
   ) {
-    const { image } = uploadImageDto;
-    return await this.imageUploadService.uploadImage(await image);
+    return await this.imageUploadService.uploadImage(uploadImageDto);
   }
 }

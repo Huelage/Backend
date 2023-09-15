@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { File } from '../../common/interfaces/file.interface';
 import { FileUploadService } from 'src/file_upload/file_upload.interface';
+import { UploadImageDto, UploadLocation } from './dtos/upload_image.dto';
 
 @Injectable()
 export class ImageUploadService {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
-  async uploadImage(file: File) {
+  async uploadImage(uploadImageDto: UploadImageDto) {
+    const file = await uploadImageDto.image;
     const url = await this.fileUploadService.uploadImage(file);
+
+    if (file.uploadLocation === UploadLocation.ENTITY) {
+      console.log(uploadImageDto.id);
+    }
     return url;
   }
 }

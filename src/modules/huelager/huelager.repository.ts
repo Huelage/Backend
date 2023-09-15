@@ -85,4 +85,6 @@ export class HuelagerRepository {
   async removeHuelager(entityId) {
     await this.repository.delete({ entityId });
   }
+
+  // async updateHuelager()
 }

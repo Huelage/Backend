@@ -258,6 +258,7 @@ input VerifyPhoneInput {
 }
 
 input UploadImageInput {
+  id: String!
   type: UploadLocation!
   image: Upload!
 }
