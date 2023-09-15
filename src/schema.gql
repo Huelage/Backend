@@ -214,7 +214,7 @@ type Mutation {
   verifyPhone(input: VerifyPhoneInput!): Huelager!
   refreshAccessToken: String!
   generateRSAKey: String!
-  uploadImage(input: UploadImageInput!): Boolean!
+  uploadImage(input: UploadImageInput!): String!
 }
 
 input CreateVendorInput {

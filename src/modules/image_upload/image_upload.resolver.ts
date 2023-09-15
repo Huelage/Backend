@@ -12,12 +12,11 @@ export class ImageUploadResolver {
     return 'Hi World!';
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => String)
   async uploadImage(
     @Args('input', FileValidationPipe) uploadImageDto: UploadImageDto,
   ) {
-    console.log(await uploadImageDto);
-
-    return true;
+    const { image } = uploadImageDto;
+    return await this.imageUploadService.uploadImage(await image);
   }
 }

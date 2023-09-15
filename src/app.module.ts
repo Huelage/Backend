@@ -11,11 +11,14 @@ import { graphqlConfig } from './config/graphql.config';
 import { HuelagersModule } from './modules/huelager/huelagers.module';
 import { join } from 'path';
 import { ImageUploadModule } from './modules/image_upload/image_upload.module';
+import { FileUploadModule } from './file_upload/file_upload.module';
+import cloudinaryConfig from './config/cloudinary.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [cloudinaryConfig],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>(graphqlConfig),
     TypeOrmModule.forRoot({
@@ -33,6 +36,7 @@ import { ImageUploadModule } from './modules/image_upload/image_upload.module';
 
     ProvidersModule,
     HuelagersModule,
+    FileUploadModule,
     ImageUploadModule,
   ],
 })
