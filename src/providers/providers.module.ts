@@ -6,4 +6,4 @@ import { SmsService } from './sms.service';
   providers: [SmsService],
   exports: [SmsService],
 })
-export class UtilsModule {}
+export class ProvidersModule {}

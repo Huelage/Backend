@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
-import { RefreshTokenGuard } from './../common/guards/refresh-token.guard';
+import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
 import { HuelagerService } from './hulager.service';
 import { Huelager } from './entities/huelager.entity';
 import { UpdatePhoneDto } from './dtos/update-phone.dto';

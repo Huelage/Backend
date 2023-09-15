@@ -8,7 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 
-import { MatchesWith } from '../../common/decorators/matches-with.decorator';
+import { MatchesWith } from '../../../common/decorators/matches-with.decorator';
 
 @InputType('CreateEntityInput')
 class CreateEntityDto {

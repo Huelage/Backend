@@ -12,8 +12,8 @@ import { compare, hash } from 'bcryptjs';
 import { Huelager } from './entities/huelager.entity';
 import { HuelagerRepository } from './huelager.repository';
 import { UpdatePhoneDto } from './dtos/update-phone.dto';
-import { genRandomOtp } from '../common/helpers/gen-otp.helper';
-import { SmsService } from 'src/utils/sms.service';
+import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
+import { SmsService } from 'src/providers/sms.service';
 import { VerifyPhoneDto } from './dtos/verify-phone.dto';
 import { generateKeyPairSync } from 'crypto';
 

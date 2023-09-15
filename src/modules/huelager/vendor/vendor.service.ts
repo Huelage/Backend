@@ -8,14 +8,14 @@ import {
 import { Vendor } from './vendor.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SmsService } from '../../utils/sms.service';
+import { SmsService } from '../../../providers/sms.service';
 import { compare, hash } from 'bcryptjs';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
 import { CreateVendorDto } from '../dtos/create-account.dto';
 import { UpdateVendorDto } from '../dtos/update-account.dto';
 import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
-import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
+import { genRandomOtp } from '../../../common/helpers/gen-otp.helper';
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../hulager.service';
 import { v4 } from 'uuid';

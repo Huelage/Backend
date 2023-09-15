@@ -6,9 +6,9 @@ import { ConfigModule } from '@nestjs/config';
 
 import { ApolloDriverConfig } from '@nestjs/apollo';
 
-import { UtilsModule } from './utils/utils.module';
+import { ProvidersModule } from './providers/providers.module';
 import { graphqlConfig } from './config/graphql.config';
-import { HuelagersModule } from './huelager/huelagers.module';
+import { HuelagersModule } from './modules/huelager/huelagers.module';
 import { join } from 'path';
 
 @Module({
@@ -30,7 +30,7 @@ import { join } from 'path';
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
     }),
 
-    UtilsModule,
+    ProvidersModule,
     HuelagersModule,
   ],
 })
