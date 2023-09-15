@@ -10,7 +10,5 @@ export interface File {
 
   createReadStream: () => Stream;
 
-  buffer: ArrayBufferLike;
-
   uploadLocation: UploadLocation;
 }
