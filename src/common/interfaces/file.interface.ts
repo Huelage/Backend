@@ -1,3 +1,4 @@
+import { UploadLocation } from 'src/modules/image_upload/dtos/upload_image.dto';
 import { Stream } from 'stream';
 
 export interface File {
@@ -10,4 +11,6 @@ export interface File {
   createReadStream: () => Stream;
 
   buffer: ArrayBufferLike;
+
+  uploadLocation: UploadLocation;
 }

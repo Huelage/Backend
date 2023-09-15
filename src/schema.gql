@@ -202,6 +202,7 @@ type Vendor {
 
 type Query {
   sayHello: String!
+  sayHi: String!
 }
 
 type Mutation {
@@ -213,6 +214,7 @@ type Mutation {
   verifyPhone(input: VerifyPhoneInput!): Huelager!
   refreshAccessToken: String!
   generateRSAKey: String!
+  uploadImage(input: UploadImageInput!): Boolean!
 }
 
 input CreateVendorInput {
@@ -254,3 +256,16 @@ input VerifyPhoneInput {
   phone: String!
   phoneOtp: Float!
 }
+
+input UploadImageInput {
+  type: UploadLocation!
+  image: Upload!
+}
+
+enum UploadLocation {
+  ENTITY
+  PRODUCT
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload

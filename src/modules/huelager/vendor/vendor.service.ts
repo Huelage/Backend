@@ -111,7 +111,6 @@ export class VendorService {
       vendor.entity.accessToken = accessToken;
       vendor.entity.refreshToken = refreshToken;
     }
-    console.log(vendor);
 
     return vendor;
   }

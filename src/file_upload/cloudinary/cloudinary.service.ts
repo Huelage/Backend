@@ -9,10 +9,13 @@ import { File } from '../../common/interfaces/file.interface';
 export class CloudinaryService extends FileUploadService {
   async uploadImage(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
-      const upload = cloudinary.uploader.upload_stream((error, result) => {
-        if (error) return reject(error);
-        resolve(result.secure_url);
-      });
+      const upload = cloudinary.uploader.upload_stream(
+        { folder: file.uploadLocation },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result.secure_url);
+        },
+      );
 
       toStream(file.buffer).pipe(upload);
     });

@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import * as graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 
 import { AppModule } from './app.module';
 
@@ -11,6 +12,11 @@ async function bootstrap() {
       transform: true,
     }),
   ); /** A Global Pipe for input validation*/
+
+  app.use(
+    '/graphql',
+    graphqlUploadExpress({ maxFileSize: 1000000, maxFiles: 10 }),
+  );
 
   const port = process.env.PORT || 3000;
   await app.listen(port);

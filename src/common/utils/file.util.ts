@@ -20,7 +20,6 @@ export const validateFileSize = async (
     fileStream
       .on('data', (data: Buffer) => {
         fileSizeInBytes += data.byteLength;
-        console.log(data);
       })
       .on('end', () => {
         resolve(fileSizeInBytes <= allowedFileSizeInBytes);
@@ -41,9 +40,7 @@ export const getBuffer = async (
       .on('data', (data: Buffer) => {
         buffer = data.buffer;
       })
-      .on('end', (data) => {
-        console.log(data);
-
+      .on('end', () => {
         resolve(buffer);
       })
       .on('error', (err) => {

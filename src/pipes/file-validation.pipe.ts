@@ -24,7 +24,7 @@ export class FileValidationPipe implements PipeTransform {
     const buffer = await getBuffer(fileStream);
 
     (await uploadImageDto.image).buffer = buffer;
-
+    (await uploadImageDto.image).uploadLocation = uploadImageDto.type;
     return uploadImageDto;
   }
 }

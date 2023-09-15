@@ -10,6 +10,7 @@ import { ProvidersModule } from './providers/providers.module';
 import { graphqlConfig } from './config/graphql.config';
 import { HuelagersModule } from './modules/huelager/huelagers.module';
 import { join } from 'path';
+import { ImageUploadModule } from './modules/image_upload/image_upload.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { join } from 'path';
 
     ProvidersModule,
     HuelagersModule,
+    ImageUploadModule,
   ],
 })
 export class AppModule {}
