@@ -57,6 +57,7 @@ import { HuelagerResolver } from './huelager.resolver';
     HuelagerService,
     HuelagerResolver,
   ],
+  exports: [HuelagerRepository],
 })
 export class HuelagersModule {}
 

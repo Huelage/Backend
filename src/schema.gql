@@ -157,6 +157,7 @@ enum OrderStatus {
 }
 
 type User {
+  userId: String!
   entity: Huelager!
   firstName: String!
   lastName: String!
@@ -189,6 +190,7 @@ enum HuelagerType {
 }
 
 type Vendor {
+  vendorId: String!
   entity: Huelager!
   businessName: String!
   businessAddress: String!

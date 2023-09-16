@@ -66,7 +66,7 @@ export class UserService {
       firstName,
       lastName,
       entity,
-      entityId: entity.entityId,
+      userId: entity.entityId,
     });
 
     try {
@@ -98,7 +98,7 @@ export class UserService {
 
     if (user.entity.isVerified) {
       const { refreshToken, accessToken } =
-        await this.huelagerService.getTokens(user.entityId);
+        await this.huelagerService.getTokens(user.userId);
 
       user.entity.hashedRefreshToken = await hash(refreshToken, 10);
       await this.userRepository.save(user);

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { Huelager } from './entities/huelager.entity';
 import { Wallet } from './entities/huenit_wallet.entity';
@@ -86,5 +87,11 @@ export class HuelagerRepository {
     await this.repository.delete({ entityId });
   }
 
-  // async updateHuelager()
+  async editHuelagerInfo(params: {
+    where: FindOptionsWhere<Huelager>;
+    update: QueryDeepPartialEntity<Huelager>;
+  }) {
+    const { where, update } = params;
+    return await this.repository.update(where, update);
+  }
 }

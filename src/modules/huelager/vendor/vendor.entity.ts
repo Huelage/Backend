@@ -16,7 +16,8 @@ import { Order } from '../other_entities/order/order.entity';
 @ObjectType()
 export class Vendor {
   @PrimaryColumn({ type: 'uuid', name: 'entity_id' })
-  entityId: string;
+  @Field()
+  vendorId: string;
 
   @OneToOne(() => Huelager, (huelager) => huelager.vendor, {
     onDelete: 'CASCADE',

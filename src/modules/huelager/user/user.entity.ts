@@ -16,7 +16,8 @@ import { Order } from '../other_entities/order/order.entity';
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn('uuid', { name: 'entity_id' })
-  entityId: string;
+  @Field()
+  userId: string;
 
   @OneToOne(() => Huelager, (huelager) => huelager.user, {
     onDelete: 'CASCADE',

@@ -95,7 +95,7 @@ export class VendorService {
 
     if (!vendor) throw new UnauthorizedException('Invalid credentials');
 
-    if (vendor.entityId !== vendorId)
+    if (vendor.vendorId !== vendorId)
       throw new UnauthorizedException('Invalid credentials');
 
     const matches = await compare(password, vendor.entity.password);
@@ -103,7 +103,7 @@ export class VendorService {
 
     if (vendor.entity.isVerified) {
       const { accessToken, refreshToken } =
-        await this.huelagerService.getTokens(vendor.entity.entityId);
+        await this.huelagerService.getTokens(vendor.vendorId);
 
       vendor.entity.hashedRefreshToken = await hash(refreshToken, 10);
       await this.vendorRepository.save(vendor);
