@@ -26,9 +26,10 @@ export class ImageUploadService {
     } else {
       toEdit = null;
     }
-    const previousUrl = toEdit?.imgUrl;
 
     if (!toEdit) throw new HttpException('id is invalid', 422);
+
+    const previousUrl = toEdit?.imgUrl;
 
     const imgUrl = await this.fileUploadService.uploadImage(file);
 
