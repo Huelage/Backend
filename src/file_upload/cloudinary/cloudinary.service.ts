@@ -27,4 +27,8 @@ export class CloudinaryService extends FileUploadService {
     );
     return urls;
   }
+
+  async deleteImage(publicId: string) {
+    cloudinary.uploader.destroy(publicId);
+  }
 }
