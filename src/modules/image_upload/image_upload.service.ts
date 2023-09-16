@@ -18,8 +18,6 @@ export class ImageUploadService {
     let result: UpdateResult;
 
     const imgUrl = await this.fileUploadService.uploadImage(file);
-    // const imgUrl =
-    //   'https://res.cloudinary.com/dtgigdp2j/image/upload/v1690997901/profileImages/ovgly1p1go37dp1b2jzp.jpg';
 
     if (file.uploadLocation === UploadLocation.ENTITY) {
       result = await this.huelagerRepository.editHuelagerInfo({
