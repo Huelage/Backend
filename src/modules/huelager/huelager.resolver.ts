@@ -6,7 +6,7 @@ import { HuelagerService } from './hulager.service';
 import { Huelager } from './entities/huelager.entity';
 import { UpdatePhoneInput } from './dtos/update-phone.input';
 import { VerifyPhoneInput } from './dtos/verify-phone.input';
-import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
+import { AccessTokenGuard } from '../../common/guards/access-token.guard';
 
 @Resolver()
 export class HuelagerResolver {

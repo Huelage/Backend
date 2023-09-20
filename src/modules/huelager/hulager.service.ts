@@ -13,7 +13,7 @@ import { Huelager } from './entities/huelager.entity';
 import { HuelagerRepository } from './huelager.repository';
 import { UpdatePhoneInput } from './dtos/update-phone.input';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
-import { SmsService } from 'src/providers/sms.service';
+import { SmsService } from '../../providers/sms.service';
 import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { generateKeyPairSync } from 'crypto';
 
