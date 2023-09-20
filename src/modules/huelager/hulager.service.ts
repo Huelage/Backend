@@ -70,8 +70,8 @@ export class HuelagerService {
     );
   }
 
-  async updatePhone(updatePhoneDto: UpdatePhoneInput): Promise<Huelager> {
-    const { email, phone } = updatePhoneDto;
+  async updatePhone(updatePhoneInput: UpdatePhoneInput): Promise<Huelager> {
+    const { email, phone } = updatePhoneInput;
 
     const possibleHuelagers = await this.repository.findHuelagers({
       where: [{ email }, { phone }],
@@ -104,8 +104,8 @@ export class HuelagerService {
     return huelager;
   }
 
-  async verifyPhone(verifyPhoneDto: VerifyPhoneInput): Promise<Huelager> {
-    const { phone, phoneOtp } = verifyPhoneDto;
+  async verifyPhone(verifyPhoneInput: VerifyPhoneInput): Promise<Huelager> {
+    const { phone, phoneOtp } = verifyPhoneInput;
 
     const huelager = await this.repository.findHuelager({ where: { phone } });
     if (!huelager)

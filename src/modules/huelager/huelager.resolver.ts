@@ -19,16 +19,16 @@ export class HuelagerResolver {
 
   @Mutation(() => Huelager)
   async updatePhone(
-    @Args('input') updatePhoneDto: UpdatePhoneInput,
+    @Args('input') updatePhoneInput: UpdatePhoneInput,
   ): Promise<Huelager> {
-    return await this.huelagerService.updatePhone(updatePhoneDto);
+    return await this.huelagerService.updatePhone(updatePhoneInput);
   }
 
   @Mutation(() => Huelager)
   async verifyPhone(
-    @Args('input') verifyPhoneDto: VerifyPhoneInput,
+    @Args('input') verifyPhoneInput: VerifyPhoneInput,
   ): Promise<Huelager> {
-    return await this.huelagerService.verifyPhone(verifyPhoneDto);
+    return await this.huelagerService.verifyPhone(verifyPhoneInput);
   }
 
   /**
