@@ -3,7 +3,7 @@ import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 @InputType('AuthenticateUserInput')
-export class AuthenticateUserDto {
+export class AuthenticateUserInput {
   @IsString()
   @Field()
   @Transform(({ value }) => value.toLowerCase())
@@ -16,7 +16,7 @@ export class AuthenticateUserDto {
 }
 
 @InputType('AuthenticateVendorInput')
-export class AuthenticateVendorDto extends AuthenticateUserDto {
+export class AuthenticateVendorInput extends AuthenticateUserInput {
   @IsNotEmpty()
   @IsString()
   @Field()

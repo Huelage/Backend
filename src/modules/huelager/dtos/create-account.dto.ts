@@ -11,7 +11,7 @@ import {
 import { MatchesWith } from '../../../common/decorators/matches-with.decorator';
 
 @InputType('CreateEntityInput')
-class CreateEntityDto {
+class CreateEntityInput {
   @IsEmail()
   @Field()
   @Transform(({ value }) => value.toLowerCase())
@@ -34,7 +34,7 @@ class CreateEntityDto {
 }
 
 @InputType('CreateUserInput')
-export class CreateUserDto extends CreateEntityDto {
+export class CreateUserInput extends CreateEntityInput {
   @IsAlpha()
   @Field()
   firstName: string;
@@ -45,7 +45,7 @@ export class CreateUserDto extends CreateEntityDto {
 }
 
 @InputType('CreateVendorInput')
-export class CreateVendorDto extends CreateEntityDto {
+export class CreateVendorInput extends CreateEntityInput {
   @IsNotEmpty()
   @IsString()
   @Field()

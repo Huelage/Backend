@@ -2,8 +2,8 @@ import { Resolver, Mutation, Args } from '@nestjs/graphql';
 
 import { VendorService } from './vendor.service';
 import { Vendor } from './vendor.entity';
-import { CreateVendorDto } from '../dtos/create-account.dto';
-import { AuthenticateVendorDto } from '../dtos/authenticate-account.dto';
+import { CreateVendorInput } from '../dtos/create-account.dto';
+import { AuthenticateVendorInput } from '../dtos/authenticate-account.dto';
 
 @Resolver()
 export class VendorResolver {
@@ -11,14 +11,14 @@ export class VendorResolver {
 
   @Mutation(() => Vendor)
   async signUpVendor(
-    @Args('input') createVendorDto: CreateVendorDto,
+    @Args('input') createVendorDto: CreateVendorInput,
   ): Promise<Vendor> {
     return await this.vendorService.create(createVendorDto);
   }
 
   @Mutation(() => Vendor)
   async signInVendor(
-    @Args('input') VendorenticateVendorDto: AuthenticateVendorDto,
+    @Args('input') VendorenticateVendorDto: AuthenticateVendorInput,
   ): Promise<Vendor> {
     return await this.vendorService.signIn(VendorenticateVendorDto);
   }

@@ -9,10 +9,10 @@ import { compare, hash } from 'bcryptjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateUserDto } from '../dtos/create-account.dto';
+import { CreateUserInput } from '../dtos/create-account.dto';
 import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
 import { UpdatePhoneDto } from '../dtos/update-phone.dto';
-import { AuthenticateUserDto } from '../dtos/authenticate-account.dto';
+import { AuthenticateUserInput } from '../dtos/authenticate-account.dto';
 import { UpdateUserDto } from '../dtos/update-account.dto';
 import { User } from './user.entity';
 import { SmsService } from '../../../providers/sms.service';
@@ -32,7 +32,7 @@ export class UserService {
     private readonly huelagerService: HuelagerService,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserInput) {
     const phoneOtp = genRandomOtp();
 
     const { firstName, lastName, phone, password, email } = createUserDto;
@@ -84,7 +84,7 @@ export class UserService {
     return user;
   }
 
-  async signIn(authenticateUserDto: AuthenticateUserDto): Promise<User> {
+  async signIn(authenticateUserDto: AuthenticateUserInput): Promise<User> {
     const { email, password } = authenticateUserDto;
     const user = await this.userRepository.findOne({
       where: { entity: { email } },
