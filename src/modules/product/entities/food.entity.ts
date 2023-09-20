@@ -3,20 +3,20 @@ import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { Product } from './product.entity';
 import { GraphQLJSON } from 'graphql-type-json';
 
-enum Availability {
+export enum Availability {
   AVAILABLE = 'available',
   TEMPORARILY_UNAVAILABLE = 'temporarily_unavailable',
   UNAVAILABLE = 'unavailable',
 }
 
-enum FoodCategory {
+export enum FoodCategory {
   SNACKS = 'snacks',
   DRINKS = 'drinks',
   PROTEIN = 'protein',
   CARBOHYDRATE = 'carbohydrate',
 }
 
-enum FoodPricing {
+export enum FoodPricing {
   PRICE = 'price',
   PORTION = 'portion',
   PACKAGE = 'package',
