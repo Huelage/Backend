@@ -16,6 +16,7 @@ export class CreateFoodInput {
 
   @Field(() => FoodCategory)
   category: FoodCategory;
+
   @Field(() => FoodPricing)
   pricingMethod: FoodPricing;
 
