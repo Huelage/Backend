@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { Huelager } from '../entities/huelager.entity';
 import { Review } from '../entities/review.entity';
-import { Product } from '../other_entities/product.entity';
-import { Order } from '../other_entities/order/order.entity';
+import { Product } from '../../product/entities/product.entity';
+import { Order } from '../../order/entities/order.entity';
 
 @Entity({ name: 'vendor' })
 @ObjectType()

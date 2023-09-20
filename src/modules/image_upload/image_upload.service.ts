@@ -5,7 +5,7 @@ import { FileUploadService } from 'src/file_upload/file_upload.interface';
 import { UploadImageDto, UploadLocation } from './dtos/upload_image.dto';
 import { HuelagerRepository } from '../huelager/huelager.repository';
 import { Huelager } from '../huelager/entities/huelager.entity';
-import { Product } from '../huelager/other_entities/product.entity';
+import { Product } from '../product/entities/product.entity';
 
 @Injectable()
 export class ImageUploadService {

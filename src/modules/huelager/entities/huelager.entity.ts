@@ -12,7 +12,7 @@ import { Wallet } from './huenit_wallet.entity';
 import { Biometric } from './biometric.entity';
 import { User } from '../user/user.entity';
 import { Vendor } from '../vendor/vendor.entity';
-import { Transaction } from '../other_entities/transaction.entity';
+import { Transaction } from '../../transaction/entities/transaction.entity';
 
 /**
  * The parameters decorated with the 'Field' decorator are the parametrers that will be returned as output for graphql.

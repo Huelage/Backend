@@ -1,5 +1,6 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Vendor } from '../vendor/vendor.entity';
+
+import { Vendor } from '../../huelager/vendor/vendor.entity';
 import {
   Column,
   Entity,
@@ -9,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Food } from './food.entity';
-import { OrderItem } from './order/order_item.entity';
+import { OrderItem } from '../../order/entities/order_item.entity';
 
 enum ProductType {
   FOOD = 'food',

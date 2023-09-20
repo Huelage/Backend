@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Huelager } from '../entities/huelager.entity';
 import { Review } from '../entities/review.entity';
-import { Order } from '../other_entities/order/order.entity';
+import { Order } from '../../order/entities/order.entity';
 // import { v4 } from 'uuid';
 
 @Entity({ name: 'user' })

@@ -1,5 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Huelager } from '../entities/huelager.entity';
+import { Huelager } from '../../huelager/entities/huelager.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { WalletTransaction } from './wallet_transaction.entity';
-import { Order, PaymentMethod } from './order/order.entity';
+import { Order, PaymentMethod } from '../../order/entities/order.entity';
 
 enum TransactionStatus {
   COMPLETED = 'completed',

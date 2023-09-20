@@ -9,7 +9,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { Order } from './order.entity';
-import { Product } from '../product.entity';
+import { Product } from '../../product/entities/product.entity';
 
 @Entity({ name: 'order_item' })
 @ObjectType()

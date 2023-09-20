@@ -1,7 +1,7 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { User } from '../../user/user.entity';
-import { Vendor } from '../../vendor/vendor.entity';
-import { Transaction } from '../transaction.entity';
+import { User } from '../../huelager/user/user.entity';
+import { Vendor } from '../../huelager/vendor/vendor.entity';
+import { Transaction } from '../../transaction/entities/transaction.entity';
 
 import {
   Column,
