@@ -2,8 +2,8 @@ import { Resolver, Mutation, Args } from '@nestjs/graphql';
 
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateUserInput } from '../dtos/create-account.dto';
-import { AuthenticateUserInput } from '../dtos/authenticate-account.dto';
+import { CreateUserInput } from '../dtos/create-account.input';
+import { AuthenticateUserInput } from '../dtos/authenticate-account.input';
 import { Huelager } from '../entities/huelager.entity';
 
 @Resolver()

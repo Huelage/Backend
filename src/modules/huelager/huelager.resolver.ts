@@ -4,8 +4,8 @@ import { UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
 import { HuelagerService } from './hulager.service';
 import { Huelager } from './entities/huelager.entity';
-import { UpdatePhoneDto } from './dtos/update-phone.dto';
-import { VerifyPhoneDto } from './dtos/verify-phone.dto';
+import { UpdatePhoneInput } from './dtos/update-phone.input';
+import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
 
 @Resolver()
@@ -19,14 +19,14 @@ export class HuelagerResolver {
 
   @Mutation(() => Huelager)
   async updatePhone(
-    @Args('input') updatePhoneDto: UpdatePhoneDto,
+    @Args('input') updatePhoneDto: UpdatePhoneInput,
   ): Promise<Huelager> {
     return await this.huelagerService.updatePhone(updatePhoneDto);
   }
 
   @Mutation(() => Huelager)
   async verifyPhone(
-    @Args('input') verifyPhoneDto: VerifyPhoneDto,
+    @Args('input') verifyPhoneDto: VerifyPhoneInput,
   ): Promise<Huelager> {
     return await this.huelagerService.verifyPhone(verifyPhoneDto);
   }

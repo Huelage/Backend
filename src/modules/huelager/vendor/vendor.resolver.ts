@@ -2,8 +2,8 @@ import { Resolver, Mutation, Args } from '@nestjs/graphql';
 
 import { VendorService } from './vendor.service';
 import { Vendor } from './vendor.entity';
-import { CreateVendorInput } from '../dtos/create-account.dto';
-import { AuthenticateVendorInput } from '../dtos/authenticate-account.dto';
+import { CreateVendorInput } from '../dtos/create-account.input';
+import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
 
 @Resolver()
 export class VendorResolver {

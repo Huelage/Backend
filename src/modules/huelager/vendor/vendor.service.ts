@@ -10,16 +10,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SmsService } from '../../../providers/sms.service';
 import { compare, hash } from 'bcryptjs';
-import { UpdatePhoneDto } from '../dtos/update-phone.dto';
-import { CreateVendorInput } from '../dtos/create-account.dto';
-import { UpdateVendorDto } from '../dtos/update-account.dto';
-import { AuthenticateVendorInput } from '../dtos/authenticate-account.dto';
-import { VerifyPhoneDto } from '../dtos/verify-phone.dto';
+import { CreateVendorInput } from '../dtos/create-account.input';
+import { UpdateVendorDto } from '../dtos/update-account.input';
+import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
 import { genRandomOtp } from '../../../common/helpers/gen-otp.helper';
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../hulager.service';
-import { v4 } from 'uuid';
-import { Huelager, HuelagerType } from '../entities/huelager.entity';
+import { HuelagerType } from '../entities/huelager.entity';
 
 @Injectable()
 export class VendorService {
@@ -113,14 +110,6 @@ export class VendorService {
     }
 
     return vendor;
-  }
-
-  async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<Huelager> {
-    return this.huelagerService.updatePhone(updatePhoneDto);
-  }
-
-  async verifyPhone(verifyPhoneDto: VerifyPhoneDto): Promise<Huelager> {
-    return this.huelagerService.verifyPhone(verifyPhoneDto);
   }
 
   findOne(id: number) {

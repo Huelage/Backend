@@ -3,7 +3,7 @@ import { Transform } from 'class-transformer';
 import { IsString } from 'class-validator';
 
 @InputType('UpdatePhoneInput')
-export class UpdatePhoneDto {
+export class UpdatePhoneInput {
   @IsString()
   @Field()
   phone: string;

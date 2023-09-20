@@ -7,14 +7,14 @@ import {
 
 import { JwtService } from '@nestjs/jwt';
 
-import { RefreshTokenDto } from './dtos/refresh-token.dto';
+import { RefreshTokenDto } from './dtos/refresh-token.input';
 import { compare, hash } from 'bcryptjs';
 import { Huelager } from './entities/huelager.entity';
 import { HuelagerRepository } from './huelager.repository';
-import { UpdatePhoneDto } from './dtos/update-phone.dto';
+import { UpdatePhoneInput } from './dtos/update-phone.input';
 import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
 import { SmsService } from 'src/providers/sms.service';
-import { VerifyPhoneDto } from './dtos/verify-phone.dto';
+import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { generateKeyPairSync } from 'crypto';
 
 @Injectable()
@@ -70,7 +70,7 @@ export class HuelagerService {
     );
   }
 
-  async updatePhone(updatePhoneDto: UpdatePhoneDto): Promise<Huelager> {
+  async updatePhone(updatePhoneDto: UpdatePhoneInput): Promise<Huelager> {
     const { email, phone } = updatePhoneDto;
 
     const possibleHuelagers = await this.repository.findHuelagers({
@@ -104,7 +104,7 @@ export class HuelagerService {
     return huelager;
   }
 
-  async verifyPhone(verifyPhoneDto: VerifyPhoneDto): Promise<Huelager> {
+  async verifyPhone(verifyPhoneDto: VerifyPhoneInput): Promise<Huelager> {
     const { phone, phoneOtp } = verifyPhoneDto;
 
     const huelager = await this.repository.findHuelager({ where: { phone } });
