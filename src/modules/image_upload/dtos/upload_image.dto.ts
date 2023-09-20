@@ -10,7 +10,7 @@ export enum UploadLocation {
 registerEnumType(UploadLocation, { name: 'UploadLocation' });
 
 @InputType('UploadImageInput')
-export class UploadImageDto {
+export class UploadImageInput {
   @Field()
   id: string;
 

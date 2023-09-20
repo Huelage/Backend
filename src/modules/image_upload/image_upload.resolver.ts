@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ImageUploadService } from './image_upload.service';
-import { UploadImageDto } from './dtos/upload_image.dto';
+import { UploadImageInput } from './dtos/upload_image.dto';
 import { FileValidationPipe } from '../../pipes/file-validation.pipe';
 
 @Resolver()
@@ -14,8 +14,8 @@ export class ImageUploadResolver {
 
   @Mutation(() => String)
   async uploadImage(
-    @Args('input', FileValidationPipe) uploadImageDto: UploadImageDto,
+    @Args('input', FileValidationPipe) uploadImageInput: UploadImageInput,
   ) {
-    return await this.imageUploadService.uploadImage(uploadImageDto);
+    return await this.imageUploadService.uploadImage(uploadImageInput);
   }
 }

@@ -1,12 +1,12 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 
 import { validateFileFormat } from '../common/utils/file.util';
-import { UploadImageDto } from '../modules/image_upload/dtos/upload_image.dto';
+import { UploadImageInput } from '../modules/image_upload/dtos/upload_image.dto';
 
 @Injectable()
 export class FileValidationPipe implements PipeTransform {
-  async transform(uploadImageDto: UploadImageDto) {
-    const image = await uploadImageDto.image;
+  async transform(uploadImageInput: UploadImageInput) {
+    const image = await uploadImageInput.image;
 
     if (!image.filename) throw new Error('File not provided');
 
@@ -20,7 +20,7 @@ export class FileValidationPipe implements PipeTransform {
 
     if (!isFileFormatValid) throw new Error('File not valid');
 
-    (await uploadImageDto.image).uploadLocation = uploadImageDto.type;
-    return uploadImageDto;
+    (await uploadImageInput.image).uploadLocation = uploadImageInput.type;
+    return uploadImageInput;
   }
 }

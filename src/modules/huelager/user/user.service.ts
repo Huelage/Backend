@@ -11,7 +11,6 @@ import { Repository } from 'typeorm';
 
 import { CreateUserInput } from '../dtos/create-account.input';
 import { AuthenticateUserInput } from '../dtos/authenticate-account.input';
-import { UpdateUserDto } from '../dtos/update-account.input';
 import { User } from './user.entity';
 import { SmsService } from '../../../providers/sms.service';
 import { genRandomOtp } from '../../../common/helpers/gen-otp.helper';
@@ -30,10 +29,10 @@ export class UserService {
     private readonly huelagerService: HuelagerService,
   ) {}
 
-  async create(createUserDto: CreateUserInput) {
+  async create(createUserInput: CreateUserInput) {
     const phoneOtp = genRandomOtp();
 
-    const { firstName, lastName, phone, password, email } = createUserDto;
+    const { firstName, lastName, phone, password, email } = createUserInput;
     const hashedPassword = await hash(password, 10);
 
     const exists = await this.repository.checkEmailAndPhone({
@@ -82,8 +81,8 @@ export class UserService {
     return user;
   }
 
-  async signIn(authenticateUserDto: AuthenticateUserInput): Promise<User> {
-    const { email, password } = authenticateUserDto;
+  async signIn(authenticateUserInput: AuthenticateUserInput): Promise<User> {
+    const { email, password } = authenticateUserInput;
     const user = await this.userRepository.findOne({
       where: { entity: { email } },
       relations: { entity: true },
@@ -110,10 +109,6 @@ export class UserService {
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
   }
 
   remove(id: number) {

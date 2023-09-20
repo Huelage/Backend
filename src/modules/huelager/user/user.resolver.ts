@@ -12,15 +12,15 @@ export class UserResolver {
 
   @Mutation(() => User)
   async signUpUser(
-    @Args('input') createUserDto: CreateUserInput,
+    @Args('input') createUserInput: CreateUserInput,
   ): Promise<User> {
-    return await this.userService.create(createUserDto);
+    return await this.userService.create(createUserInput);
   }
 
   @Mutation(() => User)
   async signInUser(
-    @Args('input') authenticateUserDto: AuthenticateUserInput,
+    @Args('input') authenticateUserInput: AuthenticateUserInput,
   ): Promise<User | Huelager> {
-    return await this.userService.signIn(authenticateUserDto);
+    return await this.userService.signIn(authenticateUserInput);
   }
 }

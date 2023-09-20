@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { UpdateResult } from 'typeorm';
 
 import { FileUploadService } from '../../file_upload/file_upload.interface';
-import { UploadImageDto, UploadLocation } from './dtos/upload_image.dto';
+import { UploadImageInput, UploadLocation } from './dtos/upload_image.dto';
 import { HuelagerRepository } from '../huelager/huelager.repository';
 import { Huelager } from '../huelager/entities/huelager.entity';
 import { Product } from '../product/entities/product.entity';
@@ -14,9 +14,9 @@ export class ImageUploadService {
     private readonly huelagerRepository: HuelagerRepository,
   ) {}
 
-  async uploadImage(uploadImageDto: UploadImageDto) {
-    const file = await uploadImageDto.image;
-    const id = uploadImageDto.id;
+  async uploadImage(uploadImageInput: UploadImageInput) {
+    const file = await uploadImageInput.image;
+    const id = uploadImageInput.id;
 
     let result: UpdateResult;
     let toEdit: Huelager | Product;

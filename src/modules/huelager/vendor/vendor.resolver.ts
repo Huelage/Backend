@@ -11,15 +11,15 @@ export class VendorResolver {
 
   @Mutation(() => Vendor)
   async signUpVendor(
-    @Args('input') createVendorDto: CreateVendorInput,
+    @Args('input') createVendorInput: CreateVendorInput,
   ): Promise<Vendor> {
-    return await this.vendorService.create(createVendorDto);
+    return await this.vendorService.create(createVendorInput);
   }
 
   @Mutation(() => Vendor)
   async signInVendor(
-    @Args('input') VendorenticateVendorDto: AuthenticateVendorInput,
+    @Args('input') authenticateVendorInput: AuthenticateVendorInput,
   ): Promise<Vendor> {
-    return await this.vendorService.signIn(VendorenticateVendorDto);
+    return await this.vendorService.signIn(authenticateVendorInput);
   }
 }

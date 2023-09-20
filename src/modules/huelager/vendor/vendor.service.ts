@@ -11,7 +11,6 @@ import { Repository } from 'typeorm';
 import { SmsService } from '../../../providers/sms.service';
 import { compare, hash } from 'bcryptjs';
 import { CreateVendorInput } from '../dtos/create-account.input';
-import { UpdateVendorDto } from '../dtos/update-account.input';
 import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
 import { genRandomOtp } from '../../../common/helpers/gen-otp.helper';
 import { HuelagerRepository } from '../huelager.repository';
@@ -30,11 +29,11 @@ export class VendorService {
     private readonly huelagerService: HuelagerService,
   ) {}
 
-  async create(createVendorDto: CreateVendorInput) {
+  async create(createVendorInput: CreateVendorInput) {
     const phoneOtp = genRandomOtp();
 
     const { businessAddress, phone, password, email, businessName, repName } =
-      createVendorDto;
+      createVendorInput;
     const hashedPassword = await hash(password, 10);
 
     const exists = await this.repository.checkEmailAndPhone({
@@ -83,8 +82,8 @@ export class VendorService {
     return vendor;
   }
 
-  async signIn(authenticateVendorDto: AuthenticateVendorInput) {
-    const { email, password, vendorId } = authenticateVendorDto;
+  async signIn(authenticateVendorInput: AuthenticateVendorInput) {
+    const { email, password, vendorId } = authenticateVendorInput;
     const vendor = await this.vendorRepository.findOne({
       where: { entity: { email } },
       relations: { entity: true },
@@ -114,10 +113,6 @@ export class VendorService {
 
   findOne(id: number) {
     return `This action returns a #${id} vendor`;
-  }
-
-  update(id: number, _updateVendorDto: UpdateVendorDto) {
-    return `This action updates a #${id} vendor`;
   }
 
   remove(id: number) {

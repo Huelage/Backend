@@ -9,7 +9,10 @@ export class TransactionResolver {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Mutation(() => Transaction)
-  createTransaction(@Args('createTransactionInput') createTransactionInput: CreateTransactionInput) {
+  createTransaction(
+    @Args('createTransactionInput')
+    createTransactionInput: CreateTransactionInput,
+  ) {
     return this.transactionService.create(createTransactionInput);
   }
 
@@ -24,8 +27,14 @@ export class TransactionResolver {
   }
 
   @Mutation(() => Transaction)
-  updateTransaction(@Args('updateTransactionInput') updateTransactionInput: UpdateTransactionInput) {
-    return this.transactionService.update(updateTransactionInput.id, updateTransactionInput);
+  updateTransaction(
+    @Args('updateTransactionInput')
+    updateTransactionInput: UpdateTransactionInput,
+  ) {
+    return this.transactionService.update(
+      updateTransactionInput.id,
+      updateTransactionInput,
+    );
   }
 
   @Mutation(() => Transaction)
