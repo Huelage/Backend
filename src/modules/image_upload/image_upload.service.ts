@@ -6,12 +6,14 @@ import { UploadImageInput, UploadLocation } from './dtos/upload_image.dto';
 import { HuelagerRepository } from '../huelager/huelager.repository';
 import { Huelager } from '../huelager/entities/huelager.entity';
 import { Product } from '../product/entities/product.entity';
+import { ProductRepository } from '../product/product.repository';
 
 @Injectable()
 export class ImageUploadService {
   constructor(
     private readonly fileUploadService: FileUploadService,
     private readonly huelagerRepository: HuelagerRepository,
+    private readonly productRepository: ProductRepository,
   ) {}
 
   async uploadImage(uploadImageInput: UploadImageInput) {
@@ -24,7 +26,7 @@ export class ImageUploadService {
     if (file.uploadLocation === UploadLocation.ENTITY) {
       toEdit = await this.huelagerRepository.findHuelagerById(id);
     } else {
-      toEdit = null;
+      toEdit = await this.productRepository.findProductById(id);
     }
 
     if (!toEdit) throw new HttpException('id is invalid', 422);
@@ -39,7 +41,10 @@ export class ImageUploadService {
         update: { imgUrl },
       });
     } else {
-      result = { generatedMaps: [], raw: [], affected: 0 };
+      result = await this.productRepository.editProductInfo({
+        where: { productId: id },
+        update: { imgUrl },
+      });
     }
 
     if (result.affected === 0) {

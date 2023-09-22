@@ -217,6 +217,7 @@ type Mutation {
   refreshAccessToken: String!
   generateRSAKey: String!
   uploadImage(input: UploadImageInput!): String!
+  addFood(input: CreateFoodInput!): Product!
 }
 
 input CreateVendorInput {
@@ -272,3 +273,16 @@ enum UploadLocation {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+input CreateFoodInput {
+  name: String!
+  description: String!
+  category: FoodCategory!
+  pricingMethod: FoodPricing!
+  portionPrice: Float
+  minPrice: Float
+  fixedPrice: Float
+  availability: Availability!
+  packagesSizes: JSON
+  sides: JSON
+}
