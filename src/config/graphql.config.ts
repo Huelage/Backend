@@ -5,18 +5,16 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 interface OriginalError {
   message: string;
+  statusCode: number;
 }
 
 export const graphqlConfig: ApolloDriverConfig = {
   driver: ApolloDriver,
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
   formatError: (err: GraphQLError) => {
-    const graphQLFormattedError: GraphQLFormattedError = {
-      message:
-        (err.extensions.originalError as OriginalError)?.message ||
-        err?.message,
-    };
+    const graphQLFormattedError = (err.extensions
+      .originalError as OriginalError) || { message: err.message };
 
-    return graphQLFormattedError;
+    return graphQLFormattedError as GraphQLFormattedError;
   },
 };
