@@ -12,8 +12,8 @@ export const graphqlConfig: ApolloDriverConfig = {
   driver: ApolloDriver,
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
   formatError: (err: GraphQLError) => {
-    const graphQLFormattedError = (err.extensions
-      .originalError as OriginalError) || { message: err.message };
+    const graphQLFormattedError =
+      (err.extensions.originalError as OriginalError) || err;
 
     return graphQLFormattedError as GraphQLFormattedError;
   },
