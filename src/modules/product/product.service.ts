@@ -3,7 +3,7 @@ import { CreateFoodInput } from './dto/create-food.input';
 
 @Injectable()
 export class ProductService {
-  create(createFoodInput: CreateFoodInput) {
+  createFood(createFoodInput: CreateFoodInput) {
     return 'This action adds a new product';
   }
 
