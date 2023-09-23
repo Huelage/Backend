@@ -47,14 +47,14 @@ export class Vendor {
   closingHours: Date;
 
   @OneToMany(() => Review, (review) => review.vendor)
-  @Field(() => Review)
+  @Field(() => [Review])
   reviews: Review[];
 
   @OneToMany(() => Product, (product) => product.vendor)
-  @Field(() => Product)
+  @Field(() => [Product])
   products: Product[];
 
   @OneToMany(() => Order, (order) => order.vendor)
-  @Field(() => Order)
+  @Field(() => [Order])
   orders: Order[];
 }

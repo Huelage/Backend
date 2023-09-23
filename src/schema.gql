@@ -146,7 +146,7 @@ type Order {
   paymentStatus: Boolean!
   createdAt: DateTime!
   canceledOrder: CanceledOrder!
-  orderItems: OrderItem!
+  orderItems: [OrderItem!]!
 }
 
 enum OrderStatus {
@@ -162,8 +162,8 @@ type User {
   firstName: String!
   lastName: String!
   isSocialAuth: Boolean!
-  reviews: Review!
-  orders: Order!
+  reviews: [Review!]
+  orders: [Order!]
 }
 
 type Huelager {
@@ -181,7 +181,6 @@ type Huelager {
   accessToken: String
   user: User
   vendor: Vendor
-  transactions: Transaction!
 }
 
 enum HuelagerType {
@@ -197,9 +196,9 @@ type Vendor {
   repName: String!
   openingHours: DateTime!
   closingHours: DateTime!
-  reviews: Review!
-  products: Product!
-  orders: Order!
+  reviews: [Review!]!
+  products: [Product!]!
+  orders: [Order!]!
 }
 
 type Query {

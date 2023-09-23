@@ -107,6 +107,5 @@ export class Huelager {
   vendor: Vendor;
 
   @OneToMany(() => Transaction, (transaction) => transaction.entity)
-  @Field(() => Transaction)
   transactions: Transaction[];
 }

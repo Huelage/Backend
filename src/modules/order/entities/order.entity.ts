@@ -106,7 +106,7 @@ export class Order {
   canceledOrder: CanceledOrder;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
-  @Field(() => OrderItem)
+  @Field(() => [OrderItem])
   orderItems: OrderItem[];
 }
 

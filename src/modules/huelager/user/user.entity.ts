@@ -43,10 +43,10 @@ export class User {
   isSocialAuth: boolean;
 
   @OneToMany(() => Review, (review) => review.user)
-  @Field(() => Review)
+  @Field(() => [Review], { nullable: true })
   reviews: Review[];
 
   @OneToMany(() => Order, (order) => order.user)
-  @Field(() => Order)
+  @Field(() => [Order], { nullable: true })
   orders: Order[];
 }

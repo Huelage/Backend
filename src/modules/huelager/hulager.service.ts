@@ -111,6 +111,8 @@ export class HuelagerService {
     if (!huelager)
       throw new NotFoundException('No user with this phone number exists');
 
+    console.log(huelager);
+
     const isExpired =
       Date.now() - huelager.updatedAt.getTime() > this.otpLifeSpan;
     const notMatch = huelager.phoneOtp !== phoneOtp;

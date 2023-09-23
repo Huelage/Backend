@@ -49,12 +49,18 @@ export class HuelagerRepository {
 
   async findHuelager(params: { where: FindOptionsWhere<Huelager> }) {
     const { where } = params;
-    return this.repository.findOneBy(where);
+    return this.repository.findOne({
+      where,
+      relations: { transactions: true, user: true, vendor: true },
+    });
   }
 
   async findHuelagers(params: { where: FindOptionsWhere<Huelager>[] }) {
     const { where } = params;
-    return this.repository.find({ where });
+    return this.repository.find({
+      where,
+      relations: { transactions: true, user: true, vendor: true },
+    });
   }
 
   async createHuelager(createHuelagerInfo: DeepPartial<Huelager>) {
