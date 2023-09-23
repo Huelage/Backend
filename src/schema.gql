@@ -250,7 +250,7 @@ input AuthenticateUserInput {
 
 input UpdatePhoneInput {
   phone: String!
-  email: String!
+  entityId: String!
 }
 
 input VerifyPhoneInput {

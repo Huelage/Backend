@@ -71,16 +71,15 @@ export class HuelagerService {
   }
 
   async updatePhone(updatePhoneInput: UpdatePhoneInput): Promise<Huelager> {
-    const { email, phone } = updatePhoneInput;
+    const { entityId, phone } = updatePhoneInput;
 
     const possibleHuelagers = await this.repository.findHuelagers({
-      where: [{ email }, { phone }],
+      where: [{ entityId }, { phone }],
     });
     const huelager = possibleHuelagers.find(
-      (huelager) => huelager.email === email,
+      (huelager) => huelager.entityId === entityId,
     );
-    if (!huelager)
-      throw new NotFoundException('No user with this email exists');
+    if (!huelager) throw new NotFoundException('No user with this id exists');
 
     /**
      * Make sure the chosen phone number does not already exist.

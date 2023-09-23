@@ -11,5 +11,5 @@ export class UpdatePhoneInput {
   @IsString()
   @Field()
   @Transform(({ value }) => value.toLowerCase())
-  email: string;
+  entityId: string;
 }
