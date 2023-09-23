@@ -51,7 +51,7 @@ export class HuelagerRepository {
     const { where } = params;
     return this.repository.findOne({
       where,
-      relations: { transactions: true, user: true, vendor: true },
+      relations: { user: true, vendor: true },
     });
   }
 
@@ -59,7 +59,7 @@ export class HuelagerRepository {
     const { where } = params;
     return this.repository.find({
       where,
-      relations: { transactions: true, user: true, vendor: true },
+      relations: { user: true, vendor: true },
     });
   }
 
