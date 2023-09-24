@@ -144,6 +144,7 @@ export class HuelagerService {
 
   async requestEmailVerification(email: string): Promise<Huelager> {
     const huelager = await this.repository.findHuelager({ where: { email } });
+
     if (!huelager)
       throw new NotFoundException('No user with this email exists');
 
@@ -155,7 +156,6 @@ export class HuelagerService {
       huelager.entityType === HuelagerType.USER
         ? huelager.user.firstName
         : huelager.vendor.businessName;
-
     this.emailService.sendOtpToEmail({ to: email, name, otp });
 
     return huelager;
@@ -211,7 +211,9 @@ export class HuelagerService {
 
     if (!huelager) throw new UnauthorizedException();
 
-    const matches = await compare(oldPassword, huelager.hashedRefreshToken);
+    const matches = await compare(oldPassword, huelager.password);
+    console.log(matches);
+
     if (!matches) throw new UnauthorizedException();
 
     huelager.password = await hash(password, 10);

@@ -101,7 +101,7 @@ export class VendorService {
 
     if (!vendor) throw new UnauthorizedException('Invalid credentials');
 
-    if (vendor.vendorKey === vendorKey)
+    if (vendor.vendorKey !== vendorKey)
       throw new UnauthorizedException('Invalid credentials');
 
     const matches = await compare(password, vendor.entity.password);
