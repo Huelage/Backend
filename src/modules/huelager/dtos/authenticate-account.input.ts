@@ -2,12 +2,11 @@ import { Field, InputType } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-@InputType('AuthenticateUserInput')
-export class AuthenticateUserInput {
+@InputType('AuthenticateEntityInput')
+export class AuthenticateEntityInput {
   @IsString()
-  @Field()
-  @Transform(({ value }) => value.toLowerCase())
-  email: string;
+  @Field({ nullable: true })
+  entityId: string;
 
   @IsNotEmpty()
   @IsString()
@@ -15,10 +14,18 @@ export class AuthenticateUserInput {
   password: string;
 }
 
+@InputType('AuthenticateUserInput')
+export class AuthenticateUserInput extends AuthenticateEntityInput {
+  @IsString()
+  @Field({ nullable: true })
+  @Transform(({ value }) => value.toLowerCase())
+  email: string;
+}
+
 @InputType('AuthenticateVendorInput')
-export class AuthenticateVendorInput extends AuthenticateUserInput {
+export class AuthenticateVendorInput extends AuthenticateEntityInput {
   @IsNotEmpty()
   @IsString()
-  @Field()
-  vendorId: string;
+  @Field({ nullable: true })
+  vendorKey: string;
 }

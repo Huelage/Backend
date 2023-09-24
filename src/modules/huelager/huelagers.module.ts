@@ -19,9 +19,11 @@ import { Biometric } from './entities/biometric.entity';
 import { Review } from './entities/review.entity';
 
 import { HuelagerResolver } from './huelager.resolver';
+import { ProvidersModule } from 'src/providers/providers.module';
 
 @Module({
   imports: [
+    ProvidersModule,
     TypeOrmModule.forFeature([
       Vendor,
       User,
@@ -35,7 +37,6 @@ import { HuelagerResolver } from './huelager.resolver';
   providers: [
     VendorService,
     VendorResolver,
-    SmsService,
     UserService,
     UserResolver,
     HuelagerRepository,

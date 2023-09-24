@@ -3,6 +3,7 @@ import {
   ConflictException,
   UnauthorizedException,
   HttpException,
+  BadRequestException,
 } from '@nestjs/common';
 
 import { compare, hash } from 'bcryptjs';
@@ -13,7 +14,7 @@ import { CreateUserInput } from '../dtos/create-account.input';
 import { AuthenticateUserInput } from '../dtos/authenticate-account.input';
 import { User } from './user.entity';
 import { SmsService } from '../../../providers/sms.service';
-import { genRandomOtp } from '../../../common/helpers/gen-otp.helper';
+import { genRandomOtp } from '../../../common/helpers/helpers';
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../hulager.service';
 import { HuelagerType } from '../entities/huelager.entity';
@@ -30,7 +31,7 @@ export class UserService {
   ) {}
 
   async create(createUserInput: CreateUserInput) {
-    const phoneOtp = genRandomOtp();
+    const otp = genRandomOtp();
 
     const { firstName, lastName, phone, password, email } = createUserInput;
     const hashedPassword = await hash(password, 10);
@@ -54,7 +55,7 @@ export class UserService {
     const entity = await this.repository.createHuelager({
       phone,
       email,
-      phoneOtp,
+      otp,
       password: hashedPassword,
       entityType: HuelagerType.USER,
     });
@@ -75,16 +76,21 @@ export class UserService {
 
     this.smsService.sendSms(
       entity.phone,
-      `Welcome to huelage ${user.firstName}, here is your OTP: ${phoneOtp} `,
+      `Welcome to huelage ${user.firstName}, here is your OTP: ${otp} `,
     );
 
     return user;
   }
 
   async signIn(authenticateUserInput: AuthenticateUserInput): Promise<User> {
-    const { email, password } = authenticateUserInput;
+    const { email, password, entityId } = authenticateUserInput;
+
+    const searchField = email ? { email } : { entityId };
+    if (!searchField)
+      throw new BadRequestException('Innput email or entityId field');
+
     const user = await this.userRepository.findOne({
-      where: { entity: { email } },
+      where: { entity: searchField },
       relations: { entity: true },
     });
 

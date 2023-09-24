@@ -19,6 +19,9 @@ export class Vendor {
   @Field()
   vendorId: string;
 
+  @Column({ name: 'vendor_key', type: 'char', length: 8, unique: true })
+  vendorKey: string;
+
   @OneToOne(() => Huelager, (huelager) => huelager.vendor, {
     onDelete: 'CASCADE',
   })

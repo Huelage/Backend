@@ -58,8 +58,8 @@ export class Huelager {
   @Field()
   emailIsVerified: boolean;
 
-  @Column({ name: 'phone_otp', nullable: true, type: 'smallint' })
-  phoneOtp: number;
+  @Column({ name: 'otp', nullable: true, type: 'smallint' })
+  otp: number;
 
   @OneToMany(() => Biometric, (biometric) => biometric.entity)
   biometrics: Biometric[];

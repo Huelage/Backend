@@ -25,7 +25,7 @@ export class HuelagerResolver {
   }
 
   @Mutation(() => Huelager)
-  async verifyPhone(
+  async verifyPhoneOtp(
     @Args('input') verifyPhoneInput: VerifyPhoneInput,
   ): Promise<Huelager> {
     return await this.huelagerService.verifyPhone(verifyPhoneInput);
@@ -46,5 +46,10 @@ export class HuelagerResolver {
   @Mutation(() => String)
   async generateRSAKey(@Context('req') req) {
     return await this.huelagerService.generateRSAKey(req.user);
+  }
+
+  @Mutation(() => String)
+  async requestEmailVerification(@Args('email') email: string) {
+    return await this.huelagerService.requestEmailVerification(email);
   }
 }

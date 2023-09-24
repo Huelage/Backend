@@ -9,13 +9,15 @@ import { JwtService } from '@nestjs/jwt';
 
 import { RefreshTokenDto } from './dtos/refresh-token.input';
 import { compare, hash } from 'bcryptjs';
-import { Huelager } from './entities/huelager.entity';
+import { Huelager, HuelagerType } from './entities/huelager.entity';
 import { HuelagerRepository } from './huelager.repository';
 import { UpdatePhoneInput } from './dtos/update-phone.input';
-import { genRandomOtp } from '../../common/helpers/gen-otp.helper';
+import { genRandomOtp } from '../../common/helpers/helpers';
 import { SmsService } from '../../providers/sms.service';
 import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { generateKeyPairSync } from 'crypto';
+import { EmailService } from 'src/providers/email.service';
+import { VerifyEmailInput } from './dtos/verify-email.input';
 
 @Injectable()
 export class HuelagerService {
@@ -25,6 +27,7 @@ export class HuelagerService {
     private readonly jwtService: JwtService,
     private readonly repository: HuelagerRepository,
     private readonly smsService: SmsService,
+    private readonly emailService: EmailService,
   ) {}
 
   async getTokens(entityId: string) {
@@ -89,32 +92,35 @@ export class HuelagerService {
     if (possibleHuelagers.length > 1)
       throw new ConflictException(`Phone number already in use.`);
 
-    const phoneOtp = genRandomOtp();
+    const otp = genRandomOtp();
     huelager.phone = phone;
-    huelager.phoneOtp = phoneOtp;
+    huelager.otp = otp;
     huelager.isVerified = false;
+
+    const name =
+      huelager.entityType === HuelagerType.USER
+        ? huelager.user.firstName
+        : huelager.vendor.businessName;
 
     await this.repository.save(huelager);
 
     this.smsService.sendSms(
       huelager.phone,
-      `Welcome to huelage  here is your OTP: ${phoneOtp} `,
+      `Hi, ${name}Welcome to huelage  here is your OTP: ${otp} `,
     );
     return huelager;
   }
 
   async verifyPhone(verifyPhoneInput: VerifyPhoneInput): Promise<Huelager> {
-    const { phone, phoneOtp } = verifyPhoneInput;
+    const { phone, otp } = verifyPhoneInput;
 
     const huelager = await this.repository.findHuelager({ where: { phone } });
     if (!huelager)
       throw new NotFoundException('No user with this phone number exists');
 
-    console.log(huelager);
-
     const isExpired =
       Date.now() - huelager.updatedAt.getTime() > this.otpLifeSpan;
-    const notMatch = huelager.phoneOtp !== phoneOtp;
+    const notMatch = huelager.otp !== otp;
 
     if (isExpired || notMatch)
       throw new UnauthorizedException('The otp is invalid');
@@ -127,6 +133,43 @@ export class HuelagerService {
     huelager.refreshToken = refreshToken;
     huelager.isVerified = true;
     huelager.hashedRefreshToken = await hash(refreshToken, 10);
+    await this.repository.save(huelager);
+
+    return huelager;
+  }
+
+  async requestEmailVerification(email: string) {
+    const huelager = await this.repository.findHuelager({ where: { email } });
+    if (!huelager)
+      throw new NotFoundException('No user with this email exists');
+
+    const otp = genRandomOtp();
+
+    huelager.otp = otp;
+    await this.repository.save(huelager);
+    const name =
+      huelager.entityType === HuelagerType.USER
+        ? huelager.user.firstName
+        : huelager.vendor.businessName;
+
+    this.emailService.sendOtpToEmail({ to: email, name, otp });
+  }
+
+  async verifyEmail(verifyEmailInput: VerifyEmailInput): Promise<Huelager> {
+    const { email, otp } = verifyEmailInput;
+
+    const huelager = await this.repository.findHuelager({ where: { email } });
+    if (!huelager)
+      throw new NotFoundException('No user with this phone number exists');
+
+    const isExpired =
+      Date.now() - huelager.updatedAt.getTime() > this.otpLifeSpan;
+    const notMatch = huelager.otp !== otp;
+
+    if (isExpired || notMatch)
+      throw new UnauthorizedException('The otp is invalid');
+
+    huelager.emailIsVerified = true;
     await this.repository.save(huelager);
 
     return huelager;

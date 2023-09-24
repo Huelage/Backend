@@ -3,6 +3,7 @@ import {
   ConflictException,
   UnauthorizedException,
   HttpException,
+  BadRequestException,
 } from '@nestjs/common';
 
 import { Vendor } from './vendor.entity';
@@ -12,7 +13,10 @@ import { SmsService } from '../../../providers/sms.service';
 import { compare, hash } from 'bcryptjs';
 import { CreateVendorInput } from '../dtos/create-account.input';
 import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
-import { genRandomOtp } from '../../../common/helpers/gen-otp.helper';
+import {
+  genRandomOtp,
+  generateVendorKey,
+} from '../../../common/helpers/helpers';
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../hulager.service';
 import { HuelagerType } from '../entities/huelager.entity';
@@ -30,7 +34,7 @@ export class VendorService {
   ) {}
 
   async create(createVendorInput: CreateVendorInput) {
-    const phoneOtp = genRandomOtp();
+    const otp = genRandomOtp();
 
     const { businessAddress, phone, password, email, businessName, repName } =
       createVendorInput;
@@ -55,7 +59,7 @@ export class VendorService {
     const entity = await this.repository.createHuelager({
       phone,
       email,
-      phoneOtp,
+      otp,
       password: hashedPassword,
       entityType: HuelagerType.VENDOR,
     });
@@ -65,6 +69,7 @@ export class VendorService {
       businessAddress,
       entity,
       repName,
+      vendorKey: generateVendorKey(),
     });
 
     try {
@@ -76,22 +81,27 @@ export class VendorService {
 
     this.smsService.sendSms(
       vendor.entity.phone,
-      `Welcome to huelage ${vendor.businessName}, here is your OTP: ${phoneOtp} `,
+      `Welcome to huelage ${vendor.businessName}, here is your OTP: ${otp} `,
     );
 
     return vendor;
   }
 
   async signIn(authenticateVendorInput: AuthenticateVendorInput) {
-    const { email, password, vendorId } = authenticateVendorInput;
+    const { vendorKey, password, entityId } = authenticateVendorInput;
+
+    const searchField = entityId ? { entity: { entityId } } : { vendorKey };
+    if (!searchField)
+      throw new BadRequestException('Innput email or entityId field');
+
     const vendor = await this.vendorRepository.findOne({
-      where: { entity: { email } },
+      where: searchField,
       relations: { entity: true },
     });
 
     if (!vendor) throw new UnauthorizedException('Invalid credentials');
 
-    if (vendor.vendorId !== vendorId)
+    if (vendor.vendorKey === vendorKey)
       throw new UnauthorizedException('Invalid credentials');
 
     const matches = await compare(password, vendor.entity.password);
