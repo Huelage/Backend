@@ -24,7 +24,9 @@ export class ImageUploadService {
     let toEdit: Huelager | Product;
 
     if (file.uploadLocation === UploadLocation.ENTITY) {
-      toEdit = await this.huelagerRepository.findHuelagerById(id);
+      toEdit = await this.huelagerRepository.findHuelager({
+        where: { entityId: id },
+      });
     } else {
       toEdit = await this.productRepository.findProductById(id);
     }

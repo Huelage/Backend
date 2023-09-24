@@ -18,6 +18,8 @@ import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { generateKeyPairSync } from 'crypto';
 import { EmailService } from 'src/providers/email.service';
 import { VerifyEmailInput } from './dtos/verify-email.input';
+import { ForgotPasswordInput } from './dtos/forgot-password.input';
+import { UpdatePasswordInput } from './dtos/update-password.input';
 
 @Injectable()
 export class HuelagerService {
@@ -61,7 +63,9 @@ export class HuelagerService {
   async refreshToken(refreshTokenDto: RefreshTokenDto) {
     const { entityId, refreshToken } = refreshTokenDto;
 
-    const huelager = await this.repository.findHuelagerById(entityId);
+    const huelager = await this.repository.findHuelager({
+      where: { entityId },
+    });
     if (!huelager) throw new UnauthorizedException();
 
     const matches = await compare(refreshToken, huelager.hashedRefreshToken);
@@ -138,7 +142,7 @@ export class HuelagerService {
     return huelager;
   }
 
-  async requestEmailVerification(email: string) {
+  async requestEmailVerification(email: string): Promise<Huelager> {
     const huelager = await this.repository.findHuelager({ where: { email } });
     if (!huelager)
       throw new NotFoundException('No user with this email exists');
@@ -153,6 +157,8 @@ export class HuelagerService {
         : huelager.vendor.businessName;
 
     this.emailService.sendOtpToEmail({ to: email, name, otp });
+
+    return huelager;
   }
 
   async verifyEmail(verifyEmailInput: VerifyEmailInput): Promise<Huelager> {
@@ -171,6 +177,45 @@ export class HuelagerService {
 
     huelager.emailIsVerified = true;
     await this.repository.save(huelager);
+
+    return huelager;
+  }
+
+  async forgotPassword(
+    forgotPasswordInput: ForgotPasswordInput,
+  ): Promise<Huelager> {
+    const { entityId, password } = forgotPasswordInput;
+
+    const huelager = await this.repository.findHuelager({
+      where: { entityId },
+    });
+
+    if (!huelager) throw new UnauthorizedException();
+
+    const hashedPassword = await hash(password, 10);
+    huelager.password = hashedPassword;
+
+    this.repository.save(huelager);
+
+    return huelager;
+  }
+
+  async updatePassword(
+    updatePasswordInput: UpdatePasswordInput,
+  ): Promise<Huelager> {
+    const { entityId, oldPassword, password } = updatePasswordInput;
+
+    const huelager = await this.repository.findHuelager({
+      where: { entityId },
+    });
+
+    if (!huelager) throw new UnauthorizedException();
+
+    const matches = await compare(oldPassword, huelager.hashedRefreshToken);
+    if (!matches) throw new UnauthorizedException();
+
+    huelager.password = await hash(password, 10);
+    this.repository.save(huelager);
 
     return huelager;
   }

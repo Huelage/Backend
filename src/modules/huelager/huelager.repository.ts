@@ -43,10 +43,6 @@ export class HuelagerRepository {
     return false;
   }
 
-  async findHuelagerById(entityId) {
-    return this.repository.findOneBy({ entityId });
-  }
-
   async findHuelager(params: { where: FindOptionsWhere<Huelager> }) {
     const { where } = params;
     return this.repository.findOne({

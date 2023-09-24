@@ -17,7 +17,9 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
 
     if (!entityId) throw new UnauthorizedException();
 
-    const huelager = await this.repository.findHuelagerById(entityId);
+    const huelager = await this.repository.findHuelager({
+      where: { entityId },
+    });
 
     if (!huelager) {
       throw new UnauthorizedException();
