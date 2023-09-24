@@ -7,6 +7,9 @@ import { Huelager } from './entities/huelager.entity';
 import { UpdatePhoneInput } from './dtos/update-phone.input';
 import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { AccessTokenGuard } from '../../common/guards/access-token.guard';
+import { VerifyEmailInput } from './dtos/verify-email.input';
+import { ForgotPasswordInput } from './dtos/forgot-password.input';
+import { UpdatePasswordInput } from './dtos/update-password.input';
 
 @Resolver()
 export class HuelagerResolver {
@@ -48,8 +51,27 @@ export class HuelagerResolver {
     return await this.huelagerService.generateRSAKey(req.user);
   }
 
-  @Mutation(() => String)
+  @Mutation(() => Huelager)
   async requestEmailVerification(@Args('email') email: string) {
     return await this.huelagerService.requestEmailVerification(email);
+  }
+
+  @Mutation(() => Huelager)
+  async verifyEmailOtp(@Args('input') verifyEmailInput: VerifyEmailInput) {
+    return await this.huelagerService.verifyEmail(verifyEmailInput);
+  }
+
+  @Mutation(() => Huelager)
+  async forgotPassword(
+    @Args('input') forgotPasswordInput: ForgotPasswordInput,
+  ) {
+    return await this.huelagerService.forgotPassword(forgotPasswordInput);
+  }
+
+  @Mutation(() => Huelager)
+  async updatePassword(
+    @Args('input') updatePasswordInput: UpdatePasswordInput,
+  ) {
+    return await this.huelagerService.updatePassword(updatePasswordInput);
   }
 }

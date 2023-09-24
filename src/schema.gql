@@ -214,7 +214,10 @@ type Mutation {
   verifyPhoneOtp(input: VerifyPhoneInput!): Huelager!
   refreshAccessToken: String!
   generateRSAKey: String!
-  requestEmailVerification(email: String!): String!
+  requestEmailVerification(email: String!): Huelager!
+  verifyEmailOtp(input: VerifyEmailInput!): Huelager!
+  forgotPassword(input: ForgotPasswordInput!): Huelager!
+  updatePassword(input: UpdatePasswordInput!): Huelager!
   uploadImage(input: UploadImageInput!): String!
   addFood(input: CreateFoodInput!): Product!
 }
@@ -258,6 +261,23 @@ input UpdatePhoneInput {
 input VerifyPhoneInput {
   phone: String!
   otp: Float!
+}
+
+input VerifyEmailInput {
+  email: String!
+  otp: Float!
+}
+
+input ForgotPasswordInput {
+  password: String!
+  entityId: String!
+}
+
+input UpdatePasswordInput {
+  entityId: String!
+  oldPassword: String!
+  password: String!
+  confirmPassword: String!
 }
 
 input UploadImageInput {
