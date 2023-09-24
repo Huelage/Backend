@@ -87,7 +87,7 @@ export class UserService {
 
     const searchField = email ? { email } : { entityId };
     if (!searchField)
-      throw new BadRequestException('Innput email or entityId field');
+      throw new BadRequestException('Input email or entityId field');
 
     const user = await this.userRepository.findOne({
       where: { entity: searchField },
