@@ -212,7 +212,6 @@ export class HuelagerService {
     if (!huelager) throw new UnauthorizedException();
 
     const matches = await compare(oldPassword, huelager.password);
-    console.log(matches);
 
     if (!matches) throw new UnauthorizedException();
 
