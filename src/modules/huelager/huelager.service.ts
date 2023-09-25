@@ -16,7 +16,7 @@ import { genRandomOtp } from '../../common/helpers/helpers';
 import { SmsService } from '../../providers/sms.service';
 import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { generateKeyPairSync } from 'crypto';
-import { EmailService } from 'src/providers/email.service';
+import { EmailService } from '../../providers/email.service';
 import { VerifyEmailInput } from './dtos/verify-email.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { UpdatePasswordInput } from './dtos/update-password.input';
@@ -26,8 +26,8 @@ export class HuelagerService {
   private otpLifeSpan = 1800000; // 30 minutes
 
   constructor(
-    private readonly jwtService: JwtService,
     private readonly repository: HuelagerRepository,
+    private readonly jwtService: JwtService,
     private readonly smsService: SmsService,
     private readonly emailService: EmailService,
   ) {}

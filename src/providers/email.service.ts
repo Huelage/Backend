@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { SendMailOptions, Transporter, createTransport } from 'nodemailer';
-import { genEmailMessage } from 'src/common/helpers/helpers';
+import { genEmailMessage } from '../common/helpers/helpers';
 
 @Injectable()
 export class EmailService {

@@ -9,7 +9,7 @@ import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UserResolver } from './user/user.resolver';
 import { HuelagerRepository } from './huelager.repository';
-import { HuelagerService } from './hulager.service';
+import { HuelagerService } from './huelager.service';
 import { RefreshTokenStrategy } from './auth/strategies/refresh-token.strategy';
 import { AccessTokenStrategy } from './auth/strategies/access-token.strategy';
 import { JwtModule } from '@nestjs/jwt';
@@ -19,7 +19,7 @@ import { Biometric } from './entities/biometric.entity';
 import { Review } from './entities/review.entity';
 
 import { HuelagerResolver } from './huelager.resolver';
-import { ProvidersModule } from 'src/providers/providers.module';
+import { ProvidersModule } from '../../providers/providers.module';
 
 @Module({
   imports: [

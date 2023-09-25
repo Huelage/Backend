@@ -16,7 +16,7 @@ import { User } from './user.entity';
 import { SmsService } from '../../../providers/sms.service';
 import { genRandomOtp } from '../../../common/helpers/helpers';
 import { HuelagerRepository } from '../huelager.repository';
-import { HuelagerService } from '../hulager.service';
+import { HuelagerService } from '../huelager.service';
 import { HuelagerType } from '../entities/huelager.entity';
 
 @Injectable()

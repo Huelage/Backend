@@ -3,7 +3,7 @@ import { ImageUploadService } from './image_upload.service';
 import { UploadImageInput } from './dtos/upload_image.dto';
 import { FileValidationPipe } from '../../pipes/file-validation.pipe';
 import { UseGuards } from '@nestjs/common';
-import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
+import { AccessTokenGuard } from '../../common/guards/access-token.guard';
 
 @Resolver()
 export class ImageUploadResolver {
