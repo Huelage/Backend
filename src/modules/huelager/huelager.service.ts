@@ -71,7 +71,7 @@ export class HuelagerService {
     const matches = await compare(refreshToken, huelager.hashedRefreshToken);
     if (!matches) throw new UnauthorizedException();
 
-    return this.jwtService.sign(
+    return await this.jwtService.signAsync(
       { entityId },
       { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '3d' },
     );
