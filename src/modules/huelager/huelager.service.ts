@@ -149,6 +149,7 @@ export class HuelagerService {
 
     huelager.otp = otp;
     await this.repository.save(huelager);
+
     const name =
       huelager.entityType === HuelagerType.USER
         ? huelager.user.firstName
@@ -186,7 +187,7 @@ export class HuelagerService {
       where: { entityId },
     });
 
-    if (!huelager) throw new UnauthorizedException();
+    if (!huelager) throw new NotFoundException();
 
     const hashedPassword = await hash(password, 10);
     huelager.password = hashedPassword;
@@ -205,7 +206,7 @@ export class HuelagerService {
       where: { entityId },
     });
 
-    if (!huelager) throw new UnauthorizedException();
+    if (!huelager) throw new NotFoundException();
 
     const matches = await compare(oldPassword, huelager.password);
 

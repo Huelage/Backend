@@ -90,9 +90,10 @@ export class VendorService {
   async signIn(authenticateVendorInput: AuthenticateVendorInput) {
     const { vendorKey, password, entityId } = authenticateVendorInput;
 
+    if (!entityId && !vendorKey)
+      throw new BadRequestException('Input email or entityId field');
+
     const searchField = entityId ? { entity: { entityId } } : { vendorKey };
-    if (!searchField)
-      throw new BadRequestException('Innput email or entityId field');
 
     const vendor = await this.vendorRepository.findOne({
       where: searchField,
@@ -100,9 +101,6 @@ export class VendorService {
     });
 
     if (!vendor) throw new UnauthorizedException('Invalid credentials');
-
-    if (vendor.vendorKey !== vendorKey)
-      throw new UnauthorizedException('Invalid credentials');
 
     const matches = await compare(password, vendor.entity.password);
     if (!matches) throw new UnauthorizedException('Invalid credentials');

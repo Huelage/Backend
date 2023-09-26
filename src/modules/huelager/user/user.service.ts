@@ -85,9 +85,10 @@ export class UserService {
   async signIn(authenticateUserInput: AuthenticateUserInput): Promise<User> {
     const { email, password, entityId } = authenticateUserInput;
 
-    const searchField = email ? { email } : { entityId };
-    if (!searchField)
+    if (!entityId && !email)
       throw new BadRequestException('Input email or entityId field');
+
+    const searchField = email ? { email } : { entityId };
 
     const user = await this.userRepository.findOne({
       where: { entity: searchField },
