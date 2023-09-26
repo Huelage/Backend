@@ -1,5 +1,6 @@
 const APLPHABETS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const NUMBERS = '0123456789';
+const otpLifeSpan = 1800000;
 
 export function genRandomOtp(): number {
   return Math.floor(1000 + Math.random() * 9000);
@@ -34,4 +35,8 @@ export function generateVendorKey(): string {
     key += APLPHABETS.charAt(Math.floor(Math.random() * APLPHABETS.length));
   }
   return key;
+}
+
+export function otpIsExpired(lastUpdated: Date): boolean {
+  return Date.now() - lastUpdated.getTime() > otpLifeSpan;
 }

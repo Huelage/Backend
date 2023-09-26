@@ -96,7 +96,7 @@ export class VendorService {
 
     const vendor = await this.vendorRepository.findOne({
       where: searchField,
-      relations: { entity: true },
+      relations: { entity: { wallet: true } },
     });
 
     if (!vendor) throw new UnauthorizedException('Invalid credentials');

@@ -12,7 +12,7 @@ import { compare, hash } from 'bcryptjs';
 import { Huelager, HuelagerType } from './entities/huelager.entity';
 import { HuelagerRepository } from './huelager.repository';
 import { UpdatePhoneInput } from './dtos/update-phone.input';
-import { genRandomOtp } from '../../common/helpers/helpers';
+import { genRandomOtp, otpIsExpired } from '../../common/helpers/helpers';
 import { SmsService } from '../../providers/sms.service';
 import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { generateKeyPairSync } from 'crypto';
@@ -23,8 +23,6 @@ import { UpdatePasswordInput } from './dtos/update-password.input';
 
 @Injectable()
 export class HuelagerService {
-  private otpLifeSpan = 1800000; // 30 minutes
-
   constructor(
     private readonly repository: HuelagerRepository,
     private readonly jwtService: JwtService,
@@ -122,8 +120,7 @@ export class HuelagerService {
     if (!huelager)
       throw new NotFoundException('No user with this phone number exists');
 
-    const isExpired =
-      Date.now() - huelager.updatedAt.getTime() > this.otpLifeSpan;
+    const isExpired = otpIsExpired(huelager.updatedAt);
     const notMatch = huelager.otp !== otp;
 
     if (isExpired || notMatch)
@@ -168,8 +165,7 @@ export class HuelagerService {
     if (!huelager)
       throw new NotFoundException('No user with this phone number exists');
 
-    const isExpired =
-      Date.now() - huelager.updatedAt.getTime() > this.otpLifeSpan;
+    const isExpired = otpIsExpired(huelager.updatedAt);
     const notMatch = huelager.otp !== otp;
 
     if (isExpired || notMatch)

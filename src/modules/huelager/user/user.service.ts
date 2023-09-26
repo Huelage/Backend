@@ -91,9 +91,12 @@ export class UserService {
 
     const user = await this.userRepository.findOne({
       where: { entity: searchField },
-      relations: { entity: true },
+      relations: {
+        entity: {
+          wallet: true,
+        },
+      },
     });
-
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
     const matches = await compare(password, user.entity.password);

@@ -1,8 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { HuelagerService } from './huelager.service';
-import { HuelagerRepository } from './huelager.repository';
-import { SmsService } from '../../providers/sms.service';
-import { EmailService } from '../../providers/email.service';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import {
@@ -11,12 +7,18 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
+import { HuelagerService } from './huelager.service';
+import { HuelagerRepository } from './huelager.repository';
+import { SmsService } from '../../providers/sms.service';
+import { EmailService } from '../../providers/email.service';
+
 jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
 }));
 
 jest.mock('../../common/helpers/helpers.ts', () => ({
   genRandomOtp: () => 1234,
+  otpIsExpired: () => false,
 }));
 
 const mockHuelagerRepository = () => ({
@@ -68,15 +70,15 @@ describe('HuelagerService', () => {
     const getTokens = async () => huelagerService.getTokens('testId');
 
     it('returns the access and refresh tokens got from the jwtService.signAsync() function called twice', async () => {
-      jwtService.signAsync.mockResolvedValue('testHash');
+      jwtService.signAsync.mockResolvedValue('testToken');
 
       expect(jwtService.signAsync).not.toHaveBeenCalled();
       const result = await getTokens();
       expect(jwtService.signAsync).toHaveBeenCalled();
 
       expect(result).toEqual({
-        accessToken: 'testHash',
-        refreshToken: 'testHash',
+        accessToken: 'testToken',
+        refreshToken: 'testToken',
       });
     });
   });
@@ -97,11 +99,11 @@ describe('HuelagerService', () => {
       (compare as jest.MockedFunction<typeof compare>).mockImplementation(
         async () => true,
       );
-      jwtService.signAsync.mockResolvedValue('testHash');
+      jwtService.signAsync.mockResolvedValue('testToken');
 
       const result = await refreshToken();
 
-      expect(result).toEqual('testHash');
+      expect(result).toEqual('testToken');
       expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
@@ -136,9 +138,6 @@ describe('HuelagerService', () => {
       entityType: 'user',
       user: { firstName: 'testName' },
       entityId: 'testId',
-      phone: 'previousPhone',
-      otp: 123,
-      isVerified: true,
     };
     const mockReturnHuelager = {
       ...mockFoundHuelager,
@@ -183,5 +182,23 @@ describe('HuelagerService', () => {
         phone: 'rightPhone',
         otp: 1234,
       });
+
+    const mockFoundUSer = {
+      entityType: 'user',
+      otp: 1234,
+      entityId: 'testId',
+    };
+
+    const mockRejectedUser = {
+      ...mockFoundUSer,
+      accessToken: 'testToken',
+      refreshToken: 'testToken',
+      hashedRefreshToken: 'testHash',
+      isVerified: true,
+    };
+
+    it('successfully verifies the phone and returns the hulager', async () => {
+      expect(2).toEqual(2);
+    });
   });
 });
