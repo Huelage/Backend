@@ -19,8 +19,6 @@ import { HuelagerType } from '../entities/huelager.entity';
 
 @Injectable()
 export class UserService {
-  private otpLifeSpan = 1800000; // 30 minutes
-
   constructor(
     private readonly repository: HuelagerRepository,
     private readonly smsService: SmsService,
@@ -31,7 +29,6 @@ export class UserService {
     const otp = genRandomOtp();
 
     const { firstName, lastName, phone, password, email } = createUserInput;
-    const hashedPassword = await hash(password, 10);
 
     const exists = await this.repository.checkEmailAndPhone({
       where: [{ email }, { phone }],
@@ -49,6 +46,7 @@ export class UserService {
       throw new ConflictException(`${inUse} already in use.`);
     }
 
+    const hashedPassword = await hash(password, 10);
     const entity = await this.repository.createHuelager({
       phone,
       email,

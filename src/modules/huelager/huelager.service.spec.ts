@@ -158,7 +158,7 @@ describe('HuelagerService', () => {
       entityId: 'testRejectedId',
     };
 
-    it('successfully updates the phone, sends SMS and returns the huelager', async () => {
+    it('updates the phone, sends SMS and returns the huelager', async () => {
       huelagerRepository.findHuelagers.mockResolvedValue([mockFoundHuelager]);
 
       const result = await updatePhone();

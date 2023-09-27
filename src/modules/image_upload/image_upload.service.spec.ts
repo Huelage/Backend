@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { ImageUploadService } from './image_upload.service';
-import { FileUploadService } from 'src/file_upload/file_upload.interface';
+import { FileUploadService } from '../../file_upload/file_upload.interface';
 import { HuelagerRepository } from '../huelager/huelager.repository';
 import { ProductRepository } from '../product/product.repository';
 

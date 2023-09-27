@@ -6,8 +6,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 
-import { Vendor } from './vendor.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { SmsService } from '../../../providers/sms.service';
 import { compare, hash } from 'bcryptjs';
 import { CreateVendorInput } from '../dtos/create-account.input';
@@ -33,7 +31,6 @@ export class VendorService {
 
     const { businessAddress, phone, password, email, businessName, repName } =
       createVendorInput;
-    const hashedPassword = await hash(password, 10);
 
     const exists = await this.repository.checkEmailAndPhone({
       where: [{ email }, { phone }],
@@ -51,6 +48,7 @@ export class VendorService {
       throw new ConflictException(`${inUse} already in use.`);
     }
 
+    const hashedPassword = await hash(password, 10);
     const entity = await this.repository.createHuelager({
       phone,
       email,
@@ -64,6 +62,7 @@ export class VendorService {
       businessAddress,
       entity,
       repName,
+      vendorId: entity.entityId,
       vendorKey: generateVendorKey(),
     });
 
