@@ -104,7 +104,7 @@ export class HuelagerService {
         ? huelager.user.firstName
         : huelager.vendor.businessName;
 
-    await this.repository.saveHulager(huelager);
+    await this.repository.saveHuelager(huelager);
 
     this.smsService.sendSms(
       huelager.phone,
@@ -134,7 +134,7 @@ export class HuelagerService {
     huelager.refreshToken = refreshToken;
     huelager.isVerified = true;
     huelager.hashedRefreshToken = await hash(refreshToken, 10);
-    await this.repository.saveHulager(huelager);
+    await this.repository.saveHuelager(huelager);
 
     return huelager;
   }
@@ -148,7 +148,7 @@ export class HuelagerService {
     const otp = genRandomOtp();
 
     huelager.otp = otp;
-    await this.repository.saveHulager(huelager);
+    await this.repository.saveHuelager(huelager);
 
     const name =
       huelager.entityType === HuelagerType.USER
@@ -173,7 +173,7 @@ export class HuelagerService {
       throw new UnauthorizedException('The otp is invalid');
 
     huelager.emailIsVerified = true;
-    await this.repository.saveHulager(huelager);
+    await this.repository.saveHuelager(huelager);
 
     return huelager;
   }
@@ -192,7 +192,7 @@ export class HuelagerService {
     const hashedPassword = await hash(password, 10);
     huelager.password = hashedPassword;
 
-    this.repository.saveHulager(huelager);
+    this.repository.saveHuelager(huelager);
 
     return huelager;
   }
@@ -213,7 +213,7 @@ export class HuelagerService {
     if (!matches) throw new UnauthorizedException();
 
     huelager.password = await hash(password, 10);
-    this.repository.saveHulager(huelager);
+    this.repository.saveHuelager(huelager);
 
     return huelager;
   }

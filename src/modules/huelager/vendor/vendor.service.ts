@@ -8,7 +8,6 @@ import {
 
 import { Vendor } from './vendor.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { SmsService } from '../../../providers/sms.service';
 import { compare, hash } from 'bcryptjs';
 import { CreateVendorInput } from '../dtos/create-account.input';
@@ -23,10 +22,7 @@ import { HuelagerType } from '../entities/huelager.entity';
 
 @Injectable()
 export class VendorService {
-  private otpLifeSpan = 1800000; // 30 minutes
-
   constructor(
-    @InjectRepository(Vendor)
     private readonly repository: HuelagerRepository,
     private readonly smsService: SmsService,
     private readonly huelagerService: HuelagerService,

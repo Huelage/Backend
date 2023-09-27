@@ -35,7 +35,7 @@ const mockHuelagerRepository = () => ({
   findHuelager: jest.fn(),
   findHuelagers: jest.fn(),
   addBiometrics: jest.fn(),
-  save: jest.fn(),
+  saveHuelager: jest.fn(),
 });
 
 const mockSmsService = () => ({

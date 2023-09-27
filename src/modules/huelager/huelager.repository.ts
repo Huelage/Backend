@@ -81,7 +81,7 @@ export class HuelagerRepository {
     return huelager;
   }
 
-  async saveHulager(entity: Huelager) {
+  async saveHuelager(entity: Huelager) {
     this.repository.save(entity);
   }
 

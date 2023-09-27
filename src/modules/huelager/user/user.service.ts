@@ -7,8 +7,6 @@ import {
 } from '@nestjs/common';
 
 import { compare, hash } from 'bcryptjs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 import { CreateUserInput } from '../dtos/create-account.input';
 import { AuthenticateUserInput } from '../dtos/authenticate-account.input';
