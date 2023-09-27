@@ -27,7 +27,6 @@ export class VendorService {
 
   constructor(
     @InjectRepository(Vendor)
-    private readonly vendorRepository: Repository<Vendor>,
     private readonly repository: HuelagerRepository,
     private readonly smsService: SmsService,
     private readonly huelagerService: HuelagerService,
@@ -64,7 +63,7 @@ export class VendorService {
       entityType: HuelagerType.VENDOR,
     });
 
-    const vendor = this.vendorRepository.create({
+    const vendor = await this.repository.createVendor({
       businessName,
       businessAddress,
       entity,
@@ -73,7 +72,7 @@ export class VendorService {
     });
 
     try {
-      await this.vendorRepository.save(vendor);
+      await this.repository.saveVendor(vendor);
     } catch (error) {
       this.repository.removeHuelager(entity.entityId);
       throw new HttpException(error, 422);
@@ -91,13 +90,12 @@ export class VendorService {
     const { vendorKey, password, entityId } = authenticateVendorInput;
 
     if (!entityId && !vendorKey)
-      throw new BadRequestException('Input email or entityId field');
+      throw new BadRequestException('Input vendorKey or entityId field');
 
     const searchField = entityId ? { entity: { entityId } } : { vendorKey };
 
-    const vendor = await this.vendorRepository.findOne({
+    const vendor = await this.repository.findVendor({
       where: searchField,
-      relations: { entity: { wallet: true } },
     });
 
     if (!vendor) throw new UnauthorizedException('Invalid credentials');
@@ -110,7 +108,7 @@ export class VendorService {
         await this.huelagerService.getTokens(vendor.vendorId);
 
       vendor.entity.hashedRefreshToken = await hash(refreshToken, 10);
-      await this.vendorRepository.save(vendor);
+      await this.repository.saveVendor(vendor);
 
       vendor.entity.accessToken = accessToken;
       vendor.entity.refreshToken = refreshToken;

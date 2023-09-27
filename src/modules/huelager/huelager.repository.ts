@@ -6,14 +6,23 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { Huelager } from './entities/huelager.entity';
 import { Wallet } from './entities/huenit_wallet.entity';
 import { Biometric } from './entities/biometric.entity';
+import { User } from './user/user.entity';
+import { Vendor } from './vendor/vendor.entity';
 
 @Injectable()
 export class HuelagerRepository {
   constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Vendor)
+    private readonly vendorRepository: Repository<Vendor>,
+
     @InjectRepository(Huelager)
     private readonly repository: Repository<Huelager>,
+
     @InjectRepository(Biometric)
     private readonly biometricRepository: Repository<Biometric>,
+
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
   ) {}
@@ -72,7 +81,7 @@ export class HuelagerRepository {
     return huelager;
   }
 
-  async save(entity: Huelager) {
+  async saveHulager(entity: Huelager) {
     this.repository.save(entity);
   }
 
@@ -86,7 +95,7 @@ export class HuelagerRepository {
   }
 
   async removeHuelager(entityId) {
-    await this.repository.delete({ entityId });
+    this.repository.delete({ entityId });
   }
 
   async editHuelagerInfo(params: {
@@ -94,6 +103,40 @@ export class HuelagerRepository {
     update: QueryDeepPartialEntity<Huelager>;
   }) {
     const { where, update } = params;
-    return await this.repository.update(where, update);
+    return this.repository.update(where, update);
+  }
+
+  async createUser(createUserInfo: DeepPartial<User>) {
+    const user = this.userRepository.create({ ...createUserInfo });
+    return user;
+  }
+
+  async findUser(params: { where: FindOptionsWhere<User> }) {
+    const { where } = params;
+    return this.userRepository.findOne({
+      where,
+      relations: { entity: { wallet: true } },
+    });
+  }
+
+  async saveUser(user: User) {
+    this.userRepository.save(user);
+  }
+
+  async createVendor(createVendorInfo: DeepPartial<Vendor>) {
+    const vendor = this.vendorRepository.create({ ...createVendorInfo });
+    return vendor;
+  }
+
+  async findVendor(params: { where: FindOptionsWhere<Vendor> }) {
+    const { where } = params;
+    return this.vendorRepository.findOne({
+      where,
+      relations: { entity: { wallet: true } },
+    });
+  }
+
+  async saveVendor(vendor: Vendor) {
+    this.vendorRepository.save(vendor);
   }
 }

@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import {
@@ -13,12 +13,13 @@ import { SmsService } from '../../providers/sms.service';
 import { EmailService } from '../../providers/email.service';
 import { otpIsExpired } from '../../common/helpers/helpers';
 
-// jest.mock('crypto', () => ({
-//   generateKeyPairSync: () => ({
-//     publickKey: 'testPublickKey',
-//     privateKey: 'testPrivateKey',
-//   }),
-// }));
+jest.mock('crypto', () => ({
+  ...jest.requireActual('crypto'),
+  generateKeyPairSync: () => ({
+    publicKey: 'testPublicKey',
+    privateKey: 'testPrivateKey',
+  }),
+}));
 
 jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
@@ -56,7 +57,7 @@ describe('HuelagerService', () => {
   let smsService;
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         HuelagerService,
         { provide: HuelagerRepository, useFactory: mockHuelagerRepository },
@@ -407,9 +408,14 @@ describe('HuelagerService', () => {
     });
   });
 
-  //   describe('generateRSAKey', () => {
-  //     const mockHuelager = {};
-  //     const generateRSAKey = async () =>
-  //       huelagerService.generateRSAKey(mockHuelager);
-  //   });
+  describe('generateRSAKey', () => {
+    const mockHuelager = {};
+    const generateRSAKey = async () =>
+      huelagerService.generateRSAKey(mockHuelager);
+
+    it('generates an RSA key pair and returns the public key', async () => {
+      const result = await generateRSAKey();
+      expect(result).toEqual('testPublicKey');
+    });
+  });
 });

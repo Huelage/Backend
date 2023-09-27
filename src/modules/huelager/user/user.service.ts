@@ -24,7 +24,6 @@ export class UserService {
   private otpLifeSpan = 1800000; // 30 minutes
 
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly repository: HuelagerRepository,
     private readonly smsService: SmsService,
     private readonly huelagerService: HuelagerService,
@@ -60,7 +59,7 @@ export class UserService {
       entityType: HuelagerType.USER,
     });
 
-    const user = this.userRepository.create({
+    const user = await this.repository.createUser({
       firstName,
       lastName,
       entity,
@@ -68,7 +67,7 @@ export class UserService {
     });
 
     try {
-      await this.userRepository.save(user);
+      await this.repository.saveUser(user);
     } catch (error) {
       this.repository.removeHuelager(entity.entityId);
       throw new HttpException(error, 422);
@@ -90,13 +89,8 @@ export class UserService {
 
     const searchField = email ? { email } : { entityId };
 
-    const user = await this.userRepository.findOne({
+    const user = await this.repository.findUser({
       where: { entity: searchField },
-      relations: {
-        entity: {
-          wallet: true,
-        },
-      },
     });
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
@@ -108,7 +102,7 @@ export class UserService {
         await this.huelagerService.getTokens(user.userId);
 
       user.entity.hashedRefreshToken = await hash(refreshToken, 10);
-      await this.userRepository.save(user);
+      await this.repository.saveUser(user);
 
       user.entity.accessToken = accessToken;
       user.entity.refreshToken = refreshToken;

@@ -4,6 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { generateKeyPairSync } from 'crypto';
 
 import { JwtService } from '@nestjs/jwt';
 
@@ -15,7 +16,6 @@ import { UpdatePhoneInput } from './dtos/update-phone.input';
 import { genRandomOtp, otpIsExpired } from '../../common/helpers/helpers';
 import { SmsService } from '../../providers/sms.service';
 import { VerifyPhoneInput } from './dtos/verify-phone.input';
-import { generateKeyPairSync } from 'crypto';
 import { EmailService } from '../../providers/email.service';
 import { VerifyEmailInput } from './dtos/verify-email.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
@@ -104,7 +104,7 @@ export class HuelagerService {
         ? huelager.user.firstName
         : huelager.vendor.businessName;
 
-    await this.repository.save(huelager);
+    await this.repository.saveHulager(huelager);
 
     this.smsService.sendSms(
       huelager.phone,
@@ -134,7 +134,7 @@ export class HuelagerService {
     huelager.refreshToken = refreshToken;
     huelager.isVerified = true;
     huelager.hashedRefreshToken = await hash(refreshToken, 10);
-    await this.repository.save(huelager);
+    await this.repository.saveHulager(huelager);
 
     return huelager;
   }
@@ -148,7 +148,7 @@ export class HuelagerService {
     const otp = genRandomOtp();
 
     huelager.otp = otp;
-    await this.repository.save(huelager);
+    await this.repository.saveHulager(huelager);
 
     const name =
       huelager.entityType === HuelagerType.USER
@@ -173,7 +173,7 @@ export class HuelagerService {
       throw new UnauthorizedException('The otp is invalid');
 
     huelager.emailIsVerified = true;
-    await this.repository.save(huelager);
+    await this.repository.saveHulager(huelager);
 
     return huelager;
   }
@@ -192,7 +192,7 @@ export class HuelagerService {
     const hashedPassword = await hash(password, 10);
     huelager.password = hashedPassword;
 
-    this.repository.save(huelager);
+    this.repository.saveHulager(huelager);
 
     return huelager;
   }
@@ -213,7 +213,7 @@ export class HuelagerService {
     if (!matches) throw new UnauthorizedException();
 
     huelager.password = await hash(password, 10);
-    this.repository.save(huelager);
+    this.repository.saveHulager(huelager);
 
     return huelager;
   }
