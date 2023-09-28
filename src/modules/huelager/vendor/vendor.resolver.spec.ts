@@ -1,7 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { DeepMocked } from '@golevelup/ts-jest';
 
 import { VendorResolver } from './vendor.resolver';
 import { VendorService } from './vendor.service';
+import { Vendor } from './vendor.entity';
+import { CreateVendorInput } from '../dtos/create-account.input';
+import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
 
 const mockVendorService = () => ({
   create: jest.fn(),
@@ -9,8 +13,8 @@ const mockVendorService = () => ({
 });
 
 describe('VendorResolver', () => {
-  let resolver;
-  let service;
+  let resolver: VendorResolver;
+  let service: DeepMocked<VendorService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,7 +25,7 @@ describe('VendorResolver', () => {
     }).compile();
 
     resolver = module.get<VendorResolver>(VendorResolver);
-    service = module.get<VendorService>(VendorService);
+    service = module.get(VendorService);
   });
 
   it('should be defined', () => {
@@ -29,24 +33,30 @@ describe('VendorResolver', () => {
   });
 
   describe('signUpVendor', () => {
+    const vendor = new Vendor();
+    const createVendorInput = new CreateVendorInput();
+
     it('calls the create service; creates a vendor and returns the vendor ', async () => {
-      service.create.mockResolvedValue('mockVendor');
+      service.create.mockResolvedValue(vendor);
 
-      const result = await resolver.signUpVendor('mockInput');
+      const result = await resolver.signUpVendor(createVendorInput);
 
-      expect(service.create).toHaveBeenCalledWith('mockInput');
-      expect(result).toEqual('mockVendor');
+      expect(service.create).toHaveBeenCalledWith(createVendorInput);
+      expect(result).toEqual(vendor);
     });
   });
 
   describe('signInVendor', () => {
+    const vendor = new Vendor();
+    const authenticateVendorInput = new AuthenticateVendorInput();
+
     it('calls the signIn service; signs in a vendor and returns the vendor ', async () => {
-      service.signIn.mockResolvedValue('mockVendor');
+      service.signIn.mockResolvedValue(vendor);
 
-      const result = await resolver.signInVendor('mockInput');
+      const result = await resolver.signInVendor(authenticateVendorInput);
 
-      expect(service.signIn).toHaveBeenCalledWith('mockInput');
-      expect(result).toEqual('mockVendor');
+      expect(service.signIn).toHaveBeenCalledWith(vendor);
+      expect(result).toEqual(authenticateVendorInput);
     });
   });
 });

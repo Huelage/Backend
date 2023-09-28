@@ -1,7 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { DeepMocked } from '@golevelup/ts-jest';
 
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
+import { User } from './user.entity';
+import { CreateUserInput } from '../dtos/create-account.input';
+import { AuthenticateUserInput } from '../dtos/authenticate-account.input';
 
 const mockUserService = () => ({
   create: jest.fn(),
@@ -9,8 +13,8 @@ const mockUserService = () => ({
 });
 
 describe('UserResolver', () => {
-  let resolver;
-  let service;
+  let resolver: UserResolver;
+  let service: DeepMocked<UserService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,7 +25,7 @@ describe('UserResolver', () => {
     }).compile();
 
     resolver = module.get<UserResolver>(UserResolver);
-    service = module.get<UserService>(UserService);
+    service = module.get(UserService);
   });
 
   it('should be defined', () => {
@@ -29,24 +33,30 @@ describe('UserResolver', () => {
   });
 
   describe('signUpUser', () => {
+    const user = new User();
+    const createUserInput = new CreateUserInput();
+
     it('calls the create service; creates a user and returns the user ', async () => {
-      service.create.mockResolvedValue('mockUser');
+      service.create.mockResolvedValue(user);
 
-      const result = await resolver.signUpUser('mockInput');
+      const result = await resolver.signUpUser(createUserInput);
 
-      expect(service.create).toHaveBeenCalledWith('mockInput');
-      expect(result).toEqual('mockUser');
+      expect(service.create).toHaveBeenCalledWith(createUserInput);
+      expect(result).toEqual(user);
     });
   });
 
   describe('signInUser', () => {
+    const user = new User();
+    const authenticateUserInput = new AuthenticateUserInput();
+
     it('calls the signIn service; signs in a user and returns the user ', async () => {
-      service.signIn.mockResolvedValue('mockUser');
+      service.signIn.mockResolvedValue(user);
 
-      const result = await resolver.signInUser('mockInput');
+      const result = await resolver.signInUser(authenticateUserInput);
 
-      expect(service.signIn).toHaveBeenCalledWith('mockInput');
-      expect(result).toEqual('mockUser');
+      expect(service.signIn).toHaveBeenCalledWith(authenticateUserInput);
+      expect(result).toEqual(user);
     });
   });
 });

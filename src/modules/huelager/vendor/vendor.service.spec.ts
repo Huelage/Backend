@@ -1,16 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-
-import { VendorService } from './vendor.service';
-import { HuelagerRepository } from '../huelager.repository';
-import { HuelagerService } from '../huelager.service';
-import { SmsService } from '../../../providers/sms.service';
 import {
   BadRequestException,
   ConflictException,
   HttpException,
   UnauthorizedException,
 } from '@nestjs/common';
+
 import { compare } from 'bcryptjs';
+
+import { VendorService } from './vendor.service';
+import { HuelagerRepository } from '../huelager.repository';
+import { HuelagerService } from '../huelager.service';
+import { SmsService } from '../../../providers/sms.service';
 
 jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
