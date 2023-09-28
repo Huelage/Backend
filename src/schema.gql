@@ -210,14 +210,14 @@ type Mutation {
   signInVendor(input: AuthenticateVendorInput!): Vendor!
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
+  refreshAccessToken: String!
   updatePhone(input: UpdatePhoneInput!): Huelager!
   verifyPhoneOtp(input: VerifyPhoneInput!): Huelager!
-  refreshAccessToken: String!
-  generateRSAKey: String!
   requestEmailVerification(email: String!): Huelager!
   verifyEmailOtp(input: VerifyEmailInput!): Huelager!
   forgotPassword(input: ForgotPasswordInput!): Huelager!
   updatePassword(input: UpdatePasswordInput!): Huelager!
+  generateRSAKey: String!
   uploadImage(input: UploadImageInput!): String!
   addFood(input: CreateFoodInput!): Product!
 }
