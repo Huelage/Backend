@@ -1,6 +1,6 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { registerAs } from '@nestjs/config';
 
-export const typeOrmConfig: TypeOrmModuleOptions = {
+export default registerAs('database', () => ({
   type: 'mysql',
   host: process.env.DB_HOST,
   port: 3306,
@@ -10,4 +10,4 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   autoLoadEntities: true,
   synchronize: true,
   entities: ['dist/**/*.entity{.ts,.js}'],
-};
+}));

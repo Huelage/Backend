@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Vendor } from './vendor/vendor.entity';
 import { VendorService } from './vendor/vendor.service';
 import { VendorResolver } from './vendor/vendor.resolver';
-import { SmsService } from '../../providers/sms.service';
 import { User } from './user/user.entity';
 import { UserService } from './user/user.service';
 import { UserResolver } from './user/user.resolver';
@@ -20,6 +19,7 @@ import { Review } from './entities/review.entity';
 
 import { HuelagerResolver } from './huelager.resolver';
 import { ProvidersModule } from '../../providers/providers.module';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
