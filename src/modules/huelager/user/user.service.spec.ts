@@ -40,7 +40,7 @@ const mockHuelagerService = () => ({
 });
 
 describe('UserService', () => {
-  let userService;
+  let service;
   let huelagerRepository;
   let huelagerService;
 
@@ -54,7 +54,7 @@ describe('UserService', () => {
       ],
     }).compile();
 
-    userService = await module.get<UserService>(UserService);
+    service = await module.get<UserService>(UserService);
     huelagerRepository = await module.get<HuelagerRepository>(
       HuelagerRepository,
     );
@@ -62,7 +62,7 @@ describe('UserService', () => {
   });
 
   it('should be defined', () => {
-    expect(userService).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   describe('create', () => {
@@ -93,7 +93,7 @@ describe('UserService', () => {
       lastName: mockCreateInput.lastName,
       userId: mockReturnHuelager.entityId,
     };
-    const create = async () => userService.create(mockCreateInput);
+    const create = async () => service.create(mockCreateInput);
 
     it('creates the user after creating an entity and returns the user', async () => {
       huelagerRepository.checkEmailAndPhone.mockResolvedValue(null);
@@ -162,7 +162,7 @@ describe('UserService', () => {
         refreshToken: 'testToken',
       });
 
-      const result = await userService.signIn({
+      const result = await service.signIn({
         entityId: 'testId',
         email: null,
         password: 'testPassword',
@@ -184,7 +184,7 @@ describe('UserService', () => {
         refreshToken: 'testToken',
       });
 
-      const result = await userService.signIn({
+      const result = await service.signIn({
         entityId: null,
         email: 'testEmail',
         password: 'testPassword',
@@ -198,7 +198,7 @@ describe('UserService', () => {
 
     it('throws a bad request error if neither the email nor entityId field is inputed', async () => {
       const signIn = async () =>
-        userService.signIn({
+        service.signIn({
           entityId: null,
           email: null,
           password: 'testPassword',
@@ -210,7 +210,7 @@ describe('UserService', () => {
       huelagerRepository.findUser.mockReturnValue(null);
 
       const signIn = async () =>
-        await userService.signIn({
+        await service.signIn({
           entityId: 'testId',
           email: 'testEmail',
           password: 'testPassword',
@@ -224,7 +224,7 @@ describe('UserService', () => {
         async () => false,
       );
       const signIn = async () =>
-        await userService.signIn({
+        await service.signIn({
           entityId: 'testId',
           email: 'testEmail',
           password: 'testPassword',

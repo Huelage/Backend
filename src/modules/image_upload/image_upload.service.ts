@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateResult } from 'typeorm';
 
 import { FileUploadService } from '../../file_upload/file_upload.interface';
@@ -28,10 +28,12 @@ export class ImageUploadService {
         where: { entityId: id },
       });
     } else {
-      toEdit = await this.productRepository.findProductById(id);
+      toEdit = await this.productRepository.findProduct({
+        where: { productId: id },
+      });
     }
 
-    if (!toEdit) throw new HttpException('id is invalid', 422);
+    if (!toEdit) throw new NotFoundException('id is invalid');
 
     const previousUrl = toEdit?.imgUrl;
 
@@ -50,7 +52,7 @@ export class ImageUploadService {
     }
 
     if (result.affected === 0) {
-      throw new HttpException('id is invalid', 422);
+      throw new NotFoundException('id is invalid');
     } else {
       if (previousUrl) {
         const publicId = previousUrl

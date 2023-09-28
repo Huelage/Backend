@@ -51,8 +51,8 @@ const mockJwtService = () => ({
 });
 
 describe('HuelagerService', () => {
-  let huelagerService;
-  let huelagerRepository;
+  let service;
+  let repository;
   let jwtService;
   let smsService;
 
@@ -67,20 +67,18 @@ describe('HuelagerService', () => {
       ],
     }).compile();
 
-    huelagerService = await module.get<HuelagerService>(HuelagerService);
-    huelagerRepository = await module.get<HuelagerRepository>(
-      HuelagerRepository,
-    );
+    service = await module.get<HuelagerService>(HuelagerService);
+    repository = await module.get<HuelagerRepository>(HuelagerRepository);
     jwtService = await module.get<JwtService>(JwtService);
     smsService = await module.get<SmsService>(SmsService);
   });
 
   it('should be defined', () => {
-    expect(huelagerService).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   describe('getTokens', () => {
-    const getTokens = async () => huelagerService.getTokens('testId');
+    const getTokens = async () => service.getTokens('testId');
 
     it('returns the access and refresh tokens got from the jwtService.signAsync() function called twice', async () => {
       jwtService.signAsync.mockResolvedValue('testToken');
@@ -98,7 +96,7 @@ describe('HuelagerService', () => {
 
   describe('refreshToken', () => {
     const refreshToken = async () =>
-      huelagerService.refreshToken({
+      service.refreshToken({
         entityId: 'testId',
         refreshToken: 'testToken',
       });
@@ -108,7 +106,7 @@ describe('HuelagerService', () => {
     };
 
     it('retrieves the huelager from the database with the findHuelager method', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
       (compare as jest.MockedFunction<typeof compare>).mockImplementation(
         async () => true,
       );
@@ -116,19 +114,19 @@ describe('HuelagerService', () => {
 
       const result = await refreshToken();
 
-      expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
+      expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
       expect(result).toEqual('testToken');
     });
 
     it('throws an unauthorized error if huelager is not found', () => {
-      huelagerRepository.findHuelager.mockResolvedValue(null);
+      repository.findHuelager.mockResolvedValue(null);
       expect(refreshToken()).rejects.toThrow(UnauthorizedException);
     });
 
     it('throws an unauthorized error if the refresh token is incorrect', () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
       (compare as jest.MockedFunction<typeof compare>).mockImplementation(
         async () => false,
       );
@@ -138,7 +136,7 @@ describe('HuelagerService', () => {
 
   describe('updatePhone', () => {
     const updatePhone = async () =>
-      huelagerService.updatePhone({
+      service.updatePhone({
         entityId: 'testId',
         phone: 'newPhone',
       });
@@ -159,11 +157,11 @@ describe('HuelagerService', () => {
     };
 
     it('updates the phone, sends SMS and returns the huelager', async () => {
-      huelagerRepository.findHuelagers.mockResolvedValue([mockFoundHuelager]);
+      repository.findHuelagers.mockResolvedValue([mockFoundHuelager]);
 
       const result = await updatePhone();
 
-      expect(huelagerRepository.findHuelagers).toHaveBeenCalledWith({
+      expect(repository.findHuelagers).toHaveBeenCalledWith({
         where: [{ entityId: 'testId' }, { phone: 'newPhone' }],
       });
       expect(smsService.sendSms).toHaveBeenCalled();
@@ -171,15 +169,13 @@ describe('HuelagerService', () => {
     });
 
     it('throws a not found error if the a huelager with that id is not found', async () => {
-      huelagerRepository.findHuelagers.mockResolvedValue([
-        mockRejectedHuelager,
-      ]);
+      repository.findHuelagers.mockResolvedValue([mockRejectedHuelager]);
 
       expect(updatePhone()).rejects.toThrow(NotFoundException);
     });
 
     it('throws an error if more than one huelager is returned from the .findHuelagers(): phone number in use', async () => {
-      huelagerRepository.findHuelagers.mockResolvedValue([
+      repository.findHuelagers.mockResolvedValue([
         mockRejectedHuelager,
         mockFoundHuelager,
       ]);
@@ -190,7 +186,7 @@ describe('HuelagerService', () => {
 
   describe('verifyPhone', () => {
     const verifyPhone = async () =>
-      huelagerService.verifyPhone({
+      service.verifyPhone({
         phone: 'testPhone',
         otp: 1234,
       });
@@ -213,8 +209,8 @@ describe('HuelagerService', () => {
       entityId: 'testId',
     };
 
-    it('successfully verifies the phone and returns the hulager', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+    it('verifies the phone and returns the hulager', async () => {
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
       (
         otpIsExpired as jest.MockedFunction<typeof otpIsExpired>
       ).mockReturnValue(false);
@@ -222,19 +218,19 @@ describe('HuelagerService', () => {
 
       const result = await verifyPhone();
 
-      expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
+      expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { phone: 'testPhone' },
       });
       expect(result).toEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(null);
+      repository.findHuelager.mockResolvedValue(null);
       expect(verifyPhone()).rejects.toThrow(NotFoundException);
     });
 
     it('throws an unauthorized error if the otp has expired', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
       (
         otpIsExpired as jest.MockedFunction<typeof otpIsExpired>
       ).mockReturnValue(true);
@@ -243,14 +239,14 @@ describe('HuelagerService', () => {
     });
 
     it('throws an unauthorized eerror if the otp is incorrect', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockRejectedHuelager);
+      repository.findHuelager.mockResolvedValue(mockRejectedHuelager);
       expect(verifyPhone()).rejects.toThrow(UnauthorizedException);
     });
   });
 
   describe('requestEmailVerification', () => {
     const requestEmailVerification = async () =>
-      huelagerService.requestEmailVerification('mockEmail');
+      service.requestEmailVerification('mockEmail');
 
     const mockFoundHuelager = {
       entityType: 'user',
@@ -264,25 +260,25 @@ describe('HuelagerService', () => {
     };
 
     it('updates the huelager otp and sends the otp to the email', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
 
       const result = await requestEmailVerification();
 
-      expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
+      expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { email: 'mockEmail' },
       });
       expect(result).toEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(null);
+      repository.findHuelager.mockResolvedValue(null);
       expect(requestEmailVerification()).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('verifyEmail', () => {
     const verifyEmail = async () =>
-      huelagerService.verifyEmail({ email: 'mockEmail', otp: 1234 });
+      service.verifyEmail({ email: 'mockEmail', otp: 1234 });
 
     const mockFoundHuelager = {
       otp: 1234,
@@ -298,26 +294,26 @@ describe('HuelagerService', () => {
     };
 
     it('updates the huelager otp and sends the otp to the email', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
       (
         otpIsExpired as jest.MockedFunction<typeof otpIsExpired>
       ).mockReturnValue(false);
 
       const result = await verifyEmail();
 
-      expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
+      expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { email: 'mockEmail' },
       });
       expect(result).toEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(null);
+      repository.findHuelager.mockResolvedValue(null);
       expect(verifyEmail()).rejects.toThrow(NotFoundException);
     });
 
     it('throws an unauthorized error if the otp has expired', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
       (
         otpIsExpired as jest.MockedFunction<typeof otpIsExpired>
       ).mockReturnValue(true);
@@ -326,14 +322,14 @@ describe('HuelagerService', () => {
     });
 
     it('throws an unauthorized eerror if the otp is incorrect', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockRejectedHuelager);
+      repository.findHuelager.mockResolvedValue(mockRejectedHuelager);
       expect(verifyEmail()).rejects.toThrow(UnauthorizedException);
     });
   });
 
   describe('forgotPassword', () => {
     const forgotPassword = async () =>
-      huelagerService.forgotPassword({
+      service.forgotPassword({
         entityId: 'testId',
         password: 'testPassword',
       });
@@ -345,28 +341,28 @@ describe('HuelagerService', () => {
     };
 
     it('updates the password of the user and returns user', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
       (compare as jest.MockedFunction<typeof compare>).mockImplementation(
         async () => true,
       );
 
       const result = await forgotPassword();
 
-      expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
+      expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
       expect(result).toEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(null);
+      repository.findHuelager.mockResolvedValue(null);
       expect(forgotPassword()).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('updatePassword', () => {
     const updatePassword = async () =>
-      huelagerService.updatePassword({
+      service.updatePassword({
         entityId: 'testId',
         oldPassword: 'testOldPassword',
         password: 'testNewPassword',
@@ -381,26 +377,26 @@ describe('HuelagerService', () => {
     };
 
     it('updates the password of the user, after confirming the old password and returns the huelager', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
       (compare as jest.MockedFunction<typeof compare>).mockImplementation(
         async () => true,
       );
 
       const result = await updatePassword();
 
-      expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
+      expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
       expect(result).toEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
-      huelagerRepository.findHuelager.mockResolvedValue(null);
+      repository.findHuelager.mockResolvedValue(null);
       expect(updatePassword()).rejects.toThrow(NotFoundException);
     });
 
     it('throws an unauthorized error if the old password is incorrect', () => {
-      huelagerRepository.findHuelager.mockResolvedValue(mockFoundHuelager);
+      repository.findHuelager.mockResolvedValue(mockFoundHuelager);
       (compare as jest.MockedFunction<typeof compare>).mockImplementation(
         async () => false,
       );
@@ -410,8 +406,7 @@ describe('HuelagerService', () => {
 
   describe('generateRSAKey', () => {
     const mockHuelager = {};
-    const generateRSAKey = async () =>
-      huelagerService.generateRSAKey(mockHuelager);
+    const generateRSAKey = async () => service.generateRSAKey(mockHuelager);
 
     it('generates an RSA key pair and returns the public key', async () => {
       const result = await generateRSAKey();

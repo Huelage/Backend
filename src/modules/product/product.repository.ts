@@ -28,10 +28,6 @@ export class ProductRepository {
     return product;
   }
 
-  async findProductById(productId) {
-    return this.productRepository.findOneBy({ productId });
-  }
-
   async findProduct(params: { where: FindOptionsWhere<Product> }) {
     const { where } = params;
     return this.productRepository.findOneBy(where);

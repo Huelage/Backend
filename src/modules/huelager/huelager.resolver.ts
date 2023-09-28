@@ -20,6 +20,17 @@ export class HuelagerResolver {
     return 'Hello World!';
   }
 
+  /**
+   *The refresh token strategy does not return the whole 'huelager' object like the access token
+   * @param req
+   * @returns accessToken-string
+   */
+  @UseGuards(RefreshTokenGuard)
+  @Mutation(() => String)
+  async refreshAccessToken(@Context('req') req) {
+    return await this.huelagerService.refreshToken(req.user);
+  }
+
   @Mutation(() => Huelager)
   async updatePhone(
     @Args('input') updatePhoneInput: UpdatePhoneInput,
@@ -32,23 +43,6 @@ export class HuelagerResolver {
     @Args('input') verifyPhoneInput: VerifyPhoneInput,
   ): Promise<Huelager> {
     return await this.huelagerService.verifyPhone(verifyPhoneInput);
-  }
-
-  /**
-   *The refresh token strategy does not return the whole 'huelager' object like the access token
-   * @param req
-   * @returns accessToken-string
-   */
-  @UseGuards(RefreshTokenGuard)
-  @Mutation(() => String)
-  async refreshAccessToken(@Context('req') req) {
-    return await this.huelagerService.refreshToken(req.user);
-  }
-
-  @UseGuards(AccessTokenGuard)
-  @Mutation(() => String)
-  async generateRSAKey(@Context('req') req) {
-    return await this.huelagerService.generateRSAKey(req.user);
   }
 
   @Mutation(() => Huelager)
@@ -73,5 +67,11 @@ export class HuelagerResolver {
     @Args('input') updatePasswordInput: UpdatePasswordInput,
   ) {
     return await this.huelagerService.updatePassword(updatePasswordInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Mutation(() => String)
+  async generateRSAKey(@Context('req') req) {
+    return await this.huelagerService.generateRSAKey(req.user);
   }
 }

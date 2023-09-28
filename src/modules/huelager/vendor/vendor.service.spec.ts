@@ -41,7 +41,7 @@ const mockHuelagerService = () => ({
 });
 
 describe('VendorService', () => {
-  let vendorService;
+  let service;
   let huelagerRepository;
   let huelagerService;
 
@@ -55,7 +55,7 @@ describe('VendorService', () => {
       ],
     }).compile();
 
-    vendorService = await module.get<VendorService>(VendorService);
+    service = await module.get<VendorService>(VendorService);
     huelagerRepository = await module.get<HuelagerRepository>(
       HuelagerRepository,
     );
@@ -63,7 +63,7 @@ describe('VendorService', () => {
   });
 
   it('should be defined', () => {
-    expect(vendorService).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   describe('create', () => {
@@ -97,7 +97,7 @@ describe('VendorService', () => {
       vendorId: mockReturnHuelager.entityId,
       vendorKey: 'testVendorKey',
     };
-    const create = async () => vendorService.create({ ...mockCreateInput });
+    const create = async () => service.create({ ...mockCreateInput });
 
     it('creates the vendor after creating an entity and returns the vendor', async () => {
       huelagerRepository.checkEmailAndPhone.mockResolvedValue(null);
@@ -167,7 +167,7 @@ describe('VendorService', () => {
         refreshToken: 'testToken',
       });
 
-      const result = await vendorService.signIn({
+      const result = await service.signIn({
         entityId: 'testId',
         vendorKey: null,
         password: 'testPassword',
@@ -189,7 +189,7 @@ describe('VendorService', () => {
         refreshToken: 'testToken',
       });
 
-      const result = await vendorService.signIn({
+      const result = await service.signIn({
         entityId: null,
         vendorKey: 'testVendorKey',
         password: 'testPassword',
@@ -203,7 +203,7 @@ describe('VendorService', () => {
 
     it('throws a bad request error if neither the vendorKey nor entityId field is inputed', async () => {
       const signIn = async () =>
-        vendorService.signIn({
+        service.signIn({
           entityId: null,
           vendorKey: null,
           password: 'testPassword',
@@ -215,7 +215,7 @@ describe('VendorService', () => {
       huelagerRepository.findVendor.mockReturnValue(null);
 
       const signIn = async () =>
-        await vendorService.signIn({
+        await service.signIn({
           entityId: 'testId',
           vendorKey: 'testEmail',
           password: 'testPassword',
@@ -229,7 +229,7 @@ describe('VendorService', () => {
         async () => false,
       );
       const signIn = async () =>
-        await vendorService.signIn({
+        await service.signIn({
           entityId: 'testId',
           email: 'testEmail',
           password: 'testPassword',
