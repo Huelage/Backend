@@ -3,13 +3,11 @@ import { DeepMocked } from '@golevelup/ts-jest';
 
 import { AccessTokenStrategy } from './access-token.strategy';
 import { HuelagerRepository } from '../../huelager.repository';
-import { ConfigService } from '@nestjs/config';
+import { Huelager } from '../../entities/huelager.entity';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { UnauthorizedException } from '@nestjs/common';
 
 const mockHuelagerRepository = () => ({
-  findHuelager: jest.fn(),
-});
-
-const mockConfigService = () => ({
   findHuelager: jest.fn(),
 });
 
@@ -22,7 +20,6 @@ describe('AccessTokenStrategy', () => {
       providers: [
         AccessTokenStrategy,
         { provide: HuelagerRepository, useFactory: mockHuelagerRepository },
-        { provide: ConfigService, useFactory: mockConfigService },
       ],
     }).compile();
 
@@ -32,5 +29,29 @@ describe('AccessTokenStrategy', () => {
 
   it('should be defined', () => {
     expect(accessTokenStrategy).toBeDefined();
+  });
+
+  describe('validate', () => {
+    const huelager = new Huelager();
+    const payLoad: JwtPayload = { entityId: 'testId' };
+    const validate = async () => accessTokenStrategy.validate(payLoad);
+
+    it('validates and returns the huelager from the JWT payload', async () => {
+      huelagerRepository.findHuelager.mockResolvedValue(huelager);
+
+      const result = await validate();
+
+      expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
+        where: { entityId: 'testId' },
+      });
+
+      expect(result).toEqual(huelager);
+    });
+
+    it('throws an unauthorized error if the huelager is not found', async () => {
+      huelagerRepository.findHuelager.mockResolvedValue(null);
+
+      expect(validate()).rejects.toThrow(UnauthorizedException);
+    });
   });
 });

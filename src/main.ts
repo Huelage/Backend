@@ -19,7 +19,8 @@ async function bootstrap() {
     graphqlUploadExpress({ maxFileSize: 1000000, maxFiles: 10 }),
   );
 
-  const port = process.env.PORT3 || 3001;
+  const port = process.env.PORT || 3000;
+  app.listen(port);
 
   logger.verbose(
     `\nApplication listening on port ${port} \nView the graphlQL playground on http://localhost:${port}/graphql/`,
