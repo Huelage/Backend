@@ -8,4 +8,4 @@ db:
 
 jwt:
   accessExpiresIn: '3d'
-  tokenExpiresIn: '1y'
+  refreshExpiresIn: '1y'
