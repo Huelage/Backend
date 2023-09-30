@@ -42,7 +42,7 @@ describe('HuelagerResolver', () => {
 
   describe('sayHello', () => {
     it('says hello', () => {
-      expect(resolver.sayHello()).toEqual('Hello World!');
+      expect(resolver.sayHello()).toStrictEqual('Hello World!');
     });
   });
 
@@ -55,7 +55,7 @@ describe('HuelagerResolver', () => {
       const result = await resolver.refreshAccessToken({ user: huelager });
 
       expect(service.refreshToken).toHaveBeenCalledWith(huelager);
-      expect(result).toEqual('testToken');
+      expect(result).toStrictEqual('testToken');
     });
   });
 
@@ -69,7 +69,7 @@ describe('HuelagerResolver', () => {
       const result = await resolver.updatePhone(updatePhoneInput);
 
       expect(service.updatePhone).toHaveBeenCalledWith(updatePhoneInput);
-      expect(result).toEqual(huelager);
+      expect(result).toStrictEqual(huelager);
     });
   });
 
@@ -83,7 +83,7 @@ describe('HuelagerResolver', () => {
       const result = await resolver.verifyPhoneOtp(verifyPhoneInput);
 
       expect(service.verifyPhone).toHaveBeenCalledWith(verifyPhoneInput);
-      expect(result).toEqual(huelager);
+      expect(result).toStrictEqual(huelager);
     });
   });
 
@@ -98,7 +98,7 @@ describe('HuelagerResolver', () => {
       expect(service.requestEmailVerification).toHaveBeenCalledWith(
         'testEmail',
       );
-      expect(result).toEqual(huelager);
+      expect(result).toStrictEqual(huelager);
     });
   });
 
@@ -112,7 +112,7 @@ describe('HuelagerResolver', () => {
       const result = await resolver.verifyEmailOtp(verifyEmailInput);
 
       expect(service.verifyEmail).toHaveBeenCalledWith(verifyEmailInput);
-      expect(result).toEqual(huelager);
+      expect(result).toStrictEqual(huelager);
     });
   });
 
@@ -126,7 +126,7 @@ describe('HuelagerResolver', () => {
       const result = await resolver.forgotPassword(forgotPasswordInput);
 
       expect(service.forgotPassword).toHaveBeenCalledWith(forgotPasswordInput);
-      expect(result).toEqual(huelager);
+      expect(result).toStrictEqual(huelager);
     });
   });
 
@@ -140,7 +140,7 @@ describe('HuelagerResolver', () => {
       const result = await resolver.updatePassword(updatePasswordInput);
 
       expect(service.updatePassword).toHaveBeenCalledWith(updatePasswordInput);
-      expect(result).toEqual(huelager);
+      expect(result).toStrictEqual(huelager);
     });
   });
 
@@ -153,7 +153,7 @@ describe('HuelagerResolver', () => {
       const result = await resolver.generateRSAKey({ user: huelager });
 
       expect(service.generateRSAKey).toHaveBeenCalledWith(huelager);
-      expect(result).toEqual('publicKey');
+      expect(result).toStrictEqual('publicKey');
     });
   });
 });

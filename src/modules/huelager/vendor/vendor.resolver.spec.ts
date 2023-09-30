@@ -42,7 +42,7 @@ describe('VendorResolver', () => {
       const result = await resolver.signUpVendor(createVendorInput);
 
       expect(service.create).toHaveBeenCalledWith(createVendorInput);
-      expect(result).toEqual(vendor);
+      expect(result).toStrictEqual(vendor);
     });
   });
 
@@ -56,7 +56,7 @@ describe('VendorResolver', () => {
       const result = await resolver.signInVendor(authenticateVendorInput);
 
       expect(service.signIn).toHaveBeenCalledWith(vendor);
-      expect(result).toEqual(authenticateVendorInput);
+      expect(result).toStrictEqual(authenticateVendorInput);
     });
   });
 });

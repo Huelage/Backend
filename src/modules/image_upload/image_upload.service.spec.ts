@@ -76,7 +76,7 @@ describe('ImageUploadService', () => {
         update: { imgUrl: 'testUrl' },
       });
 
-      expect(result).toEqual('testUrl');
+      expect(result).toStrictEqual('testUrl');
     });
 
     it('uploads the image to cloudinary and adds the link to the product got from the id', async () => {
@@ -103,7 +103,7 @@ describe('ImageUploadService', () => {
         update: { imgUrl: 'testUrl' },
       });
 
-      expect(result).toEqual('testUrl');
+      expect(result).toStrictEqual('testUrl');
     });
 
     it('throws a not found error if no huelager or product with the id exists', async () => {

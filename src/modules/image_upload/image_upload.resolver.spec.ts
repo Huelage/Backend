@@ -37,7 +37,7 @@ describe('ImageUploadResolver', () => {
       const result = await uploadImage();
 
       expect(service.uploadImage).toHaveBeenCalledWith(uploadImageInput);
-      expect(result).toEqual('testUrl');
+      expect(result).toStrictEqual('testUrl');
     });
   });
 });

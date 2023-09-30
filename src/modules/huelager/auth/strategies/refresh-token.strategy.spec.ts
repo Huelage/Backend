@@ -5,20 +5,23 @@ import { Request } from 'express';
 import { RefreshTokenStrategy } from './refresh-token.strategy';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
+process.env = {
+  JWT_REFRESH_SECRET: 'testSecret',
+};
+
 describe('RefreshTokenStrategy', () => {
-  let refreshTokenStrategy: RefreshTokenStrategy;
+  let strategy: RefreshTokenStrategy;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [RefreshTokenStrategy],
     }).compile();
 
-    refreshTokenStrategy =
-      module.get<RefreshTokenStrategy>(RefreshTokenStrategy);
+    strategy = module.get<RefreshTokenStrategy>(RefreshTokenStrategy);
   });
 
   it('should be defined', () => {
-    expect(refreshTokenStrategy).toBeDefined();
+    expect(strategy).toBeDefined();
   });
 
   describe('validate', () => {
@@ -30,16 +33,18 @@ describe('RefreshTokenStrategy', () => {
       },
     };
     jest.spyOn(req, 'get');
-    const validate = () =>
-      refreshTokenStrategy.validate(req as Request, payLoad);
+    const validate = () => strategy.validate(req as Request, payLoad);
 
-    it('validates and returns the huelager from the JWT payload', () => {
+    it('validates and returns the refresh token and the entityId', () => {
       const result = validate();
 
       expect(req.get).toHaveBeenCalledTimes(1);
       expect(req.get).toHaveBeenCalledWith('Authorization');
 
-      expect(result).toEqual({ entityId: 'testId', refreshToken: 'testToken' });
+      expect(result).toStrictEqual({
+        entityId: 'testId',
+        refreshToken: 'testToken',
+      });
     });
   });
 });

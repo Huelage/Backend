@@ -118,7 +118,7 @@ describe('VendorService', () => {
       );
       expect(huelagerRepository.createVendor).toHaveBeenCalledWith(mockVendor);
 
-      expect(result).toEqual(mockVendor);
+      expect(result).toStrictEqual(mockVendor);
     });
 
     it('throws a conflict exception error if a vendor with the phone or email exists', async () => {
@@ -177,7 +177,7 @@ describe('VendorService', () => {
       expect(huelagerRepository.findVendor).toHaveBeenCalledWith({
         where: { entity: { entityId: 'testId' } },
       });
-      expect(result).toEqual(mockReturnedVendor);
+      expect(result).toStrictEqual(mockReturnedVendor);
     });
 
     it('signs in the vendor with the vendorKey  by confirming the credentials and returning the vendor object', async () => {
@@ -199,7 +199,7 @@ describe('VendorService', () => {
       expect(huelagerRepository.findVendor).toHaveBeenCalledWith({
         where: { vendorKey: 'testVendorKey' },
       });
-      expect(result).toEqual(mockReturnedVendor);
+      expect(result).toStrictEqual(mockReturnedVendor);
     });
 
     it('throws a bad request error if neither the vendorKey nor entityId field is inputed', async () => {

@@ -42,7 +42,7 @@ describe('UserResolver', () => {
       const result = await resolver.signUpUser(createUserInput);
 
       expect(service.create).toHaveBeenCalledWith(createUserInput);
-      expect(result).toEqual(user);
+      expect(result).toStrictEqual(user);
     });
   });
 
@@ -56,7 +56,7 @@ describe('UserResolver', () => {
       const result = await resolver.signInUser(authenticateUserInput);
 
       expect(service.signIn).toHaveBeenCalledWith(authenticateUserInput);
-      expect(result).toEqual(user);
+      expect(result).toStrictEqual(user);
     });
   });
 });

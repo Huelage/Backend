@@ -2,8 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import * as config from 'config';
-
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { HuelagerRepository } from '../../../../modules/huelager/huelager.repository';
 
@@ -12,8 +10,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private readonly repository: HuelagerRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey:
-        process.env.JWT_ACCESS_SECRET || config.get('jwt.accessSecret'),
+      secretOrKey: process.env.JWT_ACCESS_SECRET,
     });
   }
   async validate(payload: JwtPayload) {

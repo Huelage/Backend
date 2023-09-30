@@ -113,7 +113,7 @@ describe('UserService', () => {
       );
       expect(huelagerRepository.createUser).toHaveBeenCalledWith(mockUser);
 
-      expect(result).toEqual(mockUser);
+      expect(result).toStrictEqual(mockUser);
     });
 
     it('throws a conflict exception error if a user with the phone or email exists', async () => {
@@ -171,7 +171,7 @@ describe('UserService', () => {
       expect(huelagerRepository.findUser).toHaveBeenCalledWith({
         where: { entity: { entityId: 'testId' } },
       });
-      expect(result).toEqual(mockReturnedUser);
+      expect(result).toStrictEqual(mockReturnedUser);
     });
 
     it('signs in the user with the email  by confirming the credentials and returning the user object', async () => {
@@ -193,7 +193,7 @@ describe('UserService', () => {
       expect(huelagerRepository.findUser).toHaveBeenCalledWith({
         where: { entity: { email: 'testEmail' } },
       });
-      expect(result).toEqual(mockReturnedUser);
+      expect(result).toStrictEqual(mockReturnedUser);
     });
 
     it('throws a bad request error if neither the email nor entityId field is inputed', async () => {

@@ -87,7 +87,7 @@ describe('HuelagerService', () => {
       const result = await getTokens();
       expect(jwtService.signAsync).toHaveBeenCalled();
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         accessToken: 'testToken',
         refreshToken: 'testToken',
       });
@@ -117,7 +117,7 @@ describe('HuelagerService', () => {
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
-      expect(result).toEqual('testToken');
+      expect(result).toStrictEqual('testToken');
     });
 
     it('throws an unauthorized error if huelager is not found', () => {
@@ -165,7 +165,7 @@ describe('HuelagerService', () => {
         where: [{ entityId: 'testId' }, { phone: 'newPhone' }],
       });
       expect(smsService.sendSms).toHaveBeenCalled();
-      expect(result).toEqual(mockReturnHuelager);
+      expect(result).toStrictEqual(mockReturnHuelager);
     });
 
     it('throws a not found error if the a huelager with that id is not found', async () => {
@@ -221,7 +221,7 @@ describe('HuelagerService', () => {
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { phone: 'testPhone' },
       });
-      expect(result).toEqual(mockReturnedHuelager);
+      expect(result).toStrictEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
@@ -267,7 +267,7 @@ describe('HuelagerService', () => {
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { email: 'mockEmail' },
       });
-      expect(result).toEqual(mockReturnedHuelager);
+      expect(result).toStrictEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
@@ -304,7 +304,7 @@ describe('HuelagerService', () => {
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { email: 'mockEmail' },
       });
-      expect(result).toEqual(mockReturnedHuelager);
+      expect(result).toStrictEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
@@ -351,7 +351,7 @@ describe('HuelagerService', () => {
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
-      expect(result).toEqual(mockReturnedHuelager);
+      expect(result).toStrictEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
@@ -387,7 +387,7 @@ describe('HuelagerService', () => {
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
-      expect(result).toEqual(mockReturnedHuelager);
+      expect(result).toStrictEqual(mockReturnedHuelager);
     });
 
     it('throws a not found error if huelager is not found', async () => {
@@ -410,7 +410,7 @@ describe('HuelagerService', () => {
 
     it('generates an RSA key pair and returns the public key', async () => {
       const result = await generateRSAKey();
-      expect(result).toEqual('testPublicKey');
+      expect(result).toStrictEqual('testPublicKey');
     });
   });
 });
