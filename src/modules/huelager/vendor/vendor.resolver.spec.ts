@@ -56,7 +56,7 @@ describe('VendorResolver', () => {
       const result = await resolver.signInVendor(authenticateVendorInput);
 
       expect(service.signIn).toHaveBeenCalledWith(vendor);
-      expect(result).toStrictEqual(authenticateVendorInput);
+      expect(result).toStrictEqual(vendor);
     });
   });
 });
