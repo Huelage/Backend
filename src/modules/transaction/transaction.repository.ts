@@ -21,7 +21,7 @@ export class TransactionRepository {
     return transaction;
   }
 
-  async editTransaction(params: {
+  async editTransactionInfo(params: {
     where: FindOptionsWhere<Transaction>;
     update: QueryDeepPartialEntity<Transaction>;
   }) {

@@ -54,6 +54,7 @@ describe('HuelagerResolver', () => {
 
       const result = await resolver.refreshAccessToken({ user: huelager });
 
+      expect(service.refreshToken).toHaveBeenCalledTimes(1);
       expect(service.refreshToken).toHaveBeenCalledWith(huelager);
       expect(result).toStrictEqual('testToken');
     });
@@ -68,6 +69,7 @@ describe('HuelagerResolver', () => {
 
       const result = await resolver.updatePhone(updatePhoneInput);
 
+      expect(service.updatePhone).toHaveBeenCalledTimes(1);
       expect(service.updatePhone).toHaveBeenCalledWith(updatePhoneInput);
       expect(result).toStrictEqual(huelager);
     });
@@ -82,6 +84,7 @@ describe('HuelagerResolver', () => {
 
       const result = await resolver.verifyPhoneOtp(verifyPhoneInput);
 
+      expect(service.verifyPhone).toHaveBeenCalledTimes(1);
       expect(service.verifyPhone).toHaveBeenCalledWith(verifyPhoneInput);
       expect(result).toStrictEqual(huelager);
     });
@@ -95,6 +98,7 @@ describe('HuelagerResolver', () => {
 
       const result = await resolver.requestEmailVerification('testEmail');
 
+      expect(service.requestEmailVerification).toHaveBeenCalledTimes(1);
       expect(service.requestEmailVerification).toHaveBeenCalledWith(
         'testEmail',
       );
@@ -111,6 +115,7 @@ describe('HuelagerResolver', () => {
 
       const result = await resolver.verifyEmailOtp(verifyEmailInput);
 
+      expect(service.verifyEmail).toHaveBeenCalledTimes(1);
       expect(service.verifyEmail).toHaveBeenCalledWith(verifyEmailInput);
       expect(result).toStrictEqual(huelager);
     });
@@ -125,6 +130,7 @@ describe('HuelagerResolver', () => {
 
       const result = await resolver.forgotPassword(forgotPasswordInput);
 
+      expect(service.forgotPassword).toHaveBeenCalledTimes(1);
       expect(service.forgotPassword).toHaveBeenCalledWith(forgotPasswordInput);
       expect(result).toStrictEqual(huelager);
     });
@@ -139,6 +145,7 @@ describe('HuelagerResolver', () => {
 
       const result = await resolver.updatePassword(updatePasswordInput);
 
+      expect(service.updatePassword).toHaveBeenCalledTimes(1);
       expect(service.updatePassword).toHaveBeenCalledWith(updatePasswordInput);
       expect(result).toStrictEqual(huelager);
     });
@@ -152,6 +159,7 @@ describe('HuelagerResolver', () => {
 
       const result = await resolver.generateRSAKey({ user: huelager });
 
+      expect(service.generateRSAKey).toHaveBeenCalledTimes(1);
       expect(service.generateRSAKey).toHaveBeenCalledWith(huelager);
       expect(result).toStrictEqual('publicKey');
     });
