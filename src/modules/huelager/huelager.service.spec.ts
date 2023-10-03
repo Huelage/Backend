@@ -85,7 +85,7 @@ describe('HuelagerService', () => {
 
       expect(jwtService.signAsync).not.toHaveBeenCalled();
       const result = await getTokens();
-      expect(jwtService.signAsync).toHaveBeenCalled();
+      expect(jwtService.signAsync).toHaveBeenCalledTimes(1);
 
       expect(result).toStrictEqual({
         accessToken: 'testToken',
@@ -114,6 +114,7 @@ describe('HuelagerService', () => {
 
       const result = await refreshToken();
 
+      expect(repository.findHuelager).toHaveBeenCalledTimes(1);
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
@@ -161,6 +162,7 @@ describe('HuelagerService', () => {
 
       const result = await updatePhone();
 
+      expect(repository.findHuelagers).toHaveBeenCalledTimes(1);
       expect(repository.findHuelagers).toHaveBeenCalledWith({
         where: [{ entityId: 'testId' }, { phone: 'newPhone' }],
       });
@@ -218,6 +220,7 @@ describe('HuelagerService', () => {
 
       const result = await verifyPhone();
 
+      expect(repository.findHuelager).toHaveBeenCalledTimes(1);
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { phone: 'testPhone' },
       });
@@ -264,6 +267,7 @@ describe('HuelagerService', () => {
 
       const result = await requestEmailVerification();
 
+      expect(repository.findHuelager).toHaveBeenCalledTimes(1);
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { email: 'mockEmail' },
       });
@@ -301,6 +305,7 @@ describe('HuelagerService', () => {
 
       const result = await verifyEmail();
 
+      expect(repository.findHuelager).toHaveBeenCalledTimes(1);
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { email: 'mockEmail' },
       });
@@ -348,6 +353,7 @@ describe('HuelagerService', () => {
 
       const result = await forgotPassword();
 
+      expect(repository.findHuelager).toHaveBeenCalledTimes(1);
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
@@ -384,6 +390,7 @@ describe('HuelagerService', () => {
 
       const result = await updatePassword();
 
+      expect(repository.findHuelager).toHaveBeenCalledTimes(1);
       expect(repository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
