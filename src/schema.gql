@@ -203,6 +203,7 @@ type Vendor {
 
 type Query {
   sayHello: String!
+  getProfile: Huelager!
 }
 
 type Mutation {
