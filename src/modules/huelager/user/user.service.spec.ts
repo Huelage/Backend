@@ -102,6 +102,10 @@ describe('UserService', () => {
 
       const result = await create();
 
+      expect(huelagerRepository.checkEmailAndPhone).toHaveBeenCalledTimes(1);
+      expect(huelagerRepository.createHuelager).toHaveBeenCalledTimes(1);
+      expect(huelagerRepository.createUser).toHaveBeenCalledTimes(1);
+
       expect(huelagerRepository.checkEmailAndPhone).toHaveBeenCalledWith({
         where: [
           { email: mockCreateInput.email },
@@ -168,6 +172,7 @@ describe('UserService', () => {
         password: 'testPassword',
       });
 
+      expect(huelagerRepository.findUser).toHaveBeenCalledTimes(1);
       expect(huelagerRepository.findUser).toHaveBeenCalledWith({
         where: { entity: { entityId: 'testId' } },
       });
@@ -190,6 +195,7 @@ describe('UserService', () => {
         password: 'testPassword',
       });
 
+      expect(huelagerRepository.findUser).toHaveBeenCalledTimes(1);
       expect(huelagerRepository.findUser).toHaveBeenCalledWith({
         where: { entity: { email: 'testEmail' } },
       });

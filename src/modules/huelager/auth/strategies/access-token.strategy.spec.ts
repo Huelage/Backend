@@ -45,6 +45,7 @@ describe('AccessTokenStrategy', () => {
 
       const result = await validate();
 
+      expect(huelagerRepository.findHuelager).toHaveBeenCalledTimes(1);
       expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });

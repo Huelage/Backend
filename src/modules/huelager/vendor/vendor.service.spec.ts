@@ -107,6 +107,10 @@ describe('VendorService', () => {
 
       const result = await create();
 
+      expect(huelagerRepository.checkEmailAndPhone).toHaveBeenCalledTimes(1);
+      expect(huelagerRepository.createHuelager).toHaveBeenCalledTimes(1);
+      expect(huelagerRepository.createVendor).toHaveBeenCalledTimes(1);
+
       expect(huelagerRepository.checkEmailAndPhone).toHaveBeenCalledWith({
         where: [
           { email: mockCreateInput.email },
@@ -174,9 +178,11 @@ describe('VendorService', () => {
         password: 'testPassword',
       });
 
+      expect(huelagerRepository.findVendor).toHaveBeenCalledTimes(1);
       expect(huelagerRepository.findVendor).toHaveBeenCalledWith({
         where: { entity: { entityId: 'testId' } },
       });
+
       expect(result).toStrictEqual(mockReturnedVendor);
     });
 
@@ -196,9 +202,11 @@ describe('VendorService', () => {
         password: 'testPassword',
       });
 
+      expect(huelagerRepository.findVendor).toHaveBeenCalledTimes(1);
       expect(huelagerRepository.findVendor).toHaveBeenCalledWith({
         where: { vendorKey: 'testVendorKey' },
       });
+
       expect(result).toStrictEqual(mockReturnedVendor);
     });
 

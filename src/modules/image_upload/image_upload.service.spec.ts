@@ -63,14 +63,16 @@ describe('ImageUploadService', () => {
         image: Promise.resolve({ uploadLocation: 'entity' }),
       });
 
+      expect(huelagerRepository.findHuelager).toHaveBeenCalledTimes(1);
+      expect(fileUploadService.uploadImage).toHaveBeenCalledTimes(1);
+      expect(huelagerRepository.editHuelagerInfo).toHaveBeenCalledTimes(1);
+
       expect(huelagerRepository.findHuelager).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
       });
-
       expect(fileUploadService.uploadImage).toHaveBeenCalledWith({
         uploadLocation: 'entity',
       });
-
       expect(huelagerRepository.editHuelagerInfo).toHaveBeenCalledWith({
         where: { entityId: 'testId' },
         update: { imgUrl: 'testUrl' },
@@ -90,14 +92,16 @@ describe('ImageUploadService', () => {
         image: Promise.resolve({ uploadLocation: 'product' }),
       });
 
+      expect(productRepository.findProduct).toHaveBeenCalledTimes(1);
+      expect(fileUploadService.uploadImage).toHaveBeenCalledTimes(1);
+      expect(productRepository.editProductInfo).toHaveBeenCalledTimes(1);
+
       expect(productRepository.findProduct).toHaveBeenCalledWith({
         where: { productId: 'testId' },
       });
-
       expect(fileUploadService.uploadImage).toHaveBeenCalledWith({
         uploadLocation: 'product',
       });
-
       expect(productRepository.editProductInfo).toHaveBeenCalledWith({
         where: { productId: 'testId' },
         update: { imgUrl: 'testUrl' },
