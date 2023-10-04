@@ -27,6 +27,14 @@ export class UserService {
     private readonly huelagerService: HuelagerService,
   ) {}
 
+  restructureHuelager(huelager: Huelager) {
+    if (huelager.entityType !== HuelagerType.USER)
+      throw new UnauthorizedException('Not a user');
+
+    const { user, ...entity } = huelager;
+    return { ...user, entity };
+  }
+
   async create(createUserInput: CreateUserInput) {
     const otp = genRandomOtp();
 

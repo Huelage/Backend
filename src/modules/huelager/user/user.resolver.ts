@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context, Query } from '@nestjs/graphql';
 
 import { UserService } from './user.service';
 import { User } from './user.entity';
@@ -12,6 +12,12 @@ import { UpdateUserInput } from '../dtos/update-account.input';
 @Resolver()
 export class UserResolver {
   constructor(private userService: UserService) {}
+
+  @UseGuards(AccessTokenGuard)
+  @Query(() => User)
+  getUserProfile(@Context('req') req) {
+    return this.userService.restructureHuelager(req.user);
+  }
 
   @Mutation(() => User)
   async signUpUser(

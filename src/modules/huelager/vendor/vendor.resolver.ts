@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context, Query } from '@nestjs/graphql';
 
 import { VendorService } from './vendor.service';
 import { Vendor } from './vendor.entity';
@@ -11,6 +11,12 @@ import { UpdateVendorInput } from '../dtos/update-account.input';
 @Resolver()
 export class VendorResolver {
   constructor(private vendorService: VendorService) {}
+
+  @UseGuards(AccessTokenGuard)
+  @Query(() => Vendor)
+  getVendorProfile(@Context('req') req) {
+    return this.vendorService.restructureHuelager(req.user);
+  }
 
   @Mutation(() => Vendor)
   async signUpVendor(
