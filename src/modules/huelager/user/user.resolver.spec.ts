@@ -41,6 +41,7 @@ describe('UserResolver', () => {
 
       const result = await resolver.signUpUser(createUserInput);
 
+      expect(service.create).toHaveBeenCalledTimes(1);
       expect(service.create).toHaveBeenCalledWith(createUserInput);
       expect(result).toStrictEqual(user);
     });
@@ -55,6 +56,7 @@ describe('UserResolver', () => {
 
       const result = await resolver.signInUser(authenticateUserInput);
 
+      expect(service.signIn).toHaveBeenCalledTimes(1);
       expect(service.signIn).toHaveBeenCalledWith(authenticateUserInput);
       expect(result).toStrictEqual(user);
     });

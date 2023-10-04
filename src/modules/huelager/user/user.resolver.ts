@@ -6,7 +6,7 @@ import { CreateUserInput } from '../dtos/create-account.input';
 import { AuthenticateUserInput } from '../dtos/authenticate-account.input';
 import { Huelager } from '../entities/huelager.entity';
 import { UseGuards } from '@nestjs/common';
-import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
+import { AccessTokenGuard } from '../../../common/guards/access-token.guard';
 import { UpdateUserInput } from '../dtos/update-account.input';
 
 @Resolver()

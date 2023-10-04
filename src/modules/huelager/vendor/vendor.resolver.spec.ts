@@ -41,7 +41,9 @@ describe('VendorResolver', () => {
 
       const result = await resolver.signUpVendor(createVendorInput);
 
+      expect(service.create).toHaveBeenCalledTimes(1);
       expect(service.create).toHaveBeenCalledWith(createVendorInput);
+
       expect(result).toStrictEqual(vendor);
     });
   });
@@ -55,6 +57,7 @@ describe('VendorResolver', () => {
 
       const result = await resolver.signInVendor(authenticateVendorInput);
 
+      expect(service.signIn).toHaveBeenCalledTimes(1);
       expect(service.signIn).toHaveBeenCalledWith(vendor);
       expect(result).toStrictEqual(vendor);
     });
