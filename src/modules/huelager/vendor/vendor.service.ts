@@ -28,6 +28,13 @@ export class VendorService {
     private readonly huelagerService: HuelagerService,
   ) {}
 
+  restructureHuelager(huelager: Huelager) {
+    if (huelager.entityType !== HuelagerType.VENDOR)
+      throw new UnauthorizedException('Not a vendor');
+
+    const { vendor, ...entity } = huelager;
+    return { ...vendor, entity };
+  }
   async create(createVendorInput: CreateVendorInput) {
     const otp = genRandomOtp();
 

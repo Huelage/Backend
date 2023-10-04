@@ -202,8 +202,10 @@ type Vendor {
 }
 
 type Query {
+  getVendorProfile: Vendor!
+  getUserProfile: User!
   sayHello: String!
-  getProfile: Huelager!
+  getEntityProfile: Huelager!
 }
 
 type Mutation {

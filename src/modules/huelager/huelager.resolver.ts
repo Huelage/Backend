@@ -22,7 +22,7 @@ export class HuelagerResolver {
 
   @UseGuards(AccessTokenGuard)
   @Query(() => Huelager)
-  getProfile(@Context('req') req) {
+  getEntityProfile(@Context('req') req) {
     return req.user;
   }
 
