@@ -1,9 +1,39 @@
-import { InputType, PartialType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsString } from 'class-validator';
 
-import { CreateUserInput, CreateVendorInput } from './create-account.input';
+@InputType('UpdateEntityInput')
+class UpdateEntityInput {}
 
-@InputType('UpdateUserType')
-export class UpdateUserInput extends PartialType(CreateUserInput) {}
+@InputType('UpdateUserInput')
+export class UpdateUserInput {
+  @IsString()
+  @Field()
+  firstName: string;
 
-@InputType('UpdateVendorType')
-export class UpdateVendorInput extends PartialType(CreateVendorInput) {}
+  @IsString()
+  @Field()
+  lastName: string;
+}
+
+@InputType('UpdateVendorInput')
+export class UpdateVendorInput extends UpdateEntityInput {
+  @IsString()
+  @Field()
+  businessName: string;
+
+  @IsString()
+  @Field()
+  businessAddress: string;
+
+  @IsString()
+  @Field()
+  repName: string;
+
+  @IsString()
+  @Field()
+  openingHours: string;
+
+  @IsString()
+  @Field()
+  closingHours: string;
+}

@@ -1,12 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsEmail,
-  IsAlpha,
-  MinLength,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsEmail, MinLength, IsString } from 'class-validator';
 
 import { MatchesWith } from '../../../common/decorators/matches-with.decorator';
 
@@ -35,11 +29,11 @@ class CreateEntityInput {
 
 @InputType('CreateUserInput')
 export class CreateUserInput extends CreateEntityInput {
-  @IsAlpha()
+  @IsString()
   @Field()
   firstName: string;
 
-  @IsAlpha()
+  @IsString()
   @Field()
   lastName: string;
 }

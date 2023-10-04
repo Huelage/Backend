@@ -15,7 +15,9 @@ import { SmsService } from '../../../providers/sms.service';
 import { genRandomOtp } from '../../../common/helpers/helpers';
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../huelager.service';
-import { HuelagerType } from '../entities/huelager.entity';
+import { Huelager, HuelagerType } from '../entities/huelager.entity';
+import { UpdateUserInput } from '../dtos/update-account.input';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -107,11 +109,23 @@ export class UserService {
     return user;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+  async updateUserProfile(
+    updateUserInput: UpdateUserInput,
+    huelager: Huelager,
+  ) {
+    const { entityId: userId, entityType } = huelager;
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    if (entityType !== HuelagerType.USER)
+      throw new UnauthorizedException('Not a user.');
+
+    const result: UpdateResult = await this.repository.editUserInfo({
+      where: { userId },
+      update: updateUserInput,
+    });
+
+    if (!result.affected)
+      throw new UnauthorizedException('No change was made oh!');
+
+    return 'succcess';
   }
 }
