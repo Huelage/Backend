@@ -20,6 +20,12 @@ export class HuelagerResolver {
     return 'Hello World!';
   }
 
+  @UseGuards(AccessTokenGuard)
+  @Query(() => Huelager)
+  getProfile(@Context('req') req) {
+    return req.user;
+  }
+
   /**
    *The refresh token strategy does not return the whole 'huelager' object like the access token
    * @param req
