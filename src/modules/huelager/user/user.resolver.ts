@@ -1,10 +1,13 @@
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CreateUserInput } from '../dtos/create-account.input';
 import { AuthenticateUserInput } from '../dtos/authenticate-account.input';
 import { Huelager } from '../entities/huelager.entity';
+import { UseGuards } from '@nestjs/common';
+import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
+import { UpdateUserInput } from '../dtos/update-account.input';
 
 @Resolver()
 export class UserResolver {
@@ -22,5 +25,14 @@ export class UserResolver {
     @Args('input') authenticateUserInput: AuthenticateUserInput,
   ): Promise<User | Huelager> {
     return await this.userService.signIn(authenticateUserInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Mutation(() => String)
+  async updateUserProfile(
+    @Context('req') req,
+    @Args('input') updateUserInput: UpdateUserInput,
+  ) {
+    return await this.userService.updateUserProfile(updateUserInput, req.user);
   }
 }

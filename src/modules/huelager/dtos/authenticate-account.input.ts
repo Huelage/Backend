@@ -3,7 +3,7 @@ import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 @InputType('AuthenticateEntityInput')
-export class AuthenticateEntityInput {
+class AuthenticateEntityInput {
   @IsString()
   @IsOptional()
   @Field({ nullable: true })

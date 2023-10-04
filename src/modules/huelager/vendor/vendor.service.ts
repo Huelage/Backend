@@ -16,7 +16,9 @@ import {
 } from '../../../common/helpers/helpers';
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../huelager.service';
-import { HuelagerType } from '../entities/huelager.entity';
+import { Huelager, HuelagerType } from '../entities/huelager.entity';
+import { UpdateVendorInput } from '../dtos/update-account.input';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class VendorService {
@@ -112,11 +114,23 @@ export class VendorService {
     return vendor;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} vendor`;
-  }
+  async updateUserProfile(
+    updateUserInput: UpdateVendorInput,
+    huelager: Huelager,
+  ) {
+    const { entityId: vendorId, entityType } = huelager;
 
-  remove(id: number) {
-    return `This action removes a #${id} vendor`;
+    if (entityType !== HuelagerType.VENDOR)
+      throw new UnauthorizedException('Not a vendor.');
+
+    const result: UpdateResult = await this.repository.editVendorInfo({
+      where: { vendorId },
+      update: updateUserInput,
+    });
+
+    if (!result.affected)
+      throw new UnauthorizedException('No change was made oh!');
+
+    return 'succcess';
   }
 }

@@ -139,4 +139,20 @@ export class HuelagerRepository {
   async saveVendor(vendor: Vendor) {
     this.vendorRepository.save(vendor);
   }
+
+  async editUserInfo(params: {
+    where: FindOptionsWhere<User>;
+    update: QueryDeepPartialEntity<User>;
+  }) {
+    const { where, update } = params;
+    return this.userRepository.update(where, update);
+  }
+
+  async editVendorInfo(params: {
+    where: FindOptionsWhere<Vendor>;
+    update: QueryDeepPartialEntity<Vendor>;
+  }) {
+    const { where, update } = params;
+    return this.vendorRepository.update(where, update);
+  }
 }

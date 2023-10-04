@@ -1,9 +1,12 @@
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 
 import { VendorService } from './vendor.service';
 import { Vendor } from './vendor.entity';
 import { CreateVendorInput } from '../dtos/create-account.input';
 import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
+import { UseGuards } from '@nestjs/common';
+import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
+import { UpdateVendorInput } from '../dtos/update-account.input';
 
 @Resolver()
 export class VendorResolver {
@@ -21,5 +24,17 @@ export class VendorResolver {
     @Args('input') authenticateVendorInput: AuthenticateVendorInput,
   ): Promise<Vendor> {
     return await this.vendorService.signIn(authenticateVendorInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Mutation(() => String)
+  async updateVendorProfile(
+    @Context('req') req,
+    @Args('input') updateVendorInput: UpdateVendorInput,
+  ) {
+    return await this.vendorService.updateUserProfile(
+      updateVendorInput,
+      req.user,
+    );
   }
 }

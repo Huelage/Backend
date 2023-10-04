@@ -209,8 +209,10 @@ type Query {
 type Mutation {
   signUpVendor(input: CreateVendorInput!): Vendor!
   signInVendor(input: AuthenticateVendorInput!): Vendor!
+  updateVendorProfile(input: UpdateVendorInput!): String!
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
+  updateUserProfile(input: UpdateUserInput!): String!
   refreshAccessToken: String!
   updatePhone(input: UpdatePhoneInput!): Huelager!
   verifyPhoneOtp(input: VerifyPhoneInput!): Huelager!
@@ -239,6 +241,14 @@ input AuthenticateVendorInput {
   vendorKey: String
 }
 
+input UpdateVendorInput {
+  businessName: String!
+  businessAddress: String!
+  repName: String!
+  openingHours: String!
+  closingHours: String!
+}
+
 input CreateUserInput {
   email: String!
   phone: String!
@@ -252,6 +262,11 @@ input AuthenticateUserInput {
   entityId: String
   password: String!
   email: String
+}
+
+input UpdateUserInput {
+  firstName: String!
+  lastName: String!
 }
 
 input UpdatePhoneInput {
