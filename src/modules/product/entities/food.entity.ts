@@ -48,17 +48,9 @@ export class Food {
   @Field(() => FoodPricing)
   pricingMethod: FoodPricing;
 
-  @Column({ name: 'portion_price', type: 'decimal', nullable: true })
+  @Column({ name: 'price', type: 'decimal', nullable: true })
   @Field({ nullable: true })
-  portionPrice: number;
-
-  @Column({ name: 'min_price', type: 'decimal', nullable: true })
-  @Field({ nullable: true })
-  minPrice: number;
-
-  @Column({ name: 'fixed_price', type: 'decimal', nullable: true })
-  @Field({ nullable: true })
-  fixedPrice: number;
+  price: number;
 
   @Column({ type: 'enum', enum: Availability, default: Availability.AVAILABLE })
   @Field(() => Availability)
