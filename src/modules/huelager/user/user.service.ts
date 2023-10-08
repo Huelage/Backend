@@ -103,7 +103,7 @@ export class UserService {
     const matches = await compare(password, user.entity.password);
     if (!matches) throw new UnauthorizedException('Invalid credentials');
 
-    if (user.entity.isVerified) {
+    if (user.entity.isPhoneVerified) {
       const { refreshToken, accessToken } =
         await this.huelagerService.getTokens(user.userId);
 

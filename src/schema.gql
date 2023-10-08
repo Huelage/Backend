@@ -161,6 +161,7 @@ type User {
   entity: Huelager!
   firstName: String!
   lastName: String!
+  deliveryAddress: JSON
   isSocialAuth: Boolean!
   reviews: [Review!]
   orders: [Order!]
@@ -171,8 +172,8 @@ type Huelager {
   wallet: Wallet!
   email: String!
   phone: String!
-  isVerified: Boolean!
-  emailIsVerified: Boolean!
+  isPhoneVerified: Boolean!
+  isEmailVerified: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   entityType: HuelagerType!

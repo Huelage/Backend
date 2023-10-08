@@ -10,6 +10,7 @@ import {
 import { Huelager } from '../entities/huelager.entity';
 import { Review } from '../entities/review.entity';
 import { Order } from '../../order/entities/order.entity';
+import GraphQLJSON from 'graphql-type-json';
 // import { v4 } from 'uuid';
 
 @Entity({ name: 'user' })
@@ -34,9 +35,9 @@ export class User {
   @Field()
   lastName: string;
 
-  // @Column({ name: 'delivery_addr', type: 'text' })
-  // @Field()
-  // deliveryAddress: string;
+  @Column({ name: 'delivery_addr', type: 'json' })
+  @Field(() => GraphQLJSON, { nullable: true })
+  deliveryAddress: any;
 
   @Column({ name: 'is_social_auth', type: 'boolean', default: false })
   @Field()

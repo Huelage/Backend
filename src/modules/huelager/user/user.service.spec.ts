@@ -143,7 +143,7 @@ describe('UserService', () => {
     const mockFoundUser = {
       entity: {
         password: 'testHash',
-        isVerified: true,
+        isPhoneVerified: true,
       },
     };
 
@@ -152,7 +152,7 @@ describe('UserService', () => {
         password: 'testHash',
         accessToken: 'testToken',
         refreshToken: 'testToken',
-        isVerified: true,
+        isPhoneVerified: true,
         hashedRefreshToken: 'testHash',
       },
     };

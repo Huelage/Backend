@@ -97,7 +97,7 @@ export class HuelagerService {
     const otp = genRandomOtp();
     huelager.phone = phone;
     huelager.otp = otp;
-    huelager.isVerified = false;
+    huelager.isPhoneVerified = false;
 
     const name =
       huelager.entityType === HuelagerType.USER
@@ -132,7 +132,7 @@ export class HuelagerService {
 
     huelager.accessToken = accessToken;
     huelager.refreshToken = refreshToken;
-    huelager.isVerified = true;
+    huelager.isPhoneVerified = true;
     huelager.hashedRefreshToken = await hash(refreshToken, 10);
     await this.repository.saveHuelager(huelager);
 
@@ -172,7 +172,7 @@ export class HuelagerService {
     if (isExpired || notMatch)
       throw new UnauthorizedException('The otp is invalid');
 
-    huelager.emailIsVerified = true;
+    huelager.isEmailVerified = true;
     await this.repository.saveHuelager(huelager);
 
     return huelager;

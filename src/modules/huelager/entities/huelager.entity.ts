@@ -50,13 +50,13 @@ export class Huelager {
   @Column({ name: 'hashed_refresh_token', nullable: true })
   hashedRefreshToken: string;
 
-  @Column({ name: 'is_verified', type: 'boolean', default: false })
+  @Column({ name: 'is_phone_verified', type: 'boolean', default: false })
   @Field()
-  isVerified: boolean;
+  isPhoneVerified: boolean;
 
-  @Column({ name: 'email_is_verified', type: 'boolean', default: false })
+  @Column({ name: 'is_email_verified', type: 'boolean', default: false })
   @Field()
-  emailIsVerified: boolean;
+  isEmailVerified: boolean;
 
   @Column({ name: 'otp', nullable: true, type: 'smallint' })
   otp: number;

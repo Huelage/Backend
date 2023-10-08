@@ -148,7 +148,7 @@ describe('VendorService', () => {
     const mockFoundVendor = {
       entity: {
         password: 'testHash',
-        isVerified: true,
+        isPhoneVerified: true,
       },
     };
 
@@ -157,7 +157,7 @@ describe('VendorService', () => {
         password: 'testHash',
         accessToken: 'testToken',
         refreshToken: 'testToken',
-        isVerified: true,
+        isPhoneVerified: true,
         hashedRefreshToken: 'testHash',
       },
     };

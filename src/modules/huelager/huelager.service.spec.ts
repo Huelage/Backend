@@ -85,7 +85,7 @@ describe('HuelagerService', () => {
 
       expect(jwtService.signAsync).not.toHaveBeenCalled();
       const result = await getTokens();
-      expect(jwtService.signAsync).toHaveBeenCalledTimes(1);
+      expect(jwtService.signAsync).toHaveBeenCalledTimes(2);
 
       expect(result).toStrictEqual({
         accessToken: 'testToken',
@@ -150,7 +150,7 @@ describe('HuelagerService', () => {
       ...mockFoundHuelager,
       phone: 'newPhone',
       otp: 1234,
-      isVerified: false,
+      isPhoneVerified: false,
     };
     const mockRejectedHuelager = {
       ...mockFoundHuelager,
@@ -203,7 +203,7 @@ describe('HuelagerService', () => {
       accessToken: 'testToken',
       refreshToken: 'testToken',
       hashedRefreshToken: 'testHash',
-      isVerified: true,
+      isPhoneVerified: true,
     };
 
     const mockRejectedHuelager = {
@@ -294,7 +294,7 @@ describe('HuelagerService', () => {
 
     const mockReturnedHuelager = {
       ...mockFoundHuelager,
-      emailIsVerified: true,
+      isEmailVerified: true,
     };
 
     it('updates the huelager otp and sends the otp to the email', async () => {

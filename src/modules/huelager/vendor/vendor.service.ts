@@ -107,7 +107,7 @@ export class VendorService {
     const matches = await compare(password, vendor.entity.password);
     if (!matches) throw new UnauthorizedException('Invalid credentials');
 
-    if (vendor.entity.isVerified) {
+    if (vendor.entity.isPhoneVerified) {
       const { accessToken, refreshToken } =
         await this.huelagerService.getTokens(vendor.vendorId);
 
