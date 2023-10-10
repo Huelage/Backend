@@ -74,9 +74,7 @@ type Food {
   product: Product!
   category: FoodCategory!
   pricingMethod: FoodPricing!
-  portionPrice: Float
-  minPrice: Float
-  fixedPrice: Float
+  price: Float
   availability: Availability!
   packagesSizes: JSON
   sides: JSON

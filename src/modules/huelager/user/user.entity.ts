@@ -35,9 +35,9 @@ export class User {
   @Field()
   lastName: string;
 
-  @Column({ name: 'delivery_addr', type: 'json' })
+  @Column({ name: 'known_location', type: 'json' })
   @Field(() => GraphQLJSON, { nullable: true })
-  deliveryAddress: any;
+  knownLocation: any;
 
   @Column({ name: 'is_social_auth', type: 'boolean', default: false })
   @Field()
