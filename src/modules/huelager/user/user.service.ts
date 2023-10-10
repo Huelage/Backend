@@ -18,6 +18,7 @@ import { HuelagerService } from '../huelager.service';
 import { Huelager, HuelagerType } from '../entities/huelager.entity';
 import { UpdateUserInput } from '../dtos/update-account.input';
 import { UpdateResult } from 'typeorm';
+import { EditUserLocationInput } from '../dtos/edit-locations.input';
 
 @Injectable()
 export class UserService {
@@ -70,6 +71,7 @@ export class UserService {
       lastName,
       entity,
       userId: entity.entityId,
+      knownLocation: { locations: [] },
     });
 
     try {
@@ -135,5 +137,25 @@ export class UserService {
       throw new UnauthorizedException('No change was made oh!');
 
     return 'succcess';
+  }
+
+  async addLocation(
+    editUserLocationInput: EditUserLocationInput,
+    userId: string,
+  ) {
+    const { locationId, name } = editUserLocationInput;
+    const user = await this.repository.findUser({ where: { userId } });
+
+    if (!name) {
+      user.knownLocation.locations = user.knownLocation.locations.filter(
+        (location) => location.locationId !== locationId,
+      );
+    } else {
+      user.knownLocation.locations.push({ locationId, name });
+    }
+
+    await this.repository.saveUser(user);
+
+    return user;
   }
 }

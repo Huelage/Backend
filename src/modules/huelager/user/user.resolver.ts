@@ -8,6 +8,7 @@ import { Huelager } from '../entities/huelager.entity';
 import { UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '../../../common/guards/access-token.guard';
 import { UpdateUserInput } from '../dtos/update-account.input';
+import { EditUserLocationInput } from '../dtos/edit-locations.input';
 
 @Resolver()
 export class UserResolver {
@@ -40,5 +41,17 @@ export class UserResolver {
     @Args('input') updateUserInput: UpdateUserInput,
   ) {
     return await this.userService.updateUserProfile(updateUserInput, req.user);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Mutation(() => User)
+  async editUserLocation(
+    @Context('req') req,
+    @Args('input') editUserLocationInput: EditUserLocationInput,
+  ) {
+    return await this.userService.addLocation(
+      editUserLocationInput,
+      req.user.id,
+    );
   }
 }
