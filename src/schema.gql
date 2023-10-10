@@ -159,7 +159,7 @@ type User {
   entity: Huelager!
   firstName: String!
   lastName: String!
-  deliveryAddress: JSON
+  knownLocation: JSON
   isSocialAuth: Boolean!
   reviews: [Review!]
   orders: [Order!]
@@ -214,6 +214,7 @@ type Mutation {
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
   updateUserProfile(input: UpdateUserInput!): String!
+  editUserLocation(input: EditUserLocationInput!): User!
   refreshAccessToken: String!
   updatePhone(input: UpdatePhoneInput!): Huelager!
   verifyPhoneOtp(input: VerifyPhoneInput!): Huelager!
@@ -268,6 +269,11 @@ input AuthenticateUserInput {
 input UpdateUserInput {
   firstName: String!
   lastName: String!
+}
+
+input EditUserLocationInput {
+  locationId: String!
+  name: String
 }
 
 input UpdatePhoneInput {
