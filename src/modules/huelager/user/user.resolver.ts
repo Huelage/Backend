@@ -35,15 +35,6 @@ export class UserResolver {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Mutation(() => String)
-  async updateUserProfile(
-    @Context('req') req,
-    @Args('input') updateUserInput: UpdateUserInput,
-  ) {
-    return await this.userService.updateUserProfile(updateUserInput, req.user);
-  }
-
-  @UseGuards(AccessTokenGuard)
   @Mutation(() => User)
   async editUserLocation(
     @Context('req') req,

@@ -31,16 +31,4 @@ export class VendorResolver {
   ): Promise<Vendor> {
     return await this.vendorService.signIn(authenticateVendorInput);
   }
-
-  @UseGuards(AccessTokenGuard)
-  @Mutation(() => String)
-  async updateVendorProfile(
-    @Context('req') req,
-    @Args('input') updateVendorInput: UpdateVendorInput,
-  ) {
-    return await this.vendorService.updateUserProfile(
-      updateVendorInput,
-      req.user,
-    );
-  }
 }
