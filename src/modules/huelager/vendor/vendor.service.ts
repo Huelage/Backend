@@ -17,8 +17,6 @@ import {
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../huelager.service';
 import { Huelager, HuelagerType } from '../entities/huelager.entity';
-import { UpdateVendorInput } from '../dtos/update-account.input';
-import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class VendorService {
