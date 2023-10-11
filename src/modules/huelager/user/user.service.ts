@@ -16,8 +16,6 @@ import { genRandomOtp } from '../../../common/helpers/helpers';
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../huelager.service';
 import { Huelager, HuelagerType } from '../entities/huelager.entity';
-import { UpdateUserInput } from '../dtos/update-account.input';
-import { UpdateResult } from 'typeorm';
 import { EditUserLocationInput } from '../dtos/edit-locations.input';
 
 @Injectable()
@@ -119,11 +117,12 @@ export class UserService {
     return user;
   }
 
-  async addLocation(
-    editUserLocationInput: EditUserLocationInput,
-    userId: string,
-  ) {
-    const { locationId, name } = editUserLocationInput;
+  async editLocation(editUserLocationInput: EditUserLocationInput) {
+    const { locationId, name, userId, entityType } = editUserLocationInput;
+
+    if (entityType !== HuelagerType.USER)
+      throw new UnauthorizedException('Not a user');
+
     const user = await this.repository.findUser({ where: { userId } });
 
     if (!name) {

@@ -11,6 +11,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { compare } from 'bcryptjs';
+import { EditUserLocationInput } from '../dtos/edit-locations.input';
+import { HuelagerType } from '../entities/huelager.entity';
 
 jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
@@ -92,6 +94,9 @@ describe('UserService', () => {
       firstName: mockCreateInput.firstName,
       lastName: mockCreateInput.lastName,
       userId: mockReturnHuelager.entityId,
+      knownLocation: {
+        locations: [],
+      },
     };
     const create = async () => service.create(mockCreateInput);
 
@@ -236,6 +241,78 @@ describe('UserService', () => {
           password: 'testPassword',
         });
       expect(signIn()).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('editLocation', () => {
+    it('adds a location to the locations array', async () => {
+      const addLocationInput = new EditUserLocationInput();
+      addLocationInput.locationId = 'testLocationId';
+      addLocationInput.name = 'testName';
+      addLocationInput.entityType = HuelagerType.USER;
+      addLocationInput.userId = 'testUserId';
+
+      const mockFoundUser = {
+        knownLocation: {
+          locations: [],
+        },
+      };
+
+      huelagerRepository.findUser.mockReturnValue(mockFoundUser);
+
+      const result = await service.editLocation(addLocationInput);
+
+      expect(huelagerRepository.findUser).toHaveBeenCalledTimes(1);
+      expect(huelagerRepository.findUser).toHaveBeenCalledWith({
+        where: { userId: 'testUserId' },
+      });
+      expect(result).toStrictEqual({
+        knownLocation: {
+          locations: [{ locationId: 'testLocationId', name: 'testName' }],
+        },
+      });
+    });
+
+    it('removes a location from the locations array if no name is sent', async () => {
+      const editLocationInput = new EditUserLocationInput();
+
+      editLocationInput.locationId = 'testLocationId';
+      editLocationInput.name = null;
+      editLocationInput.entityType = HuelagerType.USER;
+      editLocationInput.userId = 'testUserId';
+
+      const mockFoundUser = {
+        knownLocation: {
+          locations: [{ locationId: 'testLocationId', name: 'testName' }],
+        },
+      };
+
+      huelagerRepository.findUser.mockReturnValue(mockFoundUser);
+
+      const result = await service.editLocation(editLocationInput);
+
+      expect(huelagerRepository.findUser).toHaveBeenCalledTimes(1);
+      expect(huelagerRepository.findUser).toHaveBeenCalledWith({
+        where: { userId: 'testUserId' },
+      });
+      expect(result).toStrictEqual({
+        knownLocation: {
+          locations: [],
+        },
+      });
+    });
+
+    it('throws an unauthorized error if entityType is vendor', async () => {
+      const addLocationInput = new EditUserLocationInput();
+
+      addLocationInput.locationId = 'testLocationId';
+      addLocationInput.name = 'testName';
+      addLocationInput.entityType = HuelagerType.VENDOR;
+      addLocationInput.userId = 'testUserId';
+
+      expect(service.editLocation(addLocationInput)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

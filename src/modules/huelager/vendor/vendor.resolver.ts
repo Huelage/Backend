@@ -6,7 +6,6 @@ import { CreateVendorInput } from '../dtos/create-account.input';
 import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
 import { UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '../../../common/guards/access-token.guard';
-import { UpdateVendorInput } from '../dtos/update-account.input';
 
 @Resolver()
 export class VendorResolver {
