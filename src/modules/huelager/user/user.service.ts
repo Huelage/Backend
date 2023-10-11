@@ -119,26 +119,6 @@ export class UserService {
     return user;
   }
 
-  async updateUserProfile(
-    updateUserInput: UpdateUserInput,
-    huelager: Huelager,
-  ) {
-    const { entityId: userId, entityType } = huelager;
-
-    if (entityType !== HuelagerType.USER)
-      throw new UnauthorizedException('Not a user.');
-
-    const result: UpdateResult = await this.repository.editUserInfo({
-      where: { userId },
-      update: updateUserInput,
-    });
-
-    if (!result.affected)
-      throw new UnauthorizedException('No change was made oh!');
-
-    return 'succcess';
-  }
-
   async addLocation(
     editUserLocationInput: EditUserLocationInput,
     userId: string,

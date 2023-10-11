@@ -120,24 +120,4 @@ export class VendorService {
 
     return vendor;
   }
-
-  async updateUserProfile(
-    updateUserInput: UpdateVendorInput,
-    huelager: Huelager,
-  ) {
-    const { entityId: vendorId, entityType } = huelager;
-
-    if (entityType !== HuelagerType.VENDOR)
-      throw new UnauthorizedException('Not a vendor.');
-
-    const result: UpdateResult = await this.repository.editVendorInfo({
-      where: { vendorId },
-      update: updateUserInput,
-    });
-
-    if (!result.affected)
-      throw new UnauthorizedException('No change was made oh!');
-
-    return 'succcess';
-  }
 }
