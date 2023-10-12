@@ -142,16 +142,19 @@ type Order {
   totalAmount: Float!
   paymentMethod: PaymentMethod!
   paymentStatus: Boolean!
-  createdAt: DateTime!
+  orderedAt: DateTime!
+  updatedAt: DateTime!
   canceledOrder: CanceledOrder!
   orderItems: [OrderItem!]!
 }
 
 enum OrderStatus {
   PENDING
-  CONFIRMED
+  RECEIVED
+  READY
   IN_DELIVERY
   DELIEVERED
+  CANCELED
 }
 
 type User {
@@ -210,10 +213,8 @@ type Query {
 type Mutation {
   signUpVendor(input: CreateVendorInput!): Vendor!
   signInVendor(input: AuthenticateVendorInput!): Vendor!
-  updateVendorProfile(input: UpdateVendorInput!): String!
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
-  updateUserProfile(input: UpdateUserInput!): String!
   editUserLocation(input: EditUserLocationInput!): User!
   refreshAccessToken: String!
   updatePhone(input: UpdatePhoneInput!): Huelager!
@@ -243,14 +244,6 @@ input AuthenticateVendorInput {
   vendorKey: String
 }
 
-input UpdateVendorInput {
-  businessName: String!
-  businessAddress: String!
-  repName: String!
-  openingHours: String!
-  closingHours: String!
-}
-
 input CreateUserInput {
   email: String!
   phone: String!
@@ -264,11 +257,6 @@ input AuthenticateUserInput {
   entityId: String
   password: String!
   email: String
-}
-
-input UpdateUserInput {
-  firstName: String!
-  lastName: String!
 }
 
 input EditUserLocationInput {

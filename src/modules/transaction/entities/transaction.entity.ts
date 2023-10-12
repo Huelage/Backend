@@ -33,11 +33,17 @@ export class Transaction {
   @Field()
   transactionId: string;
 
-  @ManyToOne(() => Huelager, (huelager) => huelager.transactions, {
+  @ManyToOne(() => Huelager, (huelager) => huelager.sender, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'entity_id' })
-  entity: Huelager;
+  @JoinColumn({ name: 'sender_id' })
+  sender: Huelager;
+
+  @ManyToOne(() => Huelager, (huelager) => huelager.receiver, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'receiver_id' })
+  receiver: Huelager;
 
   @Column({ type: 'enum', enum: TransactionType, name: 'transaction_type' })
   @Field(() => TransactionType)
