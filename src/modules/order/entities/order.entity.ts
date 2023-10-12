@@ -12,15 +12,18 @@ import {
   OneToMany,
   OneToOne,
   PrimaryColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { CanceledOrder } from './canceled_order.entity';
 import { OrderItem } from './order_item.entity';
 
 enum OrderStatus {
   PENDING = 'pending',
-  CONFIRMED = 'confirmed',
+  RECEIVED = 'received',
+  READY = 'ready',
   IN_DELIVERY = 'in_delivery',
   DELIEVERED = 'delivered',
+  CANCELED = 'canceled',
 }
 
 export enum PaymentMethod {
@@ -65,7 +68,7 @@ export class Order {
   @Field(() => OrderStatus)
   status: OrderStatus;
 
-  @Column({ name: 'delivery_addr', type: 'text' })
+  @Column({ name: 'delivery_addr', type: 'text', nullable: true })
   @Field()
   deliveryAddress: string;
 
@@ -73,7 +76,7 @@ export class Order {
   @Field()
   subtotal: number;
 
-  @Column({ name: 'delivery_fee', type: 'decimal' })
+  @Column({ name: 'delivery_fee', type: 'decimal', nullable: true })
   @Field()
   deliveryFee: number;
 
@@ -94,12 +97,19 @@ export class Order {
   paymentStatus: boolean;
 
   @CreateDateColumn({
-    name: 'created_at',
-    type: 'datetime',
+    name: 'ordered_at',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
   @Field()
-  createdAt: Date;
+  orderedAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
+  @Field()
+  updatedAt: Date;
 
   @OneToOne(() => CanceledOrder, (canceledOrder) => canceledOrder.order)
   @Field(() => CanceledOrder)
