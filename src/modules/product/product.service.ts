@@ -1,21 +1,27 @@
-import { Injectable } from '@nestjs/common';
-import { CreateFoodInput } from './dto/create-food.input';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { ProductRepository } from './product.repository';
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductService {
-  createFood(createFoodInput: CreateFoodInput) {
-    return 'This action adds a new product';
+  constructor(private readonly repository: ProductRepository) {}
+
+  async findOne(productId: string): Promise<Product> {
+    const product = await this.repository.findProduct({ where: { productId } });
+
+    if (!product)
+      throw new NotFoundException(
+        `Product withthe id ${productId} does not exist `,
+      );
+
+    return product;
   }
 
-  findAll() {
-    return `This action returns all product`;
-  }
+  async findVendorProducts(vendorId: string): Promise<Product[]> {
+    const products = await this.repository.findProducts({
+      where: [{ vendor: { vendorId } }],
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+    return products;
   }
 }

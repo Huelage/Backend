@@ -30,12 +30,12 @@ export class ProductRepository {
 
   async findProduct(params: { where: FindOptionsWhere<Product> }) {
     const { where } = params;
-    return this.productRepository.findOneBy(where);
+    return this.productRepository.findOne({ where, relations: { food: true } });
   }
 
   async findProducts(params: { where: FindOptionsWhere<Product>[] }) {
     const { where } = params;
-    return this.productRepository.find({ where });
+    return this.productRepository.find({ where, relations: { food: true } });
   }
 
   async editProductInfo(params: {
