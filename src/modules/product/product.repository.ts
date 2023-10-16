@@ -50,4 +50,12 @@ export class ProductRepository {
     const { where, update } = params;
     return await this.productRepository.update(where, update);
   }
+
+  async editFoodInfo(params: {
+    where: FindOptionsWhere<Food>;
+    update: QueryDeepPartialEntity<Food>;
+  }) {
+    const { where, update } = params;
+    return await this.foodRepository.update(where, update);
+  }
 }

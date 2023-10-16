@@ -7,6 +7,7 @@ import { ProductRepository } from './product.repository';
 import { Product } from './entities/product.entity';
 import { CreateFoodInput } from './dtos/create-food.input';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
+import { UpdateFoodInput } from './dtos/update-food.input';
 
 @Injectable()
 export class ProductService {
@@ -53,5 +54,43 @@ export class ProductService {
     });
 
     return food;
+  }
+
+  async updateFood(updateFoodInput: UpdateFoodInput) {
+    const {
+      productId,
+      name,
+      description,
+      category,
+      pricingMethod,
+      price,
+      sides,
+      packageSizes,
+      vendor,
+      entityType,
+    } = updateFoodInput;
+
+    if (entityType !== HuelagerType.VENDOR)
+      throw new UnauthorizedException('Not a vendor');
+
+    const result = await this.repository.editProductInfo({
+      where: { productId, vendor: { vendorId: vendor.vendorId } },
+      update: {
+        name,
+        description,
+      },
+    });
+
+    if (result.affected === 0)
+      throw new NotFoundException(
+        'No product with the given id was created by the vendor.',
+      );
+
+    await this.repository.editFoodInfo({
+      where: { productId },
+      update: { category, pricingMethod, price, sides, packageSizes },
+    });
+
+    return true;
   }
 }
