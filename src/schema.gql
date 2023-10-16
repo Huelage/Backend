@@ -227,6 +227,7 @@ type Mutation {
   generateRSAKey: String!
   uploadImage(input: UploadImageInput!): String!
   addFood(input: CreateFoodInput!): Food!
+  updateFood(input: UpdateFoodInput!): Boolean!
 }
 
 input CreateVendorInput {
@@ -314,4 +315,15 @@ input CreateFoodInput {
   price: Float!
   sides: JSON
   packageSizes: JSON
+}
+
+input UpdateFoodInput {
+  name: String
+  description: String
+  category: FoodCategory
+  pricingMethod: FoodPricing
+  price: Float
+  sides: JSON
+  packageSizes: JSON
+  productId: String!
 }

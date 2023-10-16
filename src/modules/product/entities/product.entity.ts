@@ -29,6 +29,7 @@ export class Product {
 
   @ManyToOne(() => Vendor, (vendor) => vendor.products, {
     onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'vendor_id' })
   @Field(() => Vendor)
