@@ -15,8 +15,8 @@ export class UserResolver {
 
   @UseGuards(AccessTokenGuard)
   @Query(() => User)
-  getUserProfile(@Context('req') req) {
-    return this.userService.restructureHuelager(req.user);
+  getUserProfile(@Context('req') { user: huelager }: { user: Huelager }) {
+    return this.userService.restructureHuelager(huelager);
   }
 
   @Mutation(() => User)
@@ -36,13 +36,12 @@ export class UserResolver {
   @UseGuards(AccessTokenGuard)
   @Mutation(() => User)
   async editUserLocation(
-    @Context('req') req,
+    @Context('req') { user: huelager }: { user: Huelager },
     @Args('input') editUserLocationInput: EditUserLocationInput,
   ) {
-    const { entityType, entityId } = req.user as Huelager;
+    const { entityType, entityId: userId } = huelager;
 
-    editUserLocationInput.userId = entityId;
-    editUserLocationInput.entityType = entityType;
+    editUserLocationInput = { ...editUserLocationInput, entityType, userId };
 
     return await this.userService.editLocation(editUserLocationInput);
   }

@@ -20,7 +20,7 @@ async function bootstrap() {
   );
 
   const port = process.env.PORT || 3000;
-  app.listen(port);
+  await app.listen(port);
 
   logger.verbose(
     `\nApplication listening on port ${port} \nView the graphlQL playground on http://localhost:${port}/graphql/`,
