@@ -1,6 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ProductRepository } from './product.repository';
 import { Product } from './entities/product.entity';
+import { CreateFoodInput } from './dtos/create-food.input';
+import { HuelagerType } from '../huelager/entities/huelager.entity';
 
 @Injectable()
 export class ProductService {
@@ -11,7 +17,7 @@ export class ProductService {
 
     if (!product)
       throw new NotFoundException(
-        `Product withthe id ${productId} does not exist `,
+        `Product with the id ${productId} does not exist `,
       );
 
     return product;
@@ -23,5 +29,29 @@ export class ProductService {
     });
 
     return products;
+  }
+
+  async addFood(createFoodInput: CreateFoodInput) {
+    const {
+      name,
+      description,
+      category,
+      pricingMethod,
+      price,
+      sides,
+      packageSizes,
+      vendor,
+      entityType,
+    } = createFoodInput;
+
+    if (entityType !== HuelagerType.VENDOR)
+      throw new UnauthorizedException('Not a vendor');
+
+    const food = this.repository.createFood({
+      productInfo: { vendor, name, description },
+      foodInfo: { category, pricingMethod, price, sides, packageSizes },
+    });
+
+    return food;
   }
 }

@@ -76,7 +76,7 @@ type Food {
   pricingMethod: FoodPricing!
   price: Float
   availability: Availability!
-  packagesSizes: JSON
+  packageSizes: JSON
   sides: JSON
 }
 
@@ -208,6 +208,7 @@ type Query {
   getUserProfile: User!
   sayHello: String!
   getEntityProfile: Huelager!
+  getProduct(productId: String!): Product!
 }
 
 type Mutation {
@@ -225,7 +226,7 @@ type Mutation {
   updatePassword(input: UpdatePasswordInput!): Huelager!
   generateRSAKey: String!
   uploadImage(input: UploadImageInput!): String!
-  getProduct(productId: Int!): Product!
+  addFood(input: CreateFoodInput!): Food!
 }
 
 input CreateVendorInput {
@@ -304,3 +305,13 @@ enum UploadLocation {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+input CreateFoodInput {
+  name: String!
+  description: String!
+  category: FoodCategory!
+  pricingMethod: FoodPricing!
+  price: Float!
+  sides: JSON
+  packageSizes: JSON
+}

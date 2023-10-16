@@ -22,8 +22,8 @@ export class HuelagerResolver {
 
   @UseGuards(AccessTokenGuard)
   @Query(() => Huelager)
-  getEntityProfile(@Context('req') req) {
-    return req.user;
+  getEntityProfile(@Context('req') { user: huelager }: { user: Huelager }) {
+    return huelager;
   }
 
   /**
@@ -33,8 +33,10 @@ export class HuelagerResolver {
    */
   @UseGuards(RefreshTokenGuard)
   @Mutation(() => String)
-  async refreshAccessToken(@Context('req') req) {
-    return await this.huelagerService.refreshToken(req.user);
+  async refreshAccessToken(
+    @Context('req') { user: huelager }: { user: Huelager },
+  ) {
+    return await this.huelagerService.refreshToken(huelager);
   }
 
   @Mutation(() => Huelager)
@@ -77,7 +79,7 @@ export class HuelagerResolver {
 
   @UseGuards(AccessTokenGuard)
   @Mutation(() => String)
-  async generateRSAKey(@Context('req') req) {
-    return await this.huelagerService.generateRSAKey(req.user);
+  async generateRSAKey(@Context('req') { user: huelager }: { user: Huelager }) {
+    return await this.huelagerService.generateRSAKey(huelager);
   }
 }

@@ -42,7 +42,7 @@ export class Product {
   @Field()
   description: string;
 
-  @Column({ type: 'text', name: 'img_url' })
+  @Column({ type: 'text', name: 'img_url', nullable: true })
   @Field()
   imgUrl: string;
 

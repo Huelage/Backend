@@ -15,17 +15,22 @@ export class ProductRepository {
     private readonly foodRepository: Repository<Food>,
   ) {}
 
-  async createFood(createFoodInfo: DeepPartial<Product>) {
-    const food = new Food();
-    await this.foodRepository.save(food);
+  async createFood(params: {
+    productInfo: DeepPartial<Product>;
+    foodInfo: DeepPartial<Food>;
+  }): Promise<Food> {
+    const { productInfo, foodInfo } = params;
 
-    const product = await this.productRepository.create({
-      ...createFoodInfo,
-      food,
+    const product = this.productRepository.create(productInfo);
+    await this.productRepository.save(product);
+
+    const food = await this.foodRepository.create({
+      ...foodInfo,
+      product: product,
     });
 
-    await this.productRepository.save(product);
-    return product;
+    await this.foodRepository.save(food);
+    return food;
   }
 
   async findProduct(params: { where: FindOptionsWhere<Product> }) {

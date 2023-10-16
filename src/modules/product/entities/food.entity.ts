@@ -58,7 +58,7 @@ export class Food {
 
   @Column({ name: 'package_sizes', type: 'json', nullable: true })
   @Field(() => GraphQLJSON, { nullable: true })
-  packagesSizes: any;
+  packageSizes: any;
 
   @Column({ type: 'json', nullable: true })
   @Field(() => GraphQLJSON, { nullable: true })
