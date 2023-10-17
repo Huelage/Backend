@@ -10,6 +10,7 @@ import { AccessTokenGuard } from '../../common/guards/access-token.guard';
 import { VerifyEmailInput } from './dtos/verify-email.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { UpdatePasswordInput } from './dtos/update-password.input';
+import { CustomRequest } from '../../common/interfaces/request.interface';
 
 @Resolver()
 export class HuelagerResolver {
@@ -22,7 +23,7 @@ export class HuelagerResolver {
 
   @UseGuards(AccessTokenGuard)
   @Query(() => Huelager)
-  getEntityProfile(@Context('req') { user: huelager }: { user: Huelager }) {
+  getEntityProfile(@Context('req') { user: huelager }: CustomRequest) {
     return huelager;
   }
 
@@ -33,9 +34,7 @@ export class HuelagerResolver {
    */
   @UseGuards(RefreshTokenGuard)
   @Mutation(() => String)
-  async refreshAccessToken(
-    @Context('req') { user: huelager }: { user: Huelager },
-  ) {
+  async refreshAccessToken(@Context('req') { user: huelager }: CustomRequest) {
     return await this.huelagerService.refreshToken(huelager);
   }
 
@@ -79,7 +78,7 @@ export class HuelagerResolver {
 
   @UseGuards(AccessTokenGuard)
   @Mutation(() => String)
-  async generateRSAKey(@Context('req') { user: huelager }: { user: Huelager }) {
+  async generateRSAKey(@Context('req') { user: huelager }: CustomRequest) {
     return await this.huelagerService.generateRSAKey(huelager);
   }
 }
