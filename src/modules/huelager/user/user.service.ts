@@ -26,7 +26,7 @@ export class UserService {
     private readonly huelagerService: HuelagerService,
   ) {}
 
-  restructureHuelager(huelager: Huelager) {
+  async restructureHuelager(huelager: Huelager) {
     if (huelager.entityType !== HuelagerType.USER)
       throw new UnauthorizedException('Not a user');
 
@@ -109,7 +109,6 @@ export class UserService {
 
       user.entity.hashedRefreshToken = await hash(refreshToken, 10);
 
-      this.repository.saveUser(user);
       this.repository.saveHuelager(user.entity);
 
       user.entity.accessToken = accessToken;

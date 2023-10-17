@@ -27,6 +27,7 @@ const mockHuelagerRepository = () => ({
   checkEmailAndPhone: jest.fn(),
   createHuelager: jest.fn(),
   removeHuelager: jest.fn(),
+  saveHuelager: jest.fn(),
 
   createUser: jest.fn(),
   saveUser: jest.fn(),
@@ -65,6 +66,32 @@ describe('UserService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('restructureHuelager', () => {
+    const restructureHuelager = (input) => service.restructureHuelager(input);
+
+    it('takes a huelager object and returns the user object', async () => {
+      const mockHuelager = {
+        entityType: HuelagerType.USER,
+        user: {
+          firstName: 'testFirstName',
+          lastName: 'testLastName',
+        },
+      };
+      const result = await restructureHuelager(mockHuelager);
+      const { user, ...entity } = mockHuelager;
+
+      expect(result).toStrictEqual({ ...user, entity });
+    });
+
+    it('throws an unauthorized error if the huelager is a user', () => {
+      const mockVendor = { vendor: null, entityType: HuelagerType.VENDOR };
+
+      expect(restructureHuelager(mockVendor)).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
   });
 
   describe('create', () => {
