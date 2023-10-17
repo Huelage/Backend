@@ -5,7 +5,7 @@ import { DeepMocked } from '@golevelup/ts-jest';
 import { Product } from './entities/product.entity';
 import { Food } from './entities/food.entity';
 import { CreateFoodInput } from './dtos/create-food.input';
-import { Huelager, HuelagerType } from '../huelager/entities/huelager.entity';
+import { HuelagerType } from '../huelager/entities/huelager.entity';
 import { Vendor } from '../huelager/vendor/vendor.entity';
 import { CustomRequest } from 'src/common/interfaces/request.interface';
 import { UpdateFoodInput } from './dtos/update-food.input';

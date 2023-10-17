@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, Int, Query, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { ProductService } from './product.service';
 import { Product } from './entities/product.entity';
 import { Food } from './entities/food.entity';
