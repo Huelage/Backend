@@ -12,6 +12,7 @@ import { Huelager, HuelagerType } from '../entities/huelager.entity';
 const mockUserService = () => ({
   create: jest.fn(),
   signIn: jest.fn(),
+  restructureHuelager: jest.fn(),
   editLocation: jest.fn(),
 });
 
@@ -33,6 +34,20 @@ describe('UserResolver', () => {
 
   it('should be defined', () => {
     expect(resolver).toBeDefined();
+  });
+
+  describe('getUserProfile', () => {
+    const user = new User();
+
+    it('calls the restructureHuelager service; returns the user.', async () => {
+      service.restructureHuelager.mockResolvedValue(user);
+
+      const result = await resolver.getUserProfile({ user: new Huelager() });
+
+      expect(service.restructureHuelager).toHaveBeenCalledTimes(1);
+      expect(service.restructureHuelager).toHaveBeenCalledWith(user);
+      expect(result).toStrictEqual(user);
+    });
   });
 
   describe('signUpUser', () => {

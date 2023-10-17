@@ -6,10 +6,12 @@ import { VendorService } from './vendor.service';
 import { Vendor } from './vendor.entity';
 import { CreateVendorInput } from '../dtos/create-account.input';
 import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
+import { Huelager } from '../entities/huelager.entity';
 
 const mockVendorService = () => ({
   create: jest.fn(),
   signIn: jest.fn(),
+  restructureHuelager: jest.fn(),
 });
 
 describe('VendorResolver', () => {
@@ -30,6 +32,20 @@ describe('VendorResolver', () => {
 
   it('should be defined', () => {
     expect(resolver).toBeDefined();
+  });
+
+  describe('getVendorProfile', () => {
+    const vendor = new Vendor();
+
+    it('calls the restructureHuelager service; returns the vendor.', async () => {
+      service.restructureHuelager.mockResolvedValue(vendor);
+
+      const result = await resolver.getVendorProfile({ user: new Huelager() });
+
+      expect(service.restructureHuelager).toHaveBeenCalledTimes(1);
+      expect(service.restructureHuelager).toHaveBeenCalledWith(vendor);
+      expect(result).toStrictEqual(vendor);
+    });
   });
 
   describe('signUpVendor', () => {

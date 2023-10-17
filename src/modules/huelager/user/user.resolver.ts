@@ -16,8 +16,8 @@ export class UserResolver {
 
   @UseGuards(AccessTokenGuard)
   @Query(() => User)
-  getUserProfile(@Context('req') { user: huelager }: AccessTokenRequest) {
-    return this.userService.restructureHuelager(huelager);
+  async getUserProfile(@Context('req') { user: huelager }: AccessTokenRequest) {
+    return await this.userService.restructureHuelager(huelager);
   }
 
   @Mutation(() => User)

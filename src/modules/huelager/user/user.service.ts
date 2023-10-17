@@ -26,7 +26,7 @@ export class UserService {
     private readonly huelagerService: HuelagerService,
   ) {}
 
-  restructureHuelager(huelager: Huelager) {
+  async restructureHuelager(huelager: Huelager) {
     if (huelager.entityType !== HuelagerType.USER)
       throw new UnauthorizedException('Not a user');
 

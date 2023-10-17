@@ -12,6 +12,7 @@ import { VendorService } from './vendor.service';
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../huelager.service';
 import { SmsService } from '../../../providers/sms.service';
+import { HuelagerType } from '../entities/huelager.entity';
 
 jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
@@ -27,6 +28,7 @@ const mockHuelagerRepository = () => ({
   checkEmailAndPhone: jest.fn(),
   createHuelager: jest.fn(),
   removeHuelager: jest.fn(),
+  saveHuelager: jest.fn(),
 
   createVendor: jest.fn(),
   saveVendor: jest.fn(),
@@ -65,6 +67,35 @@ describe('VendorService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('restructureHuelager', () => {
+    const restructureHuelager = (input) => service.restructureHuelager(input);
+
+    it('takes a huelager object and returns the vendor object', async () => {
+      const mockHuelager = {
+        entityType: HuelagerType.VENDOR,
+        vendor: {
+          repName: 'testRepName',
+          businessAddress: 'testBusinessAddress',
+          businessName: 'testBusinessName',
+          vendorId: 'testVendorId',
+          vendorKey: 'testVendorKey',
+        },
+      };
+      const result = await restructureHuelager(mockHuelager);
+      const { vendor, ...entity } = mockHuelager;
+
+      expect(result).toStrictEqual({ ...vendor, entity });
+    });
+
+    it('throws an unauthorized error if the huelager is a user', () => {
+      const mockUser = { vendor: null, entityType: HuelagerType.USER };
+
+      expect(restructureHuelager(mockUser)).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
   });
 
   describe('create', () => {

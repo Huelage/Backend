@@ -17,6 +17,7 @@ import {
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../huelager.service';
 import { Huelager, HuelagerType } from '../entities/huelager.entity';
+import { Vendor } from './vendor.entity';
 
 @Injectable()
 export class VendorService {
@@ -26,13 +27,14 @@ export class VendorService {
     private readonly huelagerService: HuelagerService,
   ) {}
 
-  restructureHuelager(huelager: Huelager) {
+  async restructureHuelager(huelager: Huelager): Promise<Vendor> {
     if (huelager.entityType !== HuelagerType.VENDOR)
       throw new UnauthorizedException('Not a vendor');
 
     const { vendor, ...entity } = huelager;
-    return { ...vendor, entity };
+    return { ...vendor, entity } as Vendor;
   }
+
   async create(createVendorInput: CreateVendorInput) {
     const otp = genRandomOtp();
 
