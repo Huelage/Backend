@@ -108,7 +108,9 @@ export class UserService {
         await this.huelagerService.getTokens(user.userId);
 
       user.entity.hashedRefreshToken = await hash(refreshToken, 10);
-      await this.repository.saveUser(user);
+
+      this.repository.saveUser(user);
+      this.repository.saveHuelager(user.entity);
 
       user.entity.accessToken = accessToken;
       user.entity.refreshToken = refreshToken;

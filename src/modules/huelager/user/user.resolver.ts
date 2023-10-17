@@ -8,7 +8,7 @@ import { Huelager } from '../entities/huelager.entity';
 import { UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '../../../common/guards/access-token.guard';
 import { EditUserLocationInput } from '../dtos/edit-locations.input';
-import { CustomRequest } from '../../../common/interfaces/request.interface';
+import { AccessTokenRequest } from '../../../common/interfaces/request.interface';
 
 @Resolver()
 export class UserResolver {
@@ -16,7 +16,7 @@ export class UserResolver {
 
   @UseGuards(AccessTokenGuard)
   @Query(() => User)
-  getUserProfile(@Context('req') { user: huelager }: CustomRequest) {
+  getUserProfile(@Context('req') { user: huelager }: AccessTokenRequest) {
     return this.userService.restructureHuelager(huelager);
   }
 
@@ -37,7 +37,7 @@ export class UserResolver {
   @UseGuards(AccessTokenGuard)
   @Mutation(() => User)
   async editUserLocation(
-    @Context('req') { user: huelager }: CustomRequest,
+    @Context('req') { user: huelager }: AccessTokenRequest,
     @Args('input') editUserLocationInput: EditUserLocationInput,
   ) {
     const { entityType, entityId: userId } = huelager;

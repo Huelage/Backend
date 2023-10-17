@@ -8,6 +8,7 @@ import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { VerifyEmailInput } from './dtos/verify-email.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { UpdatePasswordInput } from './dtos/update-password.input';
+import { RefreshTokenRequest } from 'src/common/interfaces/request.interface';
 
 const mockHuelagerService = () => ({
   refreshToken: jest.fn(),
@@ -47,15 +48,27 @@ describe('HuelagerResolver', () => {
   });
 
   describe('refreshAccessToken', () => {
-    const huelager = new Huelager();
+    const req = {
+      user: {
+        entityId: 'testId',
+        refreshToken: 'testRefreshToken',
+        iat: 123,
+        exp: 123,
+      },
+    } as RefreshTokenRequest;
+
+    const { entityId, refreshToken } = req.user;
 
     it('calls the refreshToken service; refreshes the access token and returns it.', async () => {
       service.refreshToken.mockResolvedValue('testToken');
 
-      const result = await resolver.refreshAccessToken({ user: huelager });
+      const result = await resolver.refreshAccessToken(req);
 
       expect(service.refreshToken).toHaveBeenCalledTimes(1);
-      expect(service.refreshToken).toHaveBeenCalledWith(huelager);
+      expect(service.refreshToken).toHaveBeenCalledWith({
+        entityId,
+        refreshToken,
+      });
       expect(result).toStrictEqual('testToken');
     });
   });
