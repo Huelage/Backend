@@ -6,7 +6,7 @@ import { CreateVendorInput } from '../dtos/create-account.input';
 import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
 import { UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '../../../common/guards/access-token.guard';
-import { CustomRequest } from '../../../common/interfaces/request.interface';
+import { AccessTokenRequest } from '../../../common/interfaces/request.interface';
 
 @Resolver()
 export class VendorResolver {
@@ -14,7 +14,7 @@ export class VendorResolver {
 
   @UseGuards(AccessTokenGuard)
   @Query(() => Vendor)
-  getVendorProfile(@Context('req') { user: huelager }: CustomRequest) {
+  getVendorProfile(@Context('req') { user: huelager }: AccessTokenRequest) {
     return this.vendorService.restructureHuelager(huelager);
   }
 

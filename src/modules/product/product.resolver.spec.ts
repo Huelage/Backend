@@ -7,7 +7,7 @@ import { Food } from './entities/food.entity';
 import { CreateFoodInput } from './dtos/create-food.input';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
 import { Vendor } from '../huelager/vendor/vendor.entity';
-import { CustomRequest } from 'src/common/interfaces/request.interface';
+import { AccessTokenRequest } from 'src/common/interfaces/request.interface';
 import { UpdateFoodInput } from './dtos/update-food.input';
 
 const mockProductService = () => ({
@@ -43,7 +43,7 @@ describe('ProductResolver', () => {
 
       const result = await resolver.getProduct('someId');
 
-      expect(result).toBe(product);
+      expect(result).toStrictEqual(product);
     });
   });
 
@@ -53,7 +53,7 @@ describe('ProductResolver', () => {
       const createFoodInput = new CreateFoodInput();
       const req = {
         user: { entityType: HuelagerType.VENDOR, vendor: new Vendor() },
-      } as CustomRequest;
+      } as AccessTokenRequest;
 
       service.addFood.mockResolvedValue(food);
 
@@ -68,7 +68,7 @@ describe('ProductResolver', () => {
         vendor,
       });
 
-      expect(result).toBe(food);
+      expect(result).toStrictEqual(food);
     });
   });
 
@@ -77,7 +77,7 @@ describe('ProductResolver', () => {
       const updateFoodInput = new UpdateFoodInput();
       const req = {
         user: { entityType: HuelagerType.VENDOR, vendor: new Vendor() },
-      } as CustomRequest;
+      } as AccessTokenRequest;
 
       service.updateFood.mockResolvedValue(true);
 

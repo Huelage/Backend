@@ -110,7 +110,9 @@ export class VendorService {
         await this.huelagerService.getTokens(vendor.vendorId);
 
       vendor.entity.hashedRefreshToken = await hash(refreshToken, 10);
-      await this.repository.saveVendor(vendor);
+
+      this.repository.saveVendor(vendor);
+      this.repository.saveHuelager(vendor.entity);
 
       vendor.entity.accessToken = accessToken;
       vendor.entity.refreshToken = refreshToken;

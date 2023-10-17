@@ -65,6 +65,7 @@ export class HuelagerService {
       where: { entityId },
     });
     if (!huelager) throw new UnauthorizedException();
+    console.log(huelager.hashedRefreshToken);
 
     const matches = await compare(refreshToken, huelager.hashedRefreshToken);
     if (!matches) throw new UnauthorizedException();

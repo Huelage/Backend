@@ -6,7 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '../../common/guards/access-token.guard';
 import { CreateFoodInput } from './dtos/create-food.input';
 import { UpdateFoodInput } from './dtos/update-food.input';
-import { CustomRequest } from '../../common/interfaces/request.interface';
+import { AccessTokenRequest } from '../../common/interfaces/request.interface';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -23,7 +23,7 @@ export class ProductResolver {
   @Mutation(() => Food)
   async addFood(
     @Args('input') createFoodInput: CreateFoodInput,
-    @Context('req') { user: huelager }: CustomRequest,
+    @Context('req') { user: huelager }: AccessTokenRequest,
   ) {
     const { vendor, entityType } = huelager;
     createFoodInput = { ...createFoodInput, vendor, entityType };
@@ -35,7 +35,7 @@ export class ProductResolver {
   @Mutation(() => Boolean)
   async updateFood(
     @Args('input') updateFoodInput: UpdateFoodInput,
-    @Context('req') { user: huelager }: CustomRequest,
+    @Context('req') { user: huelager }: AccessTokenRequest,
   ): Promise<boolean> {
     const { vendor, entityType } = huelager;
     updateFoodInput = { ...updateFoodInput, vendor, entityType };
