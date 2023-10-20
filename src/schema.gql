@@ -206,6 +206,7 @@ type Vendor {
 }
 
 type Query {
+  findOrder(orderId: String!): Order!
   getVendorProfile: Vendor!
   getUserProfile: User!
   sayHello: String!

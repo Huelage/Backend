@@ -1,6 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateOrderInput } from './dto/create-order.input';
 import { OrderRepository } from './order.repository';
+import { FindOrderDto } from './dto/find-order.dto';
+import e from 'express';
 
 @Injectable()
 export class OrderService {
@@ -24,6 +30,18 @@ export class OrderService {
 
     await this.orderRepository.saveOrderItem(order.orderItems);
     await this.orderRepository.saveOrder(order);
+
+    return order;
+  }
+
+  async findOne(findOrder: FindOrderDto) {
+    const { orderId, entityId } = findOrder;
+    const order = await this.orderRepository.findOrder({ where: { orderId } });
+
+    if (!order) throw new NotFoundException('Order not found.');
+
+    if (entityId !== order.vendor.vendorId && entityId !== order.user.userId)
+      throw new UnauthorizedException('Not authorized.');
 
     return order;
   }
