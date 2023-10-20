@@ -25,13 +25,15 @@ export class OrderRepository {
       ...createOrderInfo,
     });
 
-    await this.orderRepository.save(order);
     return order;
   }
 
   async findOrder(params: { where: FindOptionsWhere<Order> }) {
     const { where } = params;
-    return this.orderRepository.findOneBy(where);
+    return this.orderRepository.findOne({
+      where,
+      relations: { vendor: true, user: true, orderItems: true },
+    });
   }
 
   async findOrders(params: { where: FindOptionsWhere<Order>[] }) {
@@ -61,5 +63,13 @@ export class OrderRepository {
     });
 
     await this.orderItemRepository.save(orderItem);
+  }
+
+  async saveOrder(order: Order) {
+    await this.orderRepository.save(order);
+  }
+
+  async saveOrderItem(orderItems: OrderItem[]) {
+    await this.orderItemRepository.save(orderItems);
   }
 }

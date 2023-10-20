@@ -71,6 +71,7 @@ type CanceledOrder {
 }
 
 type Food {
+  productId: String!
   product: Product!
   category: FoodCategory!
   pricingMethod: FoodPricing!
@@ -126,12 +127,13 @@ type OrderItem {
   orderItemnId: String!
   order: Order!
   product: Product!
-  pricePerItem: Float!
+  totalPrice: Float!
   quantity: Float!
   extras: JSON
 }
 
 type Order {
+  orderId: String!
   user: User!
   vendor: Vendor!
   transaction: Transaction!
@@ -212,6 +214,7 @@ type Query {
 }
 
 type Mutation {
+  createOrder(input: CreateOrderInput!): Order!
   signUpVendor(input: CreateVendorInput!): Vendor!
   signInVendor(input: AuthenticateVendorInput!): Vendor!
   signUpUser(input: CreateUserInput!): User!
@@ -228,6 +231,19 @@ type Mutation {
   uploadImage(input: UploadImageInput!): String!
   addFood(input: CreateFoodInput!): Food!
   updateFood(input: UpdateFoodInput!): Boolean!
+}
+
+input CreateOrderInput {
+  vendorId: String!
+  orderItems: [OrderItemInput!]!
+  deliveryAddress: String
+}
+
+input OrderItemInput {
+  productId: String!
+  totalPrice: Float!
+  quantity: Float!
+  extras: JSON
 }
 
 input CreateVendorInput {

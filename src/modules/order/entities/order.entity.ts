@@ -11,7 +11,7 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { CanceledOrder } from './canceled_order.entity';
@@ -37,7 +37,8 @@ registerEnumType(PaymentMethod, { name: 'PaymentMethod' });
 @Entity({ name: 'order' })
 @ObjectType()
 export class Order {
-  @PrimaryColumn('uuid', { name: 'order_id' })
+  @PrimaryGeneratedColumn('uuid', { name: 'order_id' })
+  @Field()
   orderId: string;
 
   @ManyToOne(() => User, (user) => user.orders, {

@@ -13,6 +13,7 @@ import { ImageUploadModule } from './modules/image_upload/image_upload.module';
 import { FileUploadModule } from './file_upload/file_upload.module';
 import cloudinaryConfig from './config/cloudinary.config';
 import typeormConfig from './config/typeorm.config';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import typeormConfig from './config/typeorm.config';
       inject: [ConfigService],
     }),
 
+    OrderModule,
     ProvidersModule,
     HuelagersModule,
     FileUploadModule,

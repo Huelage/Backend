@@ -6,7 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from '../../product/entities/product.entity';
@@ -14,7 +14,7 @@ import { Product } from '../../product/entities/product.entity';
 @Entity({ name: 'order_item' })
 @ObjectType()
 export class OrderItem {
-  @PrimaryColumn('uuid', { name: 'order_item_id' })
+  @PrimaryGeneratedColumn('uuid', { name: 'order_item_id' })
   @Field()
   orderItemnId: string;
 
@@ -28,9 +28,9 @@ export class OrderItem {
   @Field(() => Product)
   product: Product;
 
-  @Column({ name: 'price_per_item', type: 'decimal' })
+  @Column({ name: 'total_price', type: 'decimal' })
   @Field()
-  pricePerItem: number;
+  totalPrice: number;
 
   @Column({ name: 'quantity', type: 'mediumint' })
   @Field()
