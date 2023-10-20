@@ -241,8 +241,11 @@ input CreateVendorInput {
 }
 
 input AuthenticateVendorInput {
+  """The entity ID is the ID of the user or vendor."""
   entityId: String
   password: String!
+
+  """If the entity if is not sent then the vendorKey must be."""
   vendorKey: String
 }
 
@@ -256,8 +259,11 @@ input CreateUserInput {
 }
 
 input AuthenticateUserInput {
+  """The entity ID is the ID of the user or vendor."""
   entityId: String
   password: String!
+
+  """If the entity if is not sent then the email must be."""
   email: String
 }
 
