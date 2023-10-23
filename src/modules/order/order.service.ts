@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateOrderInput } from './dto/create-order.input';
-import { UpdateOrderInput } from './dto/update-order.input';
+import { OrderRepository } from './order.repository';
+import { FindOrderDto } from './dto/find-order.dto';
+import e from 'express';
 
 @Injectable()
 export class OrderService {
-  create(createOrderInput: CreateOrderInput) {
-    return 'This action adds a new order';
+  constructor(private readonly orderRepository: OrderRepository) {}
+
+  async create(createOrderInput: CreateOrderInput) {
+    const { vendorId, deliveryAddress, user, orderItems } = createOrderInput;
+    const subtotal = orderItems.reduce((acc, item) => {
+      acc += item.totalPrice;
+      return acc;
+    }, 0);
+
+    const order = await this.orderRepository.createOrder({
+      deliveryAddress,
+      vendor: { vendorId },
+      user,
+      subtotal,
+      orderItems,
+      totalAmount: subtotal,
+    });
+
+    await this.orderRepository.saveOrderItem(order.orderItems);
+    await this.orderRepository.saveOrder(order);
+
+    return order;
   }
 
-  findAll() {
-    return `This action returns all order`;
-  }
+  async findOne(findOrder: FindOrderDto) {
+    const { orderId, entityId } = findOrder;
+    const order = await this.orderRepository.findOrder({ where: { orderId } });
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
-  }
+    if (!order) throw new NotFoundException('Order not found.');
 
-  update(id: number, updateOrderInput: UpdateOrderInput) {
-    return `This action updates a #${id} order`;
-  }
+    if (entityId !== order.vendor.vendorId && entityId !== order.user.userId)
+      throw new UnauthorizedException('Not authorized.');
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+    return order;
   }
 }

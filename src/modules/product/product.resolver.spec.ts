@@ -7,7 +7,7 @@ import { Food } from './entities/food.entity';
 import { CreateFoodInput } from './dtos/create-food.input';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
 import { Vendor } from '../huelager/vendor/vendor.entity';
-import { AccessTokenRequest } from 'src/common/interfaces/request.interface';
+import { AccessTokenRequest } from '../../common/interfaces/request.interface';
 import { UpdateFoodInput } from './dtos/update-food.input';
 
 const mockProductService = () => ({

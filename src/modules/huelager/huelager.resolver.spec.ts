@@ -8,7 +8,7 @@ import { VerifyPhoneInput } from './dtos/verify-phone.input';
 import { VerifyEmailInput } from './dtos/verify-email.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { UpdatePasswordInput } from './dtos/update-password.input';
-import { RefreshTokenRequest } from 'src/common/interfaces/request.interface';
+import { RefreshTokenRequest } from '../../common/interfaces/request.interface';
 
 const mockHuelagerService = () => ({
   refreshToken: jest.fn(),

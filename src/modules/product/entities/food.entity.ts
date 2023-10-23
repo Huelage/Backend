@@ -31,6 +31,7 @@ registerEnumType(FoodPricing, { name: 'FoodPricing' });
 @ObjectType()
 export class Food {
   @PrimaryColumn({ type: 'uuid', name: 'product_id' })
+  @Field()
   productId: string;
 
   @OneToOne(() => Product, (product) => product.food, {

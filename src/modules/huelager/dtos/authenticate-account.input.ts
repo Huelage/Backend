@@ -6,7 +6,10 @@ import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 class AuthenticateEntityInput {
   @IsString()
   @IsOptional()
-  @Field({ nullable: true })
+  @Field({
+    nullable: true,
+    description: 'The entity ID is the ID of the user or vendor.',
+  })
   entityId: string;
 
   @IsNotEmpty()
@@ -19,7 +22,10 @@ class AuthenticateEntityInput {
 export class AuthenticateUserInput extends AuthenticateEntityInput {
   @IsString()
   @IsOptional()
-  @Field({ nullable: true })
+  @Field({
+    nullable: true,
+    description: 'If the entity if is not sent then the email must be.',
+  })
   @Transform(({ value }) => value.toLowerCase())
   email: string;
 }
@@ -29,6 +35,9 @@ export class AuthenticateVendorInput extends AuthenticateEntityInput {
   @IsNotEmpty()
   @IsOptional()
   @IsString()
-  @Field({ nullable: true })
+  @Field({
+    nullable: true,
+    description: 'If the entity if is not sent then the vendorKey must be.',
+  })
   vendorKey: string;
 }

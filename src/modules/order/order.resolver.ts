@@ -1,35 +1,35 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { Order } from './entities/order.entity';
 import { CreateOrderInput } from './dto/create-order.input';
-import { UpdateOrderInput } from './dto/update-order.input';
+import { UseGuards } from '@nestjs/common';
+import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
+import { AccessTokenRequest } from 'src/common/interfaces/request.interface';
+import { FindOrderDto } from './dto/find-order.dto';
 
 @Resolver(() => Order)
 export class OrderResolver {
   constructor(private readonly orderService: OrderService) {}
 
+  @UseGuards(AccessTokenGuard)
   @Mutation(() => Order)
-  createOrder(@Args('createOrderInput') createOrderInput: CreateOrderInput) {
-    return this.orderService.create(createOrderInput);
+  async createOrder(
+    @Args('input') createOrderInput: CreateOrderInput,
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ) {
+    const { user, entityType } = huelager;
+    createOrderInput = { ...createOrderInput, user, entityType };
+
+    return await this.orderService.create(createOrderInput);
   }
 
-  @Query(() => [Order], { name: 'order' })
-  findAll() {
-    return this.orderService.findAll();
-  }
-
-  @Query(() => Order, { name: 'order' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.orderService.findOne(id);
-  }
-
-  @Mutation(() => Order)
-  updateOrder(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
-    return this.orderService.update(updateOrderInput.id, updateOrderInput);
-  }
-
-  @Mutation(() => Order)
-  removeOrder(@Args('id', { type: () => Int }) id: number) {
-    return this.orderService.remove(id);
+  @UseGuards(AccessTokenGuard)
+  @Query(() => Order)
+  async findOrder(
+    @Args('orderId', { type: () => String }) orderId: string,
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ) {
+    const findOrderDto: FindOrderDto = { orderId, entityId: huelager.entityId };
+    return await this.orderService.findOne(findOrderDto);
   }
 }
