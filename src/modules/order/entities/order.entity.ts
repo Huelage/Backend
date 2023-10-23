@@ -62,7 +62,7 @@ export class Order {
     cascade: true,
   })
   @JoinColumn({ name: 'transction_id' })
-  @Field(() => Transaction)
+  @Field(() => Transaction, { nullable: true })
   transaction: Transaction;
 
   @Column({ type: 'enum', enum: OrderStatus })

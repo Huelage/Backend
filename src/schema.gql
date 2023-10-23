@@ -136,7 +136,7 @@ type Order {
   orderId: String!
   user: User!
   vendor: Vendor!
-  transaction: Transaction!
+  transaction: Transaction
   status: OrderStatus!
   deliveryAddress: String!
   subtotal: Float!
