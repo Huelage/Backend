@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import * as graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 
+import { env } from './config/env.config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -19,11 +20,8 @@ async function bootstrap() {
     graphqlUploadExpress({ maxFileSize: 1000000, maxFiles: 10 }),
   );
 
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
+  await app.listen(env.port);
 
-  logger.verbose(
-    `\nApplication listening on port ${port} \nView the graphlQL playground on http://localhost:${port}/graphql/`,
-  );
+  logger.log(`\n\nApplication listening on port ${env.port}, HuelageBackend🚀`);
 }
 bootstrap();

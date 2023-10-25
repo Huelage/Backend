@@ -1,8 +1,11 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber } from 'class-validator';
 import { config } from 'dotenv';
 import { validate } from 'src/common/utils/env.util';
 
 export class Environment {
+  @IsInt()
+  port: number;
+
   @IsNotEmpty()
   db_host: string;
 
