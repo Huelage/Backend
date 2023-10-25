@@ -3,16 +3,23 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+
 import { CreateOrderInput } from './dto/create-order.input';
 import { OrderRepository } from './order.repository';
 import { FindOrderDto } from './dto/find-order.dto';
+import { HuelagerType } from '../huelager/entities/huelager.entity';
 
 @Injectable()
 export class OrderService {
   constructor(private readonly orderRepository: OrderRepository) {}
 
   async create(createOrderInput: CreateOrderInput) {
-    const { vendorId, deliveryAddress, user, orderItems } = createOrderInput;
+    const { entityType, vendorId, deliveryAddress, user, orderItems } =
+      createOrderInput;
+
+    if (entityType !== HuelagerType.VENDOR)
+      throw new UnauthorizedException('Not a vendor.');
+
     const subtotal = orderItems.reduce((acc, item) => {
       acc += item.totalPrice;
       return acc;
