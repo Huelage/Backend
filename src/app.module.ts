@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { ApolloDriverConfig } from '@nestjs/apollo';
-
 import { ProvidersModule } from './providers/providers.module';
 import { graphqlConfig } from './config/graphql.config';
 import { HuelagersModule } from './modules/huelager/huelagers.module';
