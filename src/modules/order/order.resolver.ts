@@ -3,8 +3,8 @@ import { OrderService } from './order.service';
 import { Order } from './entities/order.entity';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UseGuards } from '@nestjs/common';
-import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
-import { AccessTokenRequest } from 'src/common/interfaces/request.interface';
+import { AccessTokenGuard } from '../../common/guards/access-token.guard';
+import { AccessTokenRequest } from '../../common/interfaces/request.interface';
 import { FindOrderDto } from './dto/find-order.dto';
 
 @Resolver(() => Order)

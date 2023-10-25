@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty, IsNumber } from 'class-validator';
 import { config } from 'dotenv';
-import { validate } from 'src/common/utils/env.util';
+import { validate } from '../common/utils/env.util';
 
 export class Environment {
   @IsInt()
@@ -18,11 +18,11 @@ export class Environment {
   @IsNotEmpty()
   db_name: string;
 
-  @IsNumber()
-  twilio_phone_number: number;
+  @IsNotEmpty()
+  twilio_phone_number: string;
 
   @IsNotEmpty()
-  twilio_account_sid: number;
+  twilio_account_sid: string;
 
   @IsNotEmpty()
   twilio_auth_token: string;

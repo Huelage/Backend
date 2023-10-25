@@ -1,8 +1,8 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import GraphQLJSON from 'graphql-type-json';
-import { HuelagerType } from 'src/modules/huelager/entities/huelager.entity';
-import { User } from 'src/modules/huelager/user/user.entity';
+import { HuelagerType } from '../../../modules/huelager/entities/huelager.entity';
+import { User } from '../../../modules/huelager/user/user.entity';
 
 @InputType()
 export class CreateOrderInput {
