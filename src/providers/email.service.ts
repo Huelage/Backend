@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { SendMailOptions, Transporter, createTransport } from 'nodemailer';
 import { genEmailMessage } from '../common/helpers/helpers';
+import { env } from '../config/env.config';
 
 @Injectable()
 export class EmailService {
@@ -13,8 +14,8 @@ export class EmailService {
       // For example, for Gmail:
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
+        user: env.email,
+        pass: env.email_password,
       },
     });
   }
@@ -26,7 +27,7 @@ export class EmailService {
   }): Promise<void> {
     const { to, otp, name } = input;
     const mailOptions: SendMailOptions = {
-      from: process.env.EMAIL,
+      from: env.email,
       to,
       subject: 'HUELAGE OTP VERIFICATION',
       html: genEmailMessage({ name, otp }),

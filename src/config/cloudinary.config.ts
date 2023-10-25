@@ -1,7 +1,8 @@
 import { registerAs } from '@nestjs/config';
+import { env } from './env.config';
 
 export default registerAs('cloudinary', () => ({
-  cloud_name: process.env.CLOUDINARY_CLOUDNAME,
-  api_key: process.env.CLOUDINARY_APIKEY,
-  api_secret: process.env.CLOUDINARY_APISECRET,
+  cloud_name: env.cloudinary_cloudname,
+  api_key: env.cloudinary_apikey,
+  api_secret: env.cloudinary_apisecret,
 }));

@@ -20,6 +20,7 @@ import { EmailService } from '../../providers/email.service';
 import { VerifyEmailInput } from './dtos/verify-email.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { UpdatePasswordInput } from './dtos/update-password.input';
+import { env } from '../../config/env.config';
 
 @Injectable()
 export class HuelagerService {
@@ -37,7 +38,7 @@ export class HuelagerService {
           entityId,
         },
         {
-          secret: process.env.JWT_ACCESS_SECRET,
+          secret: env.jwt_access_secret,
           expiresIn: '3d',
         },
       ),
@@ -46,7 +47,7 @@ export class HuelagerService {
           entityId,
         },
         {
-          secret: process.env.JWT_REFRESH_SECRET,
+          secret: env.jwt_refresh_secret,
           expiresIn: '1y',
         },
       ),
@@ -71,10 +72,9 @@ export class HuelagerService {
 
     return await this.jwtService.signAsync(
       { entityId },
-      { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '3d' },
+      { secret: env.jwt_access_secret, expiresIn: '3d' },
     );
   }
-
   async updatePhone(updatePhoneInput: UpdatePhoneInput): Promise<Huelager> {
     const { entityId, phone } = updatePhoneInput;
 
@@ -85,7 +85,6 @@ export class HuelagerService {
       (huelager) => huelager.entityId === entityId,
     );
     if (!huelager) throw new NotFoundException('No user with this id exists');
-
     /**
      * Make sure the chosen phone number does not already exist.
      * Even if it does, it should be this user that owns it.
