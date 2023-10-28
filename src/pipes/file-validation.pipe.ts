@@ -20,7 +20,6 @@ export class FileValidationPipe implements PipeTransform {
 
     if (!isFileFormatValid) throw new Error('File not valid');
 
-    (await uploadImageInput.image).uploadLocation = uploadImageInput.type;
     return uploadImageInput;
   }
 }

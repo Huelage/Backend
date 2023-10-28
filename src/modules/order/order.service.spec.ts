@@ -47,7 +47,7 @@ describe('OrderService', () => {
       ],
       deliveryAddress: 'deliveryAddress',
       user: new User(),
-      entityType: HuelagerType.VENDOR,
+      entityType: HuelagerType.USER,
     } as CreateOrderInput;
 
     const create = (input) => service.create(input);
@@ -89,7 +89,7 @@ describe('OrderService', () => {
     });
 
     it('throws an unauthorized error', async () => {
-      const mockUserInput = { ...mockInput, entityType: HuelagerType.USER };
+      const mockUserInput = { ...mockInput, entityType: HuelagerType.VENDOR };
 
       expect(create(mockUserInput)).rejects.toThrow(UnauthorizedException);
     });
