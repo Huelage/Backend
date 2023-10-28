@@ -2,8 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { OrderService } from './order.service';
 import { OrderRepository } from './order.repository';
 import { CreateOrderInput } from './dto/create-order.input';
-import { Order } from './entities/order.entity';
-import exp from 'constants';
+
 import { User } from '../huelager/user/user.entity';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';

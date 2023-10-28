@@ -27,6 +27,10 @@ export class CreateOrderInput {
 class OrderItemInput {
   @IsString()
   @Field()
+  itemId: string;
+
+  @IsString()
+  @Field()
   productId: string;
 
   @IsNumber()
@@ -38,5 +42,5 @@ class OrderItemInput {
   quantity: number;
 
   @Field(() => GraphQLJSON, { nullable: true })
-  extras: any;
+  extras: { name: string; price: number; quantity: number }[];
 }

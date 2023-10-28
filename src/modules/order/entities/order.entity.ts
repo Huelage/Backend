@@ -19,11 +19,12 @@ import { OrderItem } from './order_item.entity';
 
 enum OrderStatus {
   PENDING = 'pending',
-  RECEIVED = 'received',
+  PREPARING = 'preparing',
   READY = 'ready',
-  IN_DELIVERY = 'in_delivery',
+  EN_ROUTE = 'en_route',
   DELIEVERED = 'delivered',
-  CANCELED = 'canceled',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
 }
 
 export enum PaymentMethod {

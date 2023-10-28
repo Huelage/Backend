@@ -6,7 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from '../../product/entities/product.entity';
@@ -14,7 +14,7 @@ import { Product } from '../../product/entities/product.entity';
 @Entity({ name: 'order_item' })
 @ObjectType()
 export class OrderItem {
-  @PrimaryGeneratedColumn('uuid', { name: 'order_item_id' })
+  @PrimaryColumn('uuid', { name: 'order_item_id' })
   @Field()
   orderItemnId: string;
 

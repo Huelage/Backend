@@ -17,8 +17,8 @@ export class OrderService {
     const { entityType, vendorId, deliveryAddress, user, orderItems } =
       createOrderInput;
 
-    if (entityType !== HuelagerType.VENDOR)
-      throw new UnauthorizedException('Not a vendor.');
+    if (entityType !== HuelagerType.USER)
+      throw new UnauthorizedException('Not a user.');
 
     const subtotal = orderItems.reduce((acc, item) => {
       acc += item.totalPrice;
