@@ -10,8 +10,15 @@ import {
 import { Huelager } from '../entities/huelager.entity';
 import { Review } from '../entities/review.entity';
 import { Order } from '../../order/entities/order.entity';
-import GraphQLJSON from 'graphql-type-json';
-// import { v4 } from 'uuid';
+
+@ObjectType()
+export class Location {
+  @Field()
+  name: string;
+
+  @Field()
+  locationId: string;
+}
 
 @Entity({ name: 'user' })
 @ObjectType()
@@ -35,9 +42,9 @@ export class User {
   @Field()
   lastName: string;
 
-  @Column({ name: 'known_location', type: 'json' })
-  @Field(() => GraphQLJSON, { nullable: true })
-  knownLocation: { locations: { name: string; locationId: string }[] };
+  @Column({ name: 'locations', type: 'json' })
+  @Field(() => [Location], { nullable: true })
+  locations: Location[];
 
   @Column({ name: 'is_social_auth', type: 'boolean', default: false })
   @Field()

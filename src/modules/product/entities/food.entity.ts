@@ -1,7 +1,11 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { Product } from './product.entity';
-import { GraphQLJSON } from 'graphql-type-json';
 
 export enum Availability {
   AVAILABLE = 'available',
@@ -26,6 +30,30 @@ export enum FoodPricing {
 registerEnumType(Availability, { name: 'Availability' });
 registerEnumType(FoodCategory, { name: 'FoodCategory' });
 registerEnumType(FoodPricing, { name: 'FoodPricing' });
+
+@ObjectType()
+export class PackageSize {
+  @Field()
+  name: string;
+
+  @Field()
+  price: number;
+}
+
+@ObjectType()
+export class Sides {
+  @Field()
+  description: string;
+
+  // @Field()
+  // options: { name: string; price: number }[];
+
+  @Field()
+  isRequired: boolean;
+
+  @Field()
+  isMultiple: boolean;
+}
 
 @Entity({ name: 'food' })
 @ObjectType()
@@ -62,15 +90,10 @@ export class Food {
   availability: Availability;
 
   @Column({ name: 'package_sizes', type: 'json', nullable: true })
-  @Field(() => [GraphQLJSON], { nullable: true })
-  packageSizes: { name: string; price: number }[];
+  @Field(() => [PackageSize], { nullable: true })
+  packageSizes: PackageSize[];
 
   @Column({ type: 'json', nullable: true })
-  @Field(() => [GraphQLJSON], { nullable: true })
-  sides: {
-    description: string;
-    options: { name: string; price: number }[];
-    isRequired: boolean;
-    isMultiple: boolean;
-  }[];
+  @Field(() => [Sides], { nullable: true })
+  sides: Sides[];
 }

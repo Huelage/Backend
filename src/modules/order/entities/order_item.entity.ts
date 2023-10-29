@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { GraphQLJSON } from 'graphql-type-json';
+
 import {
   Column,
   Entity,
@@ -8,8 +8,21 @@ import {
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
+
 import { Order } from './order.entity';
 import { Product } from '../../product/entities/product.entity';
+
+@ObjectType()
+export class Extras {
+  @Field()
+  name: string;
+
+  @Field()
+  price: number;
+
+  @Field()
+  quantity: number;
+}
 
 @Entity({ name: 'order_item' })
 @ObjectType()
@@ -41,6 +54,6 @@ export class OrderItem {
   size: string;
 
   @Column({ type: 'json', nullable: true })
-  @Field(() => GraphQLJSON, { nullable: true })
-  extras: { name: string; price: number; quantity: number }[];
+  @Field(() => [Extras], { nullable: true })
+  extras: Extras[];
 }

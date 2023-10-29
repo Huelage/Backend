@@ -16,7 +16,6 @@ import {
 } from 'typeorm';
 import { CanceledOrder } from './canceled_order.entity';
 import { OrderItem } from './order_item.entity';
-import GraphQLJSON from 'graphql-type-json';
 
 enum OrderStatus {
   PENDING = 'pending',
@@ -36,6 +35,15 @@ export enum PaymentMethod {
 
 registerEnumType(OrderStatus, { name: 'OrderStatus' });
 registerEnumType(PaymentMethod, { name: 'PaymentMethod' });
+
+@ObjectType()
+export class PaymentBreakDown {
+  @Field()
+  name: string;
+
+  @Field()
+  price: string;
+}
 
 @Entity({ name: 'order' })
 @ObjectType()
@@ -89,8 +97,8 @@ export class Order {
   deliveryFee: number;
 
   @Column({ name: 'payment_breakdown', type: 'decimal', nullable: true })
-  @Field(() => [GraphQLJSON])
-  paymentBreakdown: { name: string; price: string }[];
+  @Field(() => [PaymentBreakDown])
+  paymentBreakdown: PaymentBreakDown[];
 
   @Column({ name: 'total_amount', type: 'decimal' })
   @Field()

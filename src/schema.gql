@@ -71,6 +71,17 @@ type CanceledOrder {
   refunded: Boolean!
 }
 
+type PackageSize {
+  name: String!
+  price: Float!
+}
+
+type Sides {
+  description: String!
+  isRequired: Boolean!
+  isMultiple: Boolean!
+}
+
 type Food {
   productId: String!
   product: Product!
@@ -79,8 +90,8 @@ type Food {
   price: Float
   preparationTime: String
   availability: Availability!
-  packageSizes: [JSON!]
-  sides: [JSON!]
+  packageSizes: [PackageSize!]
+  sides: [Sides!]
 }
 
 enum FoodCategory {
@@ -103,11 +114,6 @@ enum Availability {
   UNAVAILABLE
 }
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
 type Product {
   productId: String!
   vendor: Vendor!
@@ -125,6 +131,12 @@ enum ProductType {
   STATIONERY
 }
 
+type Extras {
+  name: String!
+  price: Float!
+  quantity: Float!
+}
+
 type OrderItem {
   itemId: String!
   order: Order!
@@ -132,7 +144,12 @@ type OrderItem {
   totalPrice: Float!
   quantity: Float!
   size: String!
-  extras: JSON
+  extras: [Extras!]
+}
+
+type PaymentBreakDown {
+  name: String!
+  price: String!
 }
 
 type Order {
@@ -145,7 +162,7 @@ type Order {
   estimatedDeliveryTime: DateTime!
   subtotal: Float!
   deliveryFee: Float!
-  paymentBreakdown: [JSON!]!
+  paymentBreakdown: [PaymentBreakDown!]!
   totalAmount: Float!
   paymentMethod: PaymentMethod!
   paymentStatus: Boolean!
@@ -165,12 +182,17 @@ enum OrderStatus {
   CANCELLED
 }
 
+type Location {
+  name: String!
+  locationId: String!
+}
+
 type User {
   userId: String!
   entity: Huelager!
   firstName: String!
   lastName: String!
-  knownLocation: JSON
+  locations: [Location!]
   isSocialAuth: Boolean!
   reviews: [Review!]
   orders: [Order!]
@@ -214,6 +236,7 @@ type Vendor {
 
 type Query {
   findOrder(orderId: String!): Order!
+  findUserOrders: Order!
   getMyVendorProfile: Vendor!
   getUserProfile: User!
   sayHello: String!
@@ -256,7 +279,13 @@ input OrderItemInput {
   productId: String!
   totalPrice: Float!
   quantity: Float!
-  extras: JSON
+  extras: [ExtrasInput!]
+}
+
+input ExtrasInput {
+  name: String!
+  price: Float!
+  quantity: Float!
 }
 
 input CreateVendorInput {
@@ -343,8 +372,19 @@ input CreateFoodInput {
   category: FoodCategory!
   pricingMethod: FoodPricing!
   price: Float
-  sides: [JSON!]
-  packageSizes: [JSON!]
+  sides: [SidesInput!]
+  packageSizes: [PackageSizeInput!]
+}
+
+input SidesInput {
+  description: String!
+  isRequired: Boolean!
+  isMultiple: Boolean!
+}
+
+input PackageSizeInput {
+  name: String!
+  price: Float!
 }
 
 input UpdateFoodInput {
@@ -354,7 +394,7 @@ input UpdateFoodInput {
   category: FoodCategory
   pricingMethod: FoodPricing
   price: Float
-  sides: [JSON!]
-  packageSizes: [JSON!]
+  sides: [SidesInput!]
+  packageSizes: [PackageSizeInput!]
   productId: String!
 }

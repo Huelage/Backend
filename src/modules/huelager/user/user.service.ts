@@ -69,7 +69,7 @@ export class UserService {
       lastName,
       entity,
       userId: entity.entityId,
-      knownLocation: { locations: [] },
+      locations: [],
     });
 
     try {
@@ -127,11 +127,11 @@ export class UserService {
     const user = await this.repository.findUser({ where: { userId } });
 
     if (!name) {
-      user.knownLocation.locations = user.knownLocation.locations.filter(
+      user.locations = user.locations.filter(
         (location) => location.locationId !== locationId,
       );
     } else {
-      user.knownLocation.locations.push({ locationId, name });
+      user.locations.push({ locationId, name });
     }
 
     await this.repository.saveUser(user);

@@ -1,9 +1,21 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import GraphQLJSON from 'graphql-type-json';
+
 import { HuelagerType } from '../../../modules/huelager/entities/huelager.entity';
 import { User } from '../../../modules/huelager/user/user.entity';
 import { PaymentMethod } from '../entities/order.entity';
+
+@InputType()
+export class ExtrasInput {
+  @Field()
+  name: string;
+
+  @Field()
+  price: number;
+
+  @Field()
+  quantity: number;
+}
 
 @InputType()
 export class CreateOrderInput {
@@ -56,6 +68,6 @@ class OrderItemInput {
   @Field()
   quantity: number;
 
-  @Field(() => GraphQLJSON, { nullable: true })
-  extras: { name: string; price: number; quantity: number }[];
+  @Field(() => [ExtrasInput], { nullable: true })
+  extras: ExtrasInput[];
 }
