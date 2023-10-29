@@ -34,7 +34,7 @@ export class CreateFoodInput {
   @Field(() => [GraphQLJSON], { nullable: true })
   sides: {
     description: string;
-    options: { name: string; price: number };
+    options: { name: string; price: number }[];
     isRequired: boolean;
     isMultiple: boolean;
   }[];

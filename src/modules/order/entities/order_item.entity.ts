@@ -14,9 +14,9 @@ import { Product } from '../../product/entities/product.entity';
 @Entity({ name: 'order_item' })
 @ObjectType()
 export class OrderItem {
-  @PrimaryColumn('uuid', { name: 'order_item_id' })
+  @PrimaryColumn('uuid', { name: 'item_id' })
   @Field()
-  orderItemnId: string;
+  itemId: string;
 
   @ManyToOne(() => Order, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'order_id' })
@@ -36,7 +36,11 @@ export class OrderItem {
   @Field()
   quantity: number;
 
+  @Column({ name: 'size', type: 'string' })
+  @Field()
+  size: string;
+
   @Column({ type: 'json', nullable: true })
   @Field(() => GraphQLJSON, { nullable: true })
-  extras: any;
+  extras: { name: string; price: number; quantity: number }[];
 }

@@ -41,6 +41,10 @@ export class Vendor {
   @Field()
   repName: string;
 
+  @Column({ name: 'avg_response_time', type: 'int', default: 0 })
+  @Field()
+  avgResponseTime: number;
+
   @Column({ name: 'opening_hours', type: 'time', nullable: true })
   @Field()
   openingHours: Date;

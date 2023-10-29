@@ -1,8 +1,9 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import GraphQLJSON from 'graphql-type-json';
 import { HuelagerType } from '../../../modules/huelager/entities/huelager.entity';
 import { User } from '../../../modules/huelager/user/user.entity';
+import { PaymentMethod } from '../entities/order.entity';
 
 @InputType()
 export class CreateOrderInput {
@@ -17,6 +18,20 @@ export class CreateOrderInput {
   @IsString()
   @Field({ nullable: true })
   deliveryAddress: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Field({ nullable: true })
+  discount: number;
+
+  @Field()
+  @IsNumber()
+  subtotal: number;
+
+  @IsOptional()
+  @IsEnum(PaymentMethod)
+  @Field(() => PaymentMethod)
+  paymentMethod: PaymentMethod;
 
   user: User;
 
