@@ -69,4 +69,8 @@ export class OrderService {
 
     return orders;
   }
+
+  async updateOrderStatus() {
+    return;
+  }
 }

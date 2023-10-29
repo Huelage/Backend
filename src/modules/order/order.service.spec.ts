@@ -6,6 +6,7 @@ import { CreateOrderInput } from './dto/create-order.input';
 import { User } from '../huelager/user/user.entity';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { PaymentMethod } from './entities/order.entity';
 
 const mockOrderRepository = () => ({
   createOrder: jest.fn(),
@@ -46,6 +47,8 @@ describe('OrderService', () => {
         },
       ],
       deliveryAddress: 'deliveryAddress',
+      paymentMethod: PaymentMethod.CASH,
+      subtotal: 100,
       user: new User(),
       entityType: HuelagerType.USER,
     } as CreateOrderInput;
@@ -53,17 +56,19 @@ describe('OrderService', () => {
     const create = (input) => service.create(input);
 
     it('creates an order', async () => {
-      const { orderItems, vendorId, deliveryAddress, user } = mockInput;
+      const {
+        orderItems,
+        vendorId,
+        deliveryAddress,
+        user,
+        subtotal,
+        paymentMethod,
+      } = mockInput;
       const order = {
         orderItems,
       };
 
       orderRepository.createOrder.mockResolvedValue(order);
-
-      const subtotal = orderItems.reduce((acc, item) => {
-        acc += item.totalPrice;
-        return acc;
-      }, 0);
 
       const result = await create(mockInput);
 
@@ -74,6 +79,7 @@ describe('OrderService', () => {
         user,
         orderItems,
         subtotal,
+        paymentMethod,
         totalAmount: subtotal,
       });
 

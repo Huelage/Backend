@@ -121,9 +121,7 @@ describe('UserService', () => {
       firstName: mockCreateInput.firstName,
       lastName: mockCreateInput.lastName,
       userId: mockReturnHuelager.entityId,
-      knownLocation: {
-        locations: [],
-      },
+      locations: [],
     };
     const create = async () => service.create(mockCreateInput);
 
@@ -280,9 +278,7 @@ describe('UserService', () => {
       addLocationInput.userId = 'testUserId';
 
       const mockFoundUser = {
-        knownLocation: {
-          locations: [],
-        },
+        locations: [],
       };
 
       huelagerRepository.findUser.mockReturnValue(mockFoundUser);
@@ -294,9 +290,7 @@ describe('UserService', () => {
         where: { userId: 'testUserId' },
       });
       expect(result).toStrictEqual({
-        knownLocation: {
-          locations: [{ locationId: 'testLocationId', name: 'testName' }],
-        },
+        locations: [{ locationId: 'testLocationId', name: 'testName' }],
       });
     });
 
@@ -309,9 +303,7 @@ describe('UserService', () => {
       editLocationInput.userId = 'testUserId';
 
       const mockFoundUser = {
-        knownLocation: {
-          locations: [{ locationId: 'testLocationId', name: 'testName' }],
-        },
+        locations: [{ locationId: 'testLocationId', name: 'testName' }],
       };
 
       huelagerRepository.findUser.mockReturnValue(mockFoundUser);
@@ -323,9 +315,7 @@ describe('UserService', () => {
         where: { userId: 'testUserId' },
       });
       expect(result).toStrictEqual({
-        knownLocation: {
-          locations: [],
-        },
+        locations: [],
       });
     });
 

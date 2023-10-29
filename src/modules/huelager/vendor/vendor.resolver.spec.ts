@@ -34,13 +34,15 @@ describe('VendorResolver', () => {
     expect(resolver).toBeDefined();
   });
 
-  describe('getVendorProfile', () => {
+  describe('getMyVendorProfile', () => {
     const vendor = new Vendor();
 
     it('calls the restructureHuelager service; returns the vendor.', async () => {
       service.restructureHuelager.mockResolvedValue(vendor);
 
-      const result = await resolver.getVendorProfile({ user: new Huelager() });
+      const result = await resolver.getMyVendorProfile({
+        user: new Huelager(),
+      });
 
       expect(service.restructureHuelager).toHaveBeenCalledTimes(1);
       expect(service.restructureHuelager).toHaveBeenCalledWith(vendor);
