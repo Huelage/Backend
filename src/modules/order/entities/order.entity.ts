@@ -16,19 +16,22 @@ import {
 } from 'typeorm';
 import { CanceledOrder } from './canceled_order.entity';
 import { OrderItem } from './order_item.entity';
+import GraphQLJSON from 'graphql-type-json';
 
 enum OrderStatus {
   PENDING = 'pending',
-  RECEIVED = 'received',
+  PREPARING = 'preparing',
   READY = 'ready',
-  IN_DELIVERY = 'in_delivery',
+  EN_ROUTE = 'en_route',
   DELIEVERED = 'delivered',
-  CANCELED = 'canceled',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
 }
 
 export enum PaymentMethod {
-  PAY_ON_DELIVERY = 'pay_on_delivery',
-  WALLET_BALANCE = 'wallet_balance',
+  CASH = 'cash',
+  HUENIT = 'huenit',
+  CARD = 'card',
 }
 
 registerEnumType(OrderStatus, { name: 'OrderStatus' });
@@ -73,6 +76,10 @@ export class Order {
   @Field()
   deliveryAddress: string;
 
+  @Column({ name: 'estimated_delivery_time', type: 'datetime', nullable: true })
+  @Field()
+  estimatedDeliveryTime: Date;
+
   @Column({ type: 'decimal' })
   @Field()
   subtotal: number;
@@ -81,13 +88,17 @@ export class Order {
   @Field()
   deliveryFee: number;
 
+  @Column({ name: 'payment_breakdown', type: 'decimal', nullable: true })
+  @Field(() => [GraphQLJSON])
+  paymentBreakdown: { name: string; price: string }[];
+
   @Column({ name: 'total_amount', type: 'decimal' })
   @Field()
   totalAmount: number;
 
   @Column({
     type: 'enum',
-    enum: ['pay_on_delivery', 'wallet_balance'],
+    enum: ['cash', 'huuenit', 'card'],
     name: 'payment_method',
   })
   @Field(() => PaymentMethod)

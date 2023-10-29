@@ -14,10 +14,16 @@ export class VendorResolver {
 
   @UseGuards(AccessTokenGuard)
   @Query(() => Vendor)
-  async getVendorProfile(
+  async getMyVendorProfile(
     @Context('req') { user: huelager }: AccessTokenRequest,
   ) {
     return await this.vendorService.restructureHuelager(huelager);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Mutation(() => [Vendor])
+  async getAllVendors(): Promise<Vendor[]> {
+    return await this.vendorService.findAll();
   }
 
   @Mutation(() => Vendor)

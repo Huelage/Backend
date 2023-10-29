@@ -136,6 +136,10 @@ export class HuelagerRepository {
     });
   }
 
+  async findVendors() {
+    return this.vendorRepository.find();
+  }
+
   async saveVendor(vendor: Vendor) {
     this.vendorRepository.save(vendor);
   }

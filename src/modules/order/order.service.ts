@@ -8,22 +8,26 @@ import { CreateOrderInput } from './dto/create-order.input';
 import { OrderRepository } from './order.repository';
 import { FindOrderDto } from './dto/find-order.dto';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
+import { Order } from './entities/order.entity';
 
 @Injectable()
 export class OrderService {
   constructor(private readonly orderRepository: OrderRepository) {}
 
   async create(createOrderInput: CreateOrderInput) {
-    const { entityType, vendorId, deliveryAddress, user, orderItems } =
-      createOrderInput;
+    const {
+      entityType,
+      vendorId,
+      deliveryAddress,
+      user,
+      orderItems,
+      discount,
+      paymentMethod,
+      subtotal,
+    } = createOrderInput;
 
-    if (entityType !== HuelagerType.VENDOR)
-      throw new UnauthorizedException('Not a vendor.');
-
-    const subtotal = orderItems.reduce((acc, item) => {
-      acc += item.totalPrice;
-      return acc;
-    }, 0);
+    if (entityType !== HuelagerType.USER)
+      throw new UnauthorizedException('Not a user.');
 
     const order = await this.orderRepository.createOrder({
       deliveryAddress,
@@ -31,6 +35,7 @@ export class OrderService {
       user,
       subtotal,
       orderItems,
+      paymentMethod,
       totalAmount: subtotal,
     });
 
@@ -50,5 +55,19 @@ export class OrderService {
       throw new UnauthorizedException('Not authorized.');
 
     return order;
+  }
+
+  async findUserOrders(
+    entityType: HuelagerType,
+    userId: string,
+  ): Promise<Order[]> {
+    if (entityType !== HuelagerType.USER)
+      throw new UnauthorizedException('Not a user.');
+
+    const orders = await this.orderRepository.findOrders({
+      where: [{ user: { userId } }],
+    });
+
+    return orders;
   }
 }

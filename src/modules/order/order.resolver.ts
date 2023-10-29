@@ -32,4 +32,11 @@ export class OrderResolver {
     const findOrderDto: FindOrderDto = { orderId, entityId: huelager.entityId };
     return await this.orderService.findOne(findOrderDto);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Query(() => Order)
+  async findUserOrders(@Context('req') { user: huelager }: AccessTokenRequest) {
+    const { entityId, entityType } = huelager;
+    return await this.orderService.findUserOrders(entityType, entityId);
+  }
 }

@@ -1,4 +1,3 @@
-import { UploadLocation } from '../../modules/image_upload/dtos/upload_image.dto';
 import { Stream } from 'stream';
 
 export interface File {
@@ -9,6 +8,4 @@ export interface File {
   encoding: string;
 
   createReadStream: () => Stream;
-
-  uploadLocation: UploadLocation;
 }

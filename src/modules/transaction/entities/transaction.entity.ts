@@ -64,7 +64,7 @@ export class Transaction {
   @Column({
     name: 'payment_method',
     type: 'enum',
-    enum: ['pay_on_delivery', 'wallet_balance'],
+    enum: ['cash', 'huenit', 'card'],
   })
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;

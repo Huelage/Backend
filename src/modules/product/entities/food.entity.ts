@@ -53,15 +53,24 @@ export class Food {
   @Field({ nullable: true })
   price: number;
 
+  @Column({ name: 'preparation_time', type: 'text', nullable: true })
+  @Field({ nullable: true })
+  preparationTime: string;
+
   @Column({ type: 'enum', enum: Availability, default: Availability.AVAILABLE })
   @Field(() => Availability)
   availability: Availability;
 
   @Column({ name: 'package_sizes', type: 'json', nullable: true })
-  @Field(() => GraphQLJSON, { nullable: true })
-  packageSizes: any;
+  @Field(() => [GraphQLJSON], { nullable: true })
+  packageSizes: { name: string; price: number }[];
 
   @Column({ type: 'json', nullable: true })
-  @Field(() => GraphQLJSON, { nullable: true })
-  sides: any;
+  @Field(() => [GraphQLJSON], { nullable: true })
+  sides: {
+    description: string;
+    options: { name: string; price: number }[];
+    isRequired: boolean;
+    isMultiple: boolean;
+  }[];
 }

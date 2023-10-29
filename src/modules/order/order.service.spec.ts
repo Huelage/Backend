@@ -2,8 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { OrderService } from './order.service';
 import { OrderRepository } from './order.repository';
 import { CreateOrderInput } from './dto/create-order.input';
-import { Order } from './entities/order.entity';
-import exp from 'constants';
+
 import { User } from '../huelager/user/user.entity';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
@@ -48,7 +47,7 @@ describe('OrderService', () => {
       ],
       deliveryAddress: 'deliveryAddress',
       user: new User(),
-      entityType: HuelagerType.VENDOR,
+      entityType: HuelagerType.USER,
     } as CreateOrderInput;
 
     const create = (input) => service.create(input);
@@ -90,7 +89,7 @@ describe('OrderService', () => {
     });
 
     it('throws an unauthorized error', async () => {
-      const mockUserInput = { ...mockInput, entityType: HuelagerType.USER };
+      const mockUserInput = { ...mockInput, entityType: HuelagerType.VENDOR };
 
       expect(create(mockUserInput)).rejects.toThrow(UnauthorizedException);
     });

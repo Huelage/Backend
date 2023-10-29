@@ -15,6 +15,10 @@ export class CreateFoodInput {
   @IsString()
   description: string;
 
+  @Field()
+  @IsString()
+  imageUrl: string;
+
   @Field(() => FoodCategory)
   @IsEnum(FoodCategory)
   category: FoodCategory;
@@ -23,15 +27,20 @@ export class CreateFoodInput {
   @IsEnum(FoodPricing)
   pricingMethod: FoodPricing;
 
-  @Field()
+  @Field({ nullable: true })
   @IsNumber()
   price: number;
 
-  @Field(() => GraphQLJSON, { nullable: true })
-  sides: any;
+  @Field(() => [GraphQLJSON], { nullable: true })
+  sides: {
+    description: string;
+    options: { name: string; price: number }[];
+    isRequired: boolean;
+    isMultiple: boolean;
+  }[];
 
-  @Field(() => GraphQLJSON, { nullable: true })
-  packageSizes: any;
+  @Field(() => [GraphQLJSON], { nullable: true })
+  packageSizes: { name: string; price: number }[];
 
   entityType: HuelagerType;
 
