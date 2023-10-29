@@ -21,7 +21,6 @@ export class OrderService {
       deliveryAddress,
       user,
       orderItems,
-      discount,
       paymentMethod,
       subtotal,
     } = createOrderInput;
