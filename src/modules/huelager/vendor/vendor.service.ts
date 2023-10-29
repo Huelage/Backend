@@ -35,6 +35,10 @@ export class VendorService {
     return { ...vendor, entity } as Vendor;
   }
 
+  async findAll(): Promise<Vendor[]> {
+    return this.repository.findVendors();
+  }
+
   async create(createVendorInput: CreateVendorInput) {
     const otp = genRandomOtp();
 

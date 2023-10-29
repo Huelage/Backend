@@ -36,7 +36,7 @@ export class OrderItem {
   @Field()
   quantity: number;
 
-  @Column({ name: 'size', type: 'string' })
+  @Column({ name: 'size', type: 'text' })
   @Field()
   size: string;
 
