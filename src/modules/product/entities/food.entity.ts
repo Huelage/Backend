@@ -10,10 +10,11 @@ export enum Availability {
 }
 
 export enum FoodCategory {
+  MAIN = 'main',
   SNACKS = 'snacks',
+  SOUPS = 'soups',
   DRINKS = 'drinks',
   PROTEIN = 'protein',
-  CARBOHYDRATE = 'carbohydrate',
 }
 
 export enum FoodPricing {
@@ -55,7 +56,7 @@ export class Food {
 
   @Column({ name: 'preparation_time', type: 'text', nullable: true })
   @Field({ nullable: true })
-  preparationTime: string;
+  preparationTime: number;
 
   @Column({ type: 'enum', enum: Availability, default: Availability.AVAILABLE })
   @Field(() => Availability)

@@ -43,14 +43,23 @@ export class ProductService {
       packageSizes,
       vendor,
       entityType,
+      imgUrl,
+      preparationTime,
     } = createFoodInput;
 
     if (entityType !== HuelagerType.VENDOR)
       throw new UnauthorizedException('Not a vendor');
 
     const food = this.repository.createFood({
-      productInfo: { vendor, name, description },
-      foodInfo: { category, pricingMethod, price, sides, packageSizes },
+      productInfo: { vendor, name, description, imgUrl },
+      foodInfo: {
+        category,
+        pricingMethod,
+        price,
+        sides,
+        packageSizes,
+        preparationTime,
+      },
     });
 
     return food;

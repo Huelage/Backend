@@ -19,6 +19,13 @@ export class ProductResolver {
     return await this.productService.findOne(productId);
   }
 
+  @Query(() => [Product])
+  async getVendorProducts(
+    @Args('vendorId', { type: () => String }) vendorId: string,
+  ) {
+    return await this.productService.findVendorProducts(vendorId);
+  }
+
   @UseGuards(AccessTokenGuard)
   @Mutation(() => Food)
   async addFood(

@@ -77,17 +77,18 @@ type Food {
   category: FoodCategory!
   pricingMethod: FoodPricing!
   price: Float
-  preparationTime: String
+  preparationTime: Float
   availability: Availability!
   packageSizes: [JSON!]
   sides: [JSON!]
 }
 
 enum FoodCategory {
+  MAIN
   SNACKS
+  SOUPS
   DRINKS
   PROTEIN
-  CARBOHYDRATE
 }
 
 enum FoodPricing {
@@ -214,11 +215,13 @@ type Vendor {
 
 type Query {
   findOrder(orderId: String!): Order!
+  findUserOrders: Order!
   getMyVendorProfile: Vendor!
   getUserProfile: User!
   sayHello: String!
   getEntityProfile: Huelager!
   getProduct(productId: String!): Product!
+  getVendorProducts(vendorId: String!): [Product!]!
 }
 
 type Mutation {
@@ -339,22 +342,24 @@ scalar Upload
 input CreateFoodInput {
   name: String!
   description: String!
-  imageUrl: String!
+  imgUrl: String!
   category: FoodCategory!
   pricingMethod: FoodPricing!
   price: Float
   sides: [JSON!]
   packageSizes: [JSON!]
+  preparationTime: Float
 }
 
 input UpdateFoodInput {
   name: String
   description: String
-  imageUrl: String
+  imgUrl: String
   category: FoodCategory
   pricingMethod: FoodPricing
   price: Float
   sides: [JSON!]
   packageSizes: [JSON!]
+  preparationTime: Float
   productId: String!
 }

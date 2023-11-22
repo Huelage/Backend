@@ -17,7 +17,7 @@ export class CreateFoodInput {
 
   @Field()
   @IsString()
-  imageUrl: string;
+  imgUrl: string;
 
   @Field(() => FoodCategory)
   @IsEnum(FoodCategory)
@@ -41,6 +41,10 @@ export class CreateFoodInput {
 
   @Field(() => [GraphQLJSON], { nullable: true })
   packageSizes: { name: string; price: number }[];
+
+  @Field({ nullable: true })
+  @IsNumber()
+  preparationTime: number;
 
   entityType: HuelagerType;
 
