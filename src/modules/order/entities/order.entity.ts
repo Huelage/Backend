@@ -18,7 +18,7 @@ import { CanceledOrder } from './canceled_order.entity';
 import { OrderItem } from './order_item.entity';
 import GraphQLJSON from 'graphql-type-json';
 
-enum OrderStatus {
+export enum OrderStatus {
   PENDING = 'pending',
   PREPARING = 'preparing',
   READY = 'ready',

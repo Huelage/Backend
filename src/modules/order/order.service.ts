@@ -8,7 +8,7 @@ import { CreateOrderInput } from './dto/create-order.input';
 import { OrderRepository } from './order.repository';
 import { FindOrderDto } from './dto/find-order.dto';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
-import { Order } from './entities/order.entity';
+import { Order, OrderStatus } from './entities/order.entity';
 
 @Injectable()
 export class OrderService {
@@ -82,5 +82,19 @@ export class OrderService {
     });
 
     return orders;
+  }
+
+  async updateOrderStatus(orderId: string, status: OrderStatus) {
+    const order = await this.orderRepository.findOrder({
+      where: { orderId },
+    });
+
+    if (!order) throw new NotFoundException('Order not found.');
+
+    order.status = status;
+
+    await this.orderRepository.saveOrder(order);
+
+    return order;
   }
 }

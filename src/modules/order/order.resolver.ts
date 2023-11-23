@@ -48,4 +48,15 @@ export class OrderResolver {
     const { entityId, entityType } = huelager;
     return await this.orderService.findVendorOrders(entityType, entityId);
   }
+
+  @UseGuards(AccessTokenGuard)
+  @Query(() => [Order])
+  async updateOrderStatus(
+    @Args('vendorIds', { type: () => [String] }) vendorIds: string[],
+
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ) {
+    const { entityId, entityType } = huelager;
+    return await this.orderService.findVendorOrders(entityType, entityId);
+  }
 }
