@@ -206,8 +206,9 @@ type Vendor {
   businessAddress: String!
   repName: String!
   avgResponseTime: Float!
-  openingHours: DateTime!
-  closingHours: DateTime!
+  openingHours: String!
+  closingHours: String!
+  rating: Float!
   reviews: [Review!]!
   products: [Product!]!
   orders: [Order!]!
@@ -215,8 +216,11 @@ type Vendor {
 
 type Query {
   findOrder(orderId: String!): Order!
-  findUserOrders: Order!
+  findUserOrders: [Order!]!
+  findVendorOrders: [Order!]!
   getMyVendorProfile: Vendor!
+  getVendorProfile(vendorId: String!): Vendor!
+  getAllVendors: [Vendor!]!
   getUserProfile: User!
   sayHello: String!
   getEntityProfile: Huelager!
@@ -226,7 +230,6 @@ type Query {
 
 type Mutation {
   createOrder(input: CreateOrderInput!): Order!
-  getAllVendors: [Vendor!]!
   signUpVendor(input: CreateVendorInput!): Vendor!
   signInVendor(input: AuthenticateVendorInput!): Vendor!
   signUpUser(input: CreateUserInput!): User!

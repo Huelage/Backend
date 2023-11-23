@@ -21,7 +21,15 @@ export class VendorResolver {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Mutation(() => [Vendor])
+  @Query(() => Vendor)
+  async getVendorProfile(
+    @Args('vendorId', { type: () => String }) vendorId: string,
+  ) {
+    return await this.vendorService.getVendor(vendorId);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Query(() => [Vendor])
   async getAllVendors(): Promise<Vendor[]> {
     return await this.vendorService.findAll();
   }

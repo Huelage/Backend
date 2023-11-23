@@ -45,13 +45,17 @@ export class Vendor {
   @Field()
   avgResponseTime: number;
 
-  @Column({ name: 'opening_hours', type: 'time', nullable: true })
+  @Column({ name: 'opening_hours', type: 'text', nullable: true })
   @Field()
-  openingHours: Date;
+  openingHours: string;
 
-  @Column({ name: 'closing_hours', type: 'time', nullable: true })
+  @Column({ name: 'closing_hours', type: 'text', nullable: true })
   @Field()
-  closingHours: Date;
+  closingHours: string;
+
+  @Column({ name: 'rating', type: 'decimal', default: 0 })
+  @Field()
+  rating: number;
 
   @OneToMany(() => Review, (review) => review.vendor)
   @Field(() => [Review])

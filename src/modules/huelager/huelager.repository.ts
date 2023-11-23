@@ -132,12 +132,18 @@ export class HuelagerRepository {
     const { where } = params;
     return this.vendorRepository.findOne({
       where,
-      relations: { entity: { wallet: true } },
+      relations: {
+        entity: { wallet: true },
+        reviews: true,
+        products: { food: true },
+      },
     });
   }
 
   async findVendors() {
-    return this.vendorRepository.find();
+    return this.vendorRepository.find({
+      relations: { entity: true },
+    });
   }
 
   async saveVendor(vendor: Vendor) {

@@ -69,4 +69,18 @@ export class OrderService {
 
     return orders;
   }
+
+  async findVendorOrders(
+    entityType: HuelagerType,
+    vendorId: string,
+  ): Promise<Order[]> {
+    if (entityType !== HuelagerType.VENDOR)
+      throw new UnauthorizedException('Not a vendor.');
+
+    const orders = await this.orderRepository.findOrders({
+      where: [{ vendor: { vendorId } }],
+    });
+
+    return orders;
+  }
 }

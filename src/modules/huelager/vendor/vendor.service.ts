@@ -125,4 +125,14 @@ export class VendorService {
 
     return vendor;
   }
+
+  async getVendor(vendorId: string) {
+    const vendor = await this.repository.findVendor({
+      where: { vendorId },
+    });
+
+    if (!vendor) throw new UnauthorizedException('Vendor is unknown');
+
+    return vendor;
+  }
 }

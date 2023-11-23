@@ -34,9 +34,18 @@ export class OrderResolver {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Query(() => Order)
+  @Query(() => [Order])
   async findUserOrders(@Context('req') { user: huelager }: AccessTokenRequest) {
     const { entityId, entityType } = huelager;
     return await this.orderService.findUserOrders(entityType, entityId);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Query(() => [Order])
+  async findVendorOrders(
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ) {
+    const { entityId, entityType } = huelager;
+    return await this.orderService.findVendorOrders(entityType, entityId);
   }
 }
