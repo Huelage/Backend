@@ -10,6 +10,7 @@ interface OriginalError {
 
 export const graphqlConfig: ApolloDriverConfig = {
   driver: ApolloDriver,
+  subscriptions: { 'graphql-ws': true },
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
   formatError: (err: GraphQLError) => {
     const graphQLFormattedError = (err.extensions

@@ -221,6 +221,7 @@ type Query {
   getMyVendorProfile: Vendor!
   getVendorProfile(vendorId: String!): Vendor!
   getAllVendors: [Vendor!]!
+  getVendorsById(vendorIds: [String!]!): [Vendor!]!
   getUserProfile: User!
   sayHello: String!
   getEntityProfile: Huelager!

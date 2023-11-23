@@ -140,9 +140,21 @@ export class HuelagerRepository {
     });
   }
 
-  async findVendors() {
+  async findAllVendors() {
     return this.vendorRepository.find({
       relations: { entity: true },
+    });
+  }
+
+  async findVendors(params: { where: FindOptionsWhere<Vendor>[] }) {
+    const { where } = params;
+    return this.vendorRepository.find({
+      where,
+      relations: {
+        entity: true,
+        reviews: true,
+        products: { food: true },
+      },
     });
   }
 

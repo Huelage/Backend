@@ -35,8 +35,23 @@ export class VendorService {
     return { ...vendor, entity } as Vendor;
   }
 
+  async getVendor(vendorId: string) {
+    const vendor = await this.repository.findVendor({
+      where: { vendorId },
+    });
+
+    if (!vendor) throw new UnauthorizedException('Vendor is unknown');
+
+    return vendor;
+  }
+
   async findAll(): Promise<Vendor[]> {
-    return this.repository.findVendors();
+    return this.repository.findAllVendors();
+  }
+
+  async findMany(vendorIds: string[]): Promise<Vendor[]> {
+    const where = vendorIds.map((vendorId) => ({ vendorId }));
+    return this.repository.findVendors({ where });
   }
 
   async create(createVendorInput: CreateVendorInput) {
@@ -122,16 +137,6 @@ export class VendorService {
       vendor.entity.accessToken = accessToken;
       vendor.entity.refreshToken = refreshToken;
     }
-
-    return vendor;
-  }
-
-  async getVendor(vendorId: string) {
-    const vendor = await this.repository.findVendor({
-      where: { vendorId },
-    });
-
-    if (!vendor) throw new UnauthorizedException('Vendor is unknown');
 
     return vendor;
   }

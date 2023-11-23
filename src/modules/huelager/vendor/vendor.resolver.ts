@@ -34,6 +34,14 @@ export class VendorResolver {
     return await this.vendorService.findAll();
   }
 
+  @UseGuards(AccessTokenGuard)
+  @Query(() => [Vendor])
+  async getVendorsById(
+    @Args('vendorIds', { type: () => [String] }) vendorIds: string[],
+  ): Promise<Vendor[]> {
+    return await this.vendorService.findMany(vendorIds);
+  }
+
   @Mutation(() => Vendor)
   async signUpVendor(
     @Args('input') createVendorInput: CreateVendorInput,
