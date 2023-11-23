@@ -54,7 +54,7 @@ export class Food {
   @Field({ nullable: true })
   price: number;
 
-  @Column({ name: 'preparation_time', type: 'text', nullable: true })
+  @Column({ name: 'preparation_time', type: 'decimal', nullable: true })
   @Field({ nullable: true })
   preparationTime: number;
 
