@@ -218,6 +218,7 @@ type Query {
   findOrder(orderId: String!): Order!
   findUserOrders: [Order!]!
   findVendorOrders: [Order!]!
+  updateOrderStatus(input: UpdateOrderStatusInput!): [Order!]!
   getMyVendorProfile: Vendor!
   getVendorProfile(vendorId: String!): Vendor!
   getAllVendors: [Vendor!]!
@@ -227,6 +228,11 @@ type Query {
   getEntityProfile: Huelager!
   getProduct(productId: String!): Product!
   getVendorProducts(vendorId: String!): [Product!]!
+}
+
+input UpdateOrderStatusInput {
+  orderId: String!
+  status: OrderStatus!
 }
 
 type Mutation {
