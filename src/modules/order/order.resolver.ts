@@ -1,11 +1,12 @@
 import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { OrderService } from './order.service';
-import { Order } from './entities/order.entity';
+import { Order, OrderStatus } from './entities/order.entity';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '../../common/guards/access-token.guard';
 import { AccessTokenRequest } from '../../common/interfaces/request.interface';
 import { FindOrderDto } from './dto/find-order.dto';
+import { UpdateOrderStatusInput } from './dto/update-status.input';
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -52,11 +53,15 @@ export class OrderResolver {
   @UseGuards(AccessTokenGuard)
   @Query(() => [Order])
   async updateOrderStatus(
-    @Args('vendorIds', { type: () => [String] }) vendorIds: string[],
-
+    @Args('input') updateOrderStatusInput: UpdateOrderStatusInput,
     @Context('req') { user: huelager }: AccessTokenRequest,
   ) {
-    const { entityId, entityType } = huelager;
-    return await this.orderService.findVendorOrders(entityType, entityId);
+    const { entityType, entityId } = huelager;
+    updateOrderStatusInput = {
+      ...updateOrderStatusInput,
+      entityType,
+      entityId,
+    };
+    return await this.orderService.updateOrderStatus(updateOrderStatusInput);
   }
 }

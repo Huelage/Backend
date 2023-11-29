@@ -8,7 +8,8 @@ import { CreateOrderInput } from './dto/create-order.input';
 import { OrderRepository } from './order.repository';
 import { FindOrderDto } from './dto/find-order.dto';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
-import { Order, OrderStatus } from './entities/order.entity';
+import { Order } from './entities/order.entity';
+import { UpdateOrderStatusInput } from './dto/update-status.input';
 
 @Injectable()
 export class OrderService {
@@ -84,10 +85,20 @@ export class OrderService {
     return orders;
   }
 
-  async updateOrderStatus(orderId: string, status: OrderStatus) {
+  async updateOrderStatus(updateOrderStatusInput: UpdateOrderStatusInput) {
+    const { orderId, status, entityType, entityId } = updateOrderStatusInput;
+
+    if (entityType !== HuelagerType.VENDOR) {
+      throw new UnauthorizedException('Not a vendor.');
+    }
+
     const order = await this.orderRepository.findOrder({
       where: { orderId },
     });
+
+    if (order.vendor.vendorId !== entityId) {
+      throw new UnauthorizedException('Not authorized.');
+    }
 
     if (!order) throw new NotFoundException('Order not found.');
 
