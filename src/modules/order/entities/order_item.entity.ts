@@ -36,8 +36,8 @@ export class OrderItem {
   @Field()
   quantity: number;
 
-  @Column({ name: 'size', type: 'text' })
-  @Field()
+  @Column({ name: 'size', type: 'text', nullable: true })
+  @Field({ nullable: true })
   size: string;
 
   @Column({ type: 'json', nullable: true })

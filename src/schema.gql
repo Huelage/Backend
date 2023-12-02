@@ -132,7 +132,7 @@ type OrderItem {
   product: Product!
   totalPrice: Float!
   quantity: Float!
-  size: String!
+  size: String
   extras: JSON
 }
 
