@@ -40,3 +40,11 @@ export function generateVendorKey(): string {
 export function otpIsExpired(lastUpdated: Date): boolean {
   return Date.now() - lastUpdated.getTime() > otpLifeSpan;
 }
+
+export function calculateEstimatedDeliveryTime() {
+  return new Date(Date.now() + 30 * 60000);
+}
+
+export function calculateDeliveryFee() {
+  return 1000;
+}

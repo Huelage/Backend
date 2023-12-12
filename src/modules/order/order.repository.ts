@@ -32,13 +32,24 @@ export class OrderRepository {
     const { where } = params;
     return this.orderRepository.findOne({
       where,
-      relations: { vendor: true, user: true, orderItems: true },
+      relations: {
+        vendor: true,
+        user: true,
+        orderItems: { product: { food: true } },
+      },
     });
   }
 
   async findOrders(params: { where: FindOptionsWhere<Order>[] }) {
     const { where } = params;
-    return this.orderRepository.find({ where });
+    return this.orderRepository.find({
+      where,
+      relations: {
+        vendor: true,
+        user: true,
+        orderItems: { product: { food: true } },
+      },
+    });
   }
 
   async editOrderInfo(params: {

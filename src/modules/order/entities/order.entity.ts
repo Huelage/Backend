@@ -88,9 +88,9 @@ export class Order {
   @Field()
   deliveryFee: number;
 
-  @Column({ name: 'payment_breakdown', type: 'decimal', nullable: true })
+  @Column({ name: 'payment_breakdown', type: 'json', nullable: true })
   @Field(() => [GraphQLJSON])
-  paymentBreakdown: { name: string; price: string }[];
+  paymentBreakdown: { name: string; price: number }[];
 
   @Column({ name: 'total_amount', type: 'decimal' })
   @Field()

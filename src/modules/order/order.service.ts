@@ -10,6 +10,10 @@ import { FindOrderDto } from './dto/find-order.dto';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
 import { Order } from './entities/order.entity';
 import { UpdateOrderStatusInput } from './dto/update-status.input';
+import {
+  calculateDeliveryFee,
+  calculateEstimatedDeliveryTime,
+} from 'src/common/helpers/helpers';
 
 @Injectable()
 export class OrderService {
@@ -29,6 +33,10 @@ export class OrderService {
     if (entityType !== HuelagerType.USER)
       throw new UnauthorizedException('Not a user.');
 
+    const estimatedDeliveryTime = calculateEstimatedDeliveryTime();
+    const paymentBreakdown = [{ name: paymentMethod, amount: subtotal }];
+    const deliveryFee = calculateDeliveryFee();
+
     const order = await this.orderRepository.createOrder({
       deliveryAddress,
       vendor: { vendorId },
@@ -37,6 +45,9 @@ export class OrderService {
       orderItems,
       paymentMethod,
       totalAmount: subtotal,
+      estimatedDeliveryTime,
+      paymentBreakdown,
+      deliveryFee,
     });
 
     await this.orderRepository.saveOrderItem(order.orderItems);
@@ -53,6 +64,7 @@ export class OrderService {
 
     if (entityId !== order.vendor.vendorId && entityId !== order.user.userId)
       throw new UnauthorizedException('Not authorized.');
+    console.log(order);
 
     return order;
   }
