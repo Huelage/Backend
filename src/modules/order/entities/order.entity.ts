@@ -131,6 +131,3 @@ export class Order {
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
 }
-
-('If you find a child playing with a knife, rather than forcefully collecting it, offer it a candy.');
-('if you find a child playing with a knife, rather than forcefully collecting it, offer it a candy.');
