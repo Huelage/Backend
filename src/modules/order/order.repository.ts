@@ -6,6 +6,7 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { Order } from './entities/order.entity';
 import { CanceledOrder } from './entities/canceled_order.entity';
 import { OrderItem } from './entities/order_item.entity';
+import { ProductRepository } from '../product/product.repository';
 
 @Injectable()
 export class OrderRepository {
@@ -18,6 +19,8 @@ export class OrderRepository {
 
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
+
+    private readonly productRepository: ProductRepository,
   ) {}
 
   async createOrder(createOrderInfo: DeepPartial<Order>) {
@@ -25,7 +28,7 @@ export class OrderRepository {
       ...createOrderInfo,
     });
 
-    return order;
+    return order as unknown as Order;
   }
 
   async findOrder(params: { where: FindOptionsWhere<Order> }) {
@@ -68,9 +71,15 @@ export class OrderRepository {
     await this.cancelOrderRepository.save(canceledOrder);
   }
 
-  async createOrderItem(orderItemInfo: DeepPartial<OrderItem>) {
+  async createOrderItem(orderItemInfo) {
+    const { productId, ...theRest } = orderItemInfo;
+    const product = await this.productRepository.findProduct({
+      where: { productId },
+    });
+
     const orderItem = await this.orderItemRepository.create({
-      ...orderItemInfo,
+      product,
+      ...theRest,
     });
 
     await this.orderItemRepository.save(orderItem);

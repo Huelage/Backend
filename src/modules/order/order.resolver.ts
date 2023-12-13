@@ -1,4 +1,11 @@
-import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Args,
+  Query,
+  Context,
+  Subscription,
+} from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { Order } from './entities/order.entity';
 import { CreateOrderInput } from './dto/create-order.input';
@@ -7,6 +14,9 @@ import { AccessTokenGuard } from '../../common/guards/access-token.guard';
 import { AccessTokenRequest } from '../../common/interfaces/request.interface';
 import { FindOrderDto } from './dto/find-order.dto';
 import { UpdateOrderStatusInput } from './dto/update-status.input';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubSub = new PubSub();
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -31,7 +41,9 @@ export class OrderResolver {
     @Context('req') { user: huelager }: AccessTokenRequest,
   ) {
     const findOrderDto: FindOrderDto = { orderId, entityId: huelager.entityId };
-    return await this.orderService.findOne(findOrderDto);
+    const foundUser = await this.orderService.findOne(findOrderDto);
+    pubSub.publish('orderSearch', { orderSearch: foundUser });
+    return foundUser;
   }
 
   @UseGuards(AccessTokenGuard)
@@ -63,5 +75,15 @@ export class OrderResolver {
       entityId,
     };
     return await this.orderService.updateOrderStatus(updateOrderStatusInput);
+  }
+
+  @Subscription(() => Order)
+  @UseGuards(AccessTokenGuard)
+  orderSearch() {
+    console.log('penny and dime.');
+
+    const toReturn = pubSub.asyncIterator('orderSearch');
+
+    return toReturn;
   }
 }

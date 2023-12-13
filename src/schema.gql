@@ -219,6 +219,8 @@ type Query {
   findUserOrders: [Order!]!
   findVendorOrders: [Order!]!
   updateOrderStatus(input: UpdateOrderStatusInput!): [Order!]!
+  getProduct(productId: String!): Product!
+  getVendorProducts(vendorId: String!): [Product!]!
   getMyVendorProfile: Vendor!
   getVendorProfile(vendorId: String!): Vendor!
   getAllVendors: [Vendor!]!
@@ -226,8 +228,6 @@ type Query {
   getUserProfile: User!
   sayHello: String!
   getEntityProfile: Huelager!
-  getProduct(productId: String!): Product!
-  getVendorProducts(vendorId: String!): [Product!]!
 }
 
 input UpdateOrderStatusInput {
@@ -237,6 +237,8 @@ input UpdateOrderStatusInput {
 
 type Mutation {
   createOrder(input: CreateOrderInput!): Order!
+  addFood(input: CreateFoodInput!): Food!
+  updateFood(input: UpdateFoodInput!): Boolean!
   signUpVendor(input: CreateVendorInput!): Vendor!
   signInVendor(input: AuthenticateVendorInput!): Vendor!
   signUpUser(input: CreateUserInput!): User!
@@ -251,8 +253,6 @@ type Mutation {
   updatePassword(input: UpdatePasswordInput!): Huelager!
   generateRSAKey: String!
   uploadImage(input: UploadImageInput!): String!
-  addFood(input: CreateFoodInput!): Food!
-  updateFood(input: UpdateFoodInput!): Boolean!
 }
 
 input CreateOrderInput {
@@ -270,6 +270,31 @@ input OrderItemInput {
   totalPrice: Float!
   quantity: Float!
   extras: JSON
+}
+
+input CreateFoodInput {
+  name: String!
+  description: String!
+  imgUrl: String!
+  category: FoodCategory!
+  pricingMethod: FoodPricing!
+  price: Float
+  sides: [JSON!]
+  packageSizes: [JSON!]
+  preparationTime: Float
+}
+
+input UpdateFoodInput {
+  name: String
+  description: String
+  imgUrl: String
+  category: FoodCategory
+  pricingMethod: FoodPricing
+  price: Float
+  sides: [JSON!]
+  packageSizes: [JSON!]
+  preparationTime: Float
+  productId: String!
 }
 
 input CreateVendorInput {
@@ -349,27 +374,6 @@ input UploadImageInput {
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
-input CreateFoodInput {
-  name: String!
-  description: String!
-  imgUrl: String!
-  category: FoodCategory!
-  pricingMethod: FoodPricing!
-  price: Float
-  sides: [JSON!]
-  packageSizes: [JSON!]
-  preparationTime: Float
-}
-
-input UpdateFoodInput {
-  name: String
-  description: String
-  imgUrl: String
-  category: FoodCategory
-  pricingMethod: FoodPricing
-  price: Float
-  sides: [JSON!]
-  packageSizes: [JSON!]
-  preparationTime: Float
-  productId: String!
+type Subscription {
+  orderSearch: Order!
 }

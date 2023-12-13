@@ -7,6 +7,17 @@ export class AccessTokenGuard extends AuthGuard('jwt') {
   getRequest(context: ExecutionContext) {
     const ctx = GqlArgumentsHost.create(context);
 
-    return ctx.getContext().req;
+    const { req } = ctx.getContext();
+    const { connectionParams } = req;
+
+    if (connectionParams) {
+      const { Authorization, authorization } = connectionParams;
+      if (Authorization || authorization) {
+        // console.log(req.headers);
+
+        req.headers = { authorization: authorization || Authorization };
+      }
+    }
+    return req;
   }
 }

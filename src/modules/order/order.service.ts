@@ -42,7 +42,13 @@ export class OrderService {
       vendor: { vendorId },
       user,
       subtotal,
-      orderItems,
+      orderItems: orderItems.map((orderItem) => {
+        const { productId, ...theRest } = orderItem;
+        return {
+          ...theRest,
+          product: { productId },
+        };
+      }),
       paymentMethod,
       totalAmount: subtotal,
       estimatedDeliveryTime,
@@ -64,7 +70,6 @@ export class OrderService {
 
     if (entityId !== order.vendor.vendorId && entityId !== order.user.userId)
       throw new UnauthorizedException('Not authorized.');
-    console.log(order);
 
     return order;
   }
