@@ -218,7 +218,6 @@ type Query {
   findOrder(orderId: String!): Order!
   findUserOrders: [Order!]!
   findVendorOrders: [Order!]!
-  updateOrderStatus(input: UpdateOrderStatusInput!): [Order!]!
   getProduct(productId: String!): Product!
   getVendorProducts(vendorId: String!): [Product!]!
   getMyVendorProfile: Vendor!
@@ -230,13 +229,9 @@ type Query {
   getEntityProfile: Huelager!
 }
 
-input UpdateOrderStatusInput {
-  orderId: String!
-  status: OrderStatus!
-}
-
 type Mutation {
   createOrder(input: CreateOrderInput!): Order!
+  updateOrderStatus(input: UpdateOrderStatusInput!): Order!
   addFood(input: CreateFoodInput!): Food!
   updateFood(input: UpdateFoodInput!): Boolean!
   signUpVendor(input: CreateVendorInput!): Vendor!
@@ -270,6 +265,11 @@ input OrderItemInput {
   totalPrice: Float!
   quantity: Float!
   extras: JSON
+}
+
+input UpdateOrderStatusInput {
+  orderId: String!
+  status: OrderStatus!
 }
 
 input CreateFoodInput {
@@ -375,5 +375,5 @@ input UploadImageInput {
 scalar Upload
 
 type Subscription {
-  orderSearch: Order!
+  orderStatusUpdated: Order!
 }

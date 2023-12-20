@@ -19,7 +19,6 @@ import { Review } from './entities/review.entity';
 
 import { HuelagerResolver } from './huelager.resolver';
 import { ProvidersModule } from '../../providers/providers.module';
-import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [

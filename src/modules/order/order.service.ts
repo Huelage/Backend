@@ -14,10 +14,16 @@ import {
   calculateDeliveryFee,
   calculateEstimatedDeliveryTime,
 } from 'src/common/helpers/helpers';
+import { HuelagerRepository } from '../huelager/huelager.repository';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly orderRepository: OrderRepository) {}
+  constructor(
+    private readonly orderRepository: OrderRepository,
+    private readonly huelagerrepository: HuelagerRepository,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async create(createOrderInput: CreateOrderInput) {
     const {
@@ -124,5 +130,29 @@ export class OrderService {
     await this.orderRepository.saveOrder(order);
 
     return order;
+  }
+
+  async verifySubscriber(connectionParams: any) {
+    const authorization = connectionParams.Authorization;
+
+    if (!authorization) throw new Error('Not authorized.');
+
+    const token = authorization.replace('Bearer ', '');
+
+    if (!token) throw new Error('Not authorized.');
+
+    const { entityId } = (await this.jwtService.decode(token)) as {
+      entityId: string;
+    };
+
+    const huelager = await this.huelagerrepository.findHuelager({
+      where: { entityId },
+    });
+
+    if (!huelager) {
+      throw new UnauthorizedException();
+    }
+
+    return entityId;
   }
 }

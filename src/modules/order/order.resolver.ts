@@ -41,9 +41,7 @@ export class OrderResolver {
     @Context('req') { user: huelager }: AccessTokenRequest,
   ) {
     const findOrderDto: FindOrderDto = { orderId, entityId: huelager.entityId };
-    const foundUser = await this.orderService.findOne(findOrderDto);
-    pubSub.publish('orderSearch', { orderSearch: foundUser });
-    return foundUser;
+    return await this.orderService.findOne(findOrderDto);
   }
 
   @UseGuards(AccessTokenGuard)
@@ -63,7 +61,7 @@ export class OrderResolver {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Query(() => [Order])
+  @Mutation(() => Order)
   async updateOrderStatus(
     @Args('input') updateOrderStatusInput: UpdateOrderStatusInput,
     @Context('req') { user: huelager }: AccessTokenRequest,
@@ -74,16 +72,24 @@ export class OrderResolver {
       entityType,
       entityId,
     };
-    return await this.orderService.updateOrderStatus(updateOrderStatusInput);
+    const order = await this.orderService.updateOrderStatus(
+      updateOrderStatusInput,
+    );
+
+    const { user } = order;
+    const { userId } = user;
+
+    pubSub.publish(`order-${userId}`, { orderStatusUpdated: order });
+
+    return order;
   }
 
   @Subscription(() => Order)
-  @UseGuards(AccessTokenGuard)
-  orderSearch() {
-    console.log('penny and dime.');
+  async orderStatusUpdated(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const entityId = await this.orderService.verifySubscriber(connectionParams);
 
-    const toReturn = pubSub.asyncIterator('orderSearch');
-
-    return toReturn;
+    return pubSub.asyncIterator(`order-${entityId}`);
   }
 }
