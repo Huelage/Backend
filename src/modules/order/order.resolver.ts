@@ -31,7 +31,14 @@ export class OrderResolver {
     const { user, entityType } = huelager;
     createOrderInput = { ...createOrderInput, user, entityType };
 
-    return await this.orderService.create(createOrderInput);
+    const order = await this.orderService.create(createOrderInput);
+
+    const { vendor } = order;
+    const { vendorId } = vendor;
+
+    pubSub.publish(`order-${vendorId}`, { orderStatusUpdated: order });
+
+    return order;
   }
 
   @UseGuards(AccessTokenGuard)
