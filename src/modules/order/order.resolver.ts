@@ -36,7 +36,7 @@ export class OrderResolver {
     const { vendor } = order;
     const { vendorId } = vendor;
 
-    pubSub.publish(`order-new-${vendorId}`, { orderStatusUpdated: order });
+    pubSub.publish(`order-new-${vendorId}`, { newOrder: order });
 
     return order;
   }
