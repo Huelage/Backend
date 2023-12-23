@@ -132,6 +132,8 @@ type OrderItem {
   product: Product!
   totalPrice: Float!
   quantity: Float!
+  portion: Float
+  price: Float
   size: String
   extras: JSON
 }
@@ -264,6 +266,9 @@ input OrderItemInput {
   productId: String!
   totalPrice: Float!
   quantity: Float!
+  portion: Float
+  price: Float
+  size: String
   extras: JSON
 }
 

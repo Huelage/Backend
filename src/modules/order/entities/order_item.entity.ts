@@ -36,6 +36,14 @@ export class OrderItem {
   @Field()
   quantity: number;
 
+  @Column({ name: 'portion', type: 'mediumint', nullable: true })
+  @Field({ nullable: true })
+  portion: number;
+
+  @Column({ name: 'price', type: 'decimal', nullable: true })
+  @Field({ nullable: true })
+  price: number;
+
   @Column({ name: 'size', type: 'text', nullable: true })
   @Field({ nullable: true })
   size: string;

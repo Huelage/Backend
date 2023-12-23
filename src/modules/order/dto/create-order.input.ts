@@ -56,6 +56,21 @@ class OrderItemInput {
   @Field()
   quantity: number;
 
+  @IsOptional()
+  @IsNumber()
+  @Field({ nullable: true })
+  portion: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Field({ nullable: true })
+  price: number;
+
+  @IsOptional()
+  @IsString()
+  @Field({ nullable: true })
+  size: string;
+
   @Field(() => GraphQLJSON, { nullable: true })
   extras: { name: string; price: number; quantity: number }[];
 }

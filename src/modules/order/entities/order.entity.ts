@@ -90,7 +90,7 @@ export class Order {
 
   @Column({ name: 'payment_breakdown', type: 'json', nullable: true })
   @Field(() => [GraphQLJSON])
-  paymentBreakdown: { name: string; price: number }[];
+  paymentBreakdown: { name: string; amount: number }[];
 
   @Column({ name: 'total_amount', type: 'decimal' })
   @Field()
