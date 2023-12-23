@@ -23,7 +23,7 @@ export class OrderItem {
   @Field(() => Order)
   order: Order;
 
-  @OneToOne(() => Product, (product) => product.orderItem)
+  @ManyToOne(() => Product, (product) => product.orderItems)
   @JoinColumn({ name: 'product_id' })
   @Field(() => Product)
   product: Product;

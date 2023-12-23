@@ -118,11 +118,11 @@ export class OrderService {
       where: { orderId },
     });
 
+    if (!order) throw new NotFoundException('Order not found.');
+
     if (order.vendor.vendorId !== entityId) {
       throw new UnauthorizedException('Not authorized.');
     }
-
-    if (!order) throw new NotFoundException('Order not found.');
 
     order.status = status;
 

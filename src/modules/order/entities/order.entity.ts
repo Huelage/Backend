@@ -98,7 +98,7 @@ export class Order {
 
   @Column({
     type: 'enum',
-    enum: ['cash', 'huuenit', 'card'],
+    enum: ['cash', 'huenit', 'card'],
     name: 'payment_method',
   })
   @Field(() => PaymentMethod)

@@ -6,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -55,7 +56,7 @@ export class Product {
   @Field(() => Food)
   food: Food;
 
-  @OneToOne(() => OrderItem, (orderItem) => orderItem.product)
-  @Field(() => OrderItem)
-  orderItem: OrderItem;
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+  @Field(() => [OrderItem])
+  orderItems: OrderItem[];
 }

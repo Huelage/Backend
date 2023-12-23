@@ -117,7 +117,7 @@ type Product {
   imgUrl: String!
   type: ProductType!
   food: Food!
-  orderItem: OrderItem!
+  orderItems: [OrderItem!]!
 }
 
 enum ProductType {
@@ -381,4 +381,5 @@ scalar Upload
 
 type Subscription {
   orderStatusUpdated: Order!
+  newOrder: Order!
 }
