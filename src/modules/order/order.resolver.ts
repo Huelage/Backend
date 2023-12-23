@@ -31,7 +31,14 @@ export class OrderResolver {
     const { user, entityType } = huelager;
     createOrderInput = { ...createOrderInput, user, entityType };
 
-    return await this.orderService.create(createOrderInput);
+    const order = await this.orderService.create(createOrderInput);
+
+    const { vendor } = order;
+    const { vendorId } = vendor;
+
+    pubSub.publish(`order-new-${vendorId}`, { newOrder: order });
+
+    return order;
   }
 
   @UseGuards(AccessTokenGuard)
@@ -91,5 +98,14 @@ export class OrderResolver {
     const entityId = await this.orderService.verifySubscriber(connectionParams);
 
     return pubSub.asyncIterator(`order-${entityId}`);
+  }
+
+  @Subscription(() => Order)
+  async newOrder(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const entityId = await this.orderService.verifySubscriber(connectionParams);
+
+    return pubSub.asyncIterator(`order-new-${entityId}`);
   }
 }
