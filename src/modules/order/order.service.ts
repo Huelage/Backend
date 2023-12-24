@@ -52,10 +52,10 @@ export class OrderService {
       user,
       subtotal,
       orderItems: orderItems.map((orderItem) => {
-        const { productId, ...theRest } = orderItem;
+        const { productId, productName, ...theRest } = orderItem;
         return {
           ...theRest,
-          product: { productId },
+          product: { productId, name: productName },
         };
       }),
       paymentMethod,

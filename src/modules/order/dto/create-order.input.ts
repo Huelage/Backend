@@ -48,6 +48,10 @@ class OrderItemInput {
   @Field()
   productId: string;
 
+  @IsString()
+  @Field()
+  productName: string;
+
   @IsNumber()
   @Field()
   totalPrice: number;

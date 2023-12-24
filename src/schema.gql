@@ -266,6 +266,7 @@ input CreateOrderInput {
 input OrderItemInput {
   itemId: String!
   productId: String!
+  productName: String!
   totalPrice: Float!
   quantity: Float!
   portion: Float
