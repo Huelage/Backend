@@ -20,7 +20,7 @@ import { JwtService } from '@nestjs/jwt';
 export class OrderService {
   constructor(
     private readonly orderRepository: OrderRepository,
-    private readonly huelagerrepository: HuelagerRepository,
+    private readonly huelagerRepository: HuelagerRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -42,9 +42,13 @@ export class OrderService {
     const paymentBreakdown = [{ name: paymentMethod, amount: subtotal }];
     const deliveryFee = calculateDeliveryFee();
 
+    const vendor = await this.huelagerRepository.findVendor({
+      where: { vendorId },
+    });
+
     const order = await this.orderRepository.createOrder({
       deliveryAddress,
-      vendor: { vendorId },
+      vendor,
       user,
       subtotal,
       orderItems: orderItems.map((orderItem) => {
@@ -144,7 +148,7 @@ export class OrderService {
       entityId: string;
     };
 
-    const huelager = await this.huelagerrepository.findHuelager({
+    const huelager = await this.huelagerRepository.findHuelager({
       where: { entityId },
     });
 
