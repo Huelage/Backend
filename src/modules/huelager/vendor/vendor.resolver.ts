@@ -7,6 +7,7 @@ import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
 import { UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '../../../common/guards/access-token.guard';
 import { AccessTokenRequest } from '../../../common/interfaces/request.interface';
+import { EditVendorProfileInput } from '../dtos/edit-profile.input';
 
 @Resolver()
 export class VendorResolver {
@@ -54,5 +55,18 @@ export class VendorResolver {
     @Args('input') authenticateVendorInput: AuthenticateVendorInput,
   ): Promise<Vendor> {
     return await this.vendorService.signIn(authenticateVendorInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Mutation(() => Vendor)
+  async editVendorProfile(
+    @Args('input') editVendorProfileInput: EditVendorProfileInput,
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ): Promise<Vendor> {
+    const vendor = await this.vendorService.restructureHuelager(huelager);
+
+    editVendorProfileInput.vendor = vendor;
+
+    return await this.vendorService.editProfile(editVendorProfileInput);
   }
 }

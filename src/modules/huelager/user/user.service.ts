@@ -17,6 +17,7 @@ import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../huelager.service';
 import { Huelager, HuelagerType } from '../entities/huelager.entity';
 import { EditUserLocationInput } from '../dtos/edit-locations.input';
+import { EditUserProfileInput } from '../dtos/edit-profile.input';
 
 @Injectable()
 export class UserService {
@@ -26,12 +27,12 @@ export class UserService {
     private readonly huelagerService: HuelagerService,
   ) {}
 
-  async restructureHuelager(huelager: Huelager) {
+  async restructureHuelager(huelager: Huelager): Promise<User> {
     if (huelager.entityType !== HuelagerType.USER)
       throw new UnauthorizedException('Not a user');
 
     const { user, ...entity } = huelager;
-    return { ...user, entity };
+    return { ...user, entity } as User;
   }
 
   async create(createUserInput: CreateUserInput) {
@@ -136,6 +137,15 @@ export class UserService {
 
     await this.repository.saveUser(user);
 
+    return user;
+  }
+
+  async editProfile(editUserProfileInput: EditUserProfileInput) {
+    const { imgUrl, user } = editUserProfileInput;
+
+    user.entity.imgUrl = imgUrl;
+
+    await this.repository.saveHuelager(user.entity);
     return user;
   }
 }

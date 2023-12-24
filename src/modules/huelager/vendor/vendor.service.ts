@@ -18,6 +18,7 @@ import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../huelager.service';
 import { Huelager, HuelagerType } from '../entities/huelager.entity';
 import { Vendor } from './vendor.entity';
+import { EditVendorProfileInput } from '../dtos/edit-profile.input';
 
 @Injectable()
 export class VendorService {
@@ -138,6 +139,24 @@ export class VendorService {
       vendor.entity.refreshToken = refreshToken;
     }
 
+    return vendor;
+  }
+
+  async editProfile(editVendorProfileInput: EditVendorProfileInput) {
+    const { parameters, vendor } = editVendorProfileInput;
+
+    for (let i = 0; i < parameters.length; i++) {
+      const { prop, value } = parameters[i];
+
+      if (prop === 'imgUrl') {
+        vendor.entity.imgUrl = value;
+        this.repository.saveHuelager(vendor.entity);
+      } else {
+        vendor[prop] = value;
+      }
+    }
+
+    await this.repository.saveVendor(vendor);
     return vendor;
   }
 }

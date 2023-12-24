@@ -238,9 +238,11 @@ type Mutation {
   updateFood(input: UpdateFoodInput!): Boolean!
   signUpVendor(input: CreateVendorInput!): Vendor!
   signInVendor(input: AuthenticateVendorInput!): Vendor!
+  editVendorProfile(input: EditVendorProfileInput!): Vendor!
   signUpUser(input: CreateUserInput!): User!
   signInUser(input: AuthenticateUserInput!): User!
   editUserLocation(input: EditUserLocationInput!): User!
+  editUserProfile(input: EditUserProfileInput!): User!
   refreshAccessToken: String!
   updatePhone(input: UpdatePhoneInput!): Huelager!
   verifyPhoneOtp(input: VerifyPhoneInput!): Huelager!
@@ -321,6 +323,15 @@ input AuthenticateVendorInput {
   vendorKey: String
 }
 
+input EditVendorProfileInput {
+  parameters: [EditVendorParam!]!
+}
+
+input EditVendorParam {
+  prop: String!
+  value: String!
+}
+
 input CreateUserInput {
   email: String!
   phone: String!
@@ -342,6 +353,10 @@ input AuthenticateUserInput {
 input EditUserLocationInput {
   locationId: String!
   name: String
+}
+
+input EditUserProfileInput {
+  imgUrl: String!
 }
 
 input UpdatePhoneInput {

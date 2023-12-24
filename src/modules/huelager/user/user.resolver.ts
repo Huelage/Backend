@@ -9,6 +9,7 @@ import { UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from '../../../common/guards/access-token.guard';
 import { EditUserLocationInput } from '../dtos/edit-locations.input';
 import { AccessTokenRequest } from '../../../common/interfaces/request.interface';
+import { EditUserProfileInput } from '../dtos/edit-profile.input';
 
 @Resolver()
 export class UserResolver {
@@ -45,5 +46,18 @@ export class UserResolver {
     editUserLocationInput = { ...editUserLocationInput, entityType, userId };
 
     return await this.userService.editLocation(editUserLocationInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Mutation(() => User)
+  async editUserProfile(
+    @Args('input') editUserProfileInput: EditUserProfileInput,
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ): Promise<User> {
+    const user = await this.userService.restructureHuelager(huelager);
+
+    editUserProfileInput.user = user;
+
+    return await this.userService.editProfile(editUserProfileInput);
   }
 }
