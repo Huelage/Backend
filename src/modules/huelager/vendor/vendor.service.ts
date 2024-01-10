@@ -1,24 +1,27 @@
 import {
-  Injectable,
-  ConflictException,
-  UnauthorizedException,
-  HttpException,
   BadRequestException,
+  ConflictException,
+  HttpException,
+  Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 
-import { SmsService } from '../../../providers/sms.service';
 import { compare, hash } from 'bcryptjs';
-import { CreateVendorInput } from '../dtos/create-account.input';
-import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
 import {
   genRandomOtp,
   generateVendorKey,
 } from '../../../common/helpers/helpers';
+import { SmsService } from '../../../providers/sms.service';
+import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
+import {
+  AddressInterface,
+  CreateVendorInput,
+} from '../dtos/create-account.input';
+import { EditVendorProfileInput } from '../dtos/edit-profile.input';
+import { Huelager, HuelagerType } from '../entities/huelager.entity';
 import { HuelagerRepository } from '../huelager.repository';
 import { HuelagerService } from '../huelager.service';
-import { Huelager, HuelagerType } from '../entities/huelager.entity';
 import { Vendor } from './vendor.entity';
-import { EditVendorProfileInput } from '../dtos/edit-profile.input';
 
 @Injectable()
 export class VendorService {
@@ -149,10 +152,12 @@ export class VendorService {
       const { prop, value } = parameters[i];
 
       if (prop === 'imgUrl') {
-        vendor.entity.imgUrl = value;
+        vendor.entity.imgUrl = value as string;
         this.repository.saveHuelager(vendor.entity);
+      } else if (prop === 'businessAddress') {
+        vendor.businessAddress = value as AddressInterface;
       } else {
-        vendor[prop] = value;
+        vendor[prop] = value as string;
       }
     }
 

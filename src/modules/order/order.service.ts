@@ -7,7 +7,7 @@ import { CreateOrderInput } from './dto/create-order.input';
 import { OrderRepository } from './order.repository';
 import { FindOrderDto } from './dto/find-order.dto';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
-import { Order } from './entities/order.entity';
+import { Order, OrderStatus } from './entities/order.entity';
 import { UpdateOrderStatusInput } from './dto/update-status.input';
 import {
   calculateDeliveryFee,
@@ -63,6 +63,7 @@ export class OrderService {
       estimatedDeliveryTime,
       paymentBreakdown,
       deliveryFee,
+      status: OrderStatus.PENDING,
     });
 
     await this.orderRepository.saveOrderItem(order.orderItems);

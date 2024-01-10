@@ -1,5 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsString } from 'class-validator';
+import { IsJSON, IsString } from 'class-validator';
+import { AddressInterface } from './create-account.input';
+import GraphQLJSON from 'graphql-type-json';
 
 @InputType('UpdateEntityInput')
 class UpdateEntityInput {}
@@ -21,9 +23,9 @@ export class UpdateVendorInput extends UpdateEntityInput {
   @Field()
   businessName: string;
 
-  @IsString()
-  @Field()
-  businessAddress: string;
+  @IsJSON()
+  @Field(() => GraphQLJSON)
+  businessAddress: AddressInterface;
 
   @IsString()
   @Field()

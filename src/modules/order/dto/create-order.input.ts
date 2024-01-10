@@ -4,6 +4,7 @@ import GraphQLJSON from 'graphql-type-json';
 import { HuelagerType } from '../../../modules/huelager/entities/huelager.entity';
 import { User } from '../../../modules/huelager/user/user.entity';
 import { PaymentMethod } from '../entities/order.entity';
+import { AddressInterface } from 'src/modules/huelager/dtos/create-account.input';
 
 @InputType()
 export class CreateOrderInput {
@@ -16,8 +17,8 @@ export class CreateOrderInput {
 
   @IsOptional()
   @IsString()
-  @Field({ nullable: true })
-  deliveryAddress: string;
+  @Field(() => GraphQLJSON, { nullable: true })
+  deliveryAddress: AddressInterface;
 
   @IsOptional()
   @IsNumber()

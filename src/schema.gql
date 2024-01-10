@@ -144,7 +144,7 @@ type Order {
   vendor: Vendor!
   transaction: Transaction
   status: OrderStatus!
-  deliveryAddress: String!
+  deliveryAddress: JSON!
   estimatedDeliveryTime: DateTime!
   subtotal: Float!
   deliveryFee: Float!
@@ -163,7 +163,7 @@ enum OrderStatus {
   PREPARING
   READY
   EN_ROUTE
-  DELIEVERED
+  DELIVERED
   COMPLETED
   CANCELLED
 }
@@ -205,7 +205,7 @@ type Vendor {
   vendorId: String!
   entity: Huelager!
   businessName: String!
-  businessAddress: String!
+  businessAddress: JSON!
   repName: String!
   avgResponseTime: Float!
   openingHours: String!
@@ -257,7 +257,7 @@ type Mutation {
 input CreateOrderInput {
   vendorId: String!
   orderItems: [OrderItemInput!]!
-  deliveryAddress: String
+  deliveryAddress: JSON
   discount: Float
   subtotal: Float!
   paymentMethod: PaymentMethod!
@@ -303,6 +303,7 @@ input UpdateFoodInput {
   packageSizes: [JSON!]
   preparationTime: Float
   productId: String!
+  availability: Availability!
 }
 
 input CreateVendorInput {
@@ -312,7 +313,7 @@ input CreateVendorInput {
   confirmPassword: String!
   repName: String!
   businessName: String!
-  businessAddress: String!
+  businessAddress: JSON!
 }
 
 input AuthenticateVendorInput {
@@ -330,7 +331,7 @@ input EditVendorProfileInput {
 
 input EditVendorParam {
   prop: String!
-  value: String!
+  value: JSON!
 }
 
 input CreateUserInput {
@@ -354,6 +355,7 @@ input AuthenticateUserInput {
 input EditUserLocationInput {
   locationId: String!
   name: String
+  geoLocation: JSON
 }
 
 input EditUserProfileInput {

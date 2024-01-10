@@ -17,13 +17,14 @@ import {
 import { CanceledOrder } from './canceled_order.entity';
 import { OrderItem } from './order_item.entity';
 import GraphQLJSON from 'graphql-type-json';
+import { AddressInterface } from 'src/modules/huelager/dtos/create-account.input';
 
 export enum OrderStatus {
   PENDING = 'pending',
   PREPARING = 'preparing',
   READY = 'ready',
   EN_ROUTE = 'en_route',
-  DELIEVERED = 'delivered',
+  DELIVERED = 'delivered',
   COMPLETED = 'completed',
   CANCELLED = 'cancelled',
 }
@@ -72,9 +73,9 @@ export class Order {
   @Field(() => OrderStatus)
   status: OrderStatus;
 
-  @Column({ name: 'delivery_addr', type: 'text', nullable: true })
-  @Field()
-  deliveryAddress: string;
+  @Column({ name: 'delivery_addr', type: 'json', nullable: true })
+  @Field(() => GraphQLJSON)
+  deliveryAddress: AddressInterface;
 
   @Column({ name: 'estimated_delivery_time', type: 'datetime', nullable: true })
   @Field()
@@ -96,11 +97,7 @@ export class Order {
   @Field()
   totalAmount: number;
 
-  @Column({
-    type: 'enum',
-    enum: ['cash', 'huenit', 'card'],
-    name: 'payment_method',
-  })
+  @Column({ type: 'enum', enum: PaymentMethod })
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
 

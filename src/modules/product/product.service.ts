@@ -75,8 +75,11 @@ export class ProductService {
       price,
       sides,
       packageSizes,
+      preparationTime,
+      availability,
       vendor,
       entityType,
+      imgUrl,
     } = updateFoodInput;
 
     if (entityType !== HuelagerType.VENDOR)
@@ -87,6 +90,7 @@ export class ProductService {
       update: {
         name,
         description,
+        imgUrl,
       },
     });
 
@@ -97,7 +101,15 @@ export class ProductService {
 
     await this.repository.editFoodInfo({
       where: { productId },
-      update: { category, pricingMethod, price, sides, packageSizes },
+      update: {
+        category,
+        pricingMethod,
+        price,
+        preparationTime,
+        availability,
+        sides,
+        packageSizes,
+      },
     });
 
     return true;

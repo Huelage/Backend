@@ -1,15 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryColumn,
-} from 'typeorm';
-import { Order } from './order.entity';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Product } from '../../product/entities/product.entity';
+import { Order } from './order.entity';
 
 @Entity({ name: 'order_item' })
 @ObjectType()

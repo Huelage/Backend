@@ -11,6 +11,7 @@ import { Huelager } from '../entities/huelager.entity';
 import { Review } from '../entities/review.entity';
 import { Order } from '../../order/entities/order.entity';
 import GraphQLJSON from 'graphql-type-json';
+import { AddressInterface } from '../dtos/create-account.input';
 // import { v4 } from 'uuid';
 
 @Entity({ name: 'user' })
@@ -37,7 +38,9 @@ export class User {
 
   @Column({ name: 'known_location', type: 'json' })
   @Field(() => GraphQLJSON, { nullable: true })
-  knownLocation: { locations: { name: string; locationId: string }[] };
+  knownLocation: {
+    locations: AddressInterface[];
+  };
 
   @Column({ name: 'is_social_auth', type: 'boolean', default: false })
   @Field()

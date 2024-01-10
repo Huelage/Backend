@@ -11,6 +11,8 @@ import { Huelager } from '../entities/huelager.entity';
 import { Review } from '../entities/review.entity';
 import { Product } from '../../product/entities/product.entity';
 import { Order } from '../../order/entities/order.entity';
+import { AddressInterface } from '../dtos/create-account.input';
+import GraphQLJSON from 'graphql-type-json';
 
 @Entity({ name: 'vendor' })
 @ObjectType()
@@ -33,9 +35,9 @@ export class Vendor {
   @Field()
   businessName: string;
 
-  @Column({ name: 'business_addr', type: 'text' })
-  @Field()
-  businessAddress: string;
+  @Column({ name: 'business_addr', type: 'json' })
+  @Field(() => GraphQLJSON)
+  businessAddress: AddressInterface;
 
   @Column({ name: 'rep_name', type: 'text' })
   @Field()

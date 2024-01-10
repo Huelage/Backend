@@ -30,6 +30,7 @@ export class ProductRepository {
     });
 
     await this.foodRepository.save(food);
+
     return food;
   }
 

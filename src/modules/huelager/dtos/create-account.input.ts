@@ -1,8 +1,22 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsEmail, MinLength, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsEmail,
+  MinLength,
+  IsString,
+  IsJSON,
+} from 'class-validator';
 
 import { MatchesWith } from '../../../common/decorators/matches-with.decorator';
+import GraphQLJSON from 'graphql-type-json';
+
+export interface AddressInterface {
+  name: string;
+  locationId: string;
+  geoLocation: { lat: number; lng: number };
+  extraDetails?: string;
+}
 
 @InputType('CreateEntityInput')
 class CreateEntityInput {
@@ -51,7 +65,7 @@ export class CreateVendorInput extends CreateEntityInput {
   businessName: string;
 
   @IsNotEmpty()
-  @IsString()
-  @Field()
-  businessAddress: string;
+  @IsJSON()
+  @Field(() => GraphQLJSON)
+  businessAddress: AddressInterface;
 }

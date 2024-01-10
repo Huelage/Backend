@@ -120,7 +120,8 @@ export class UserService {
   }
 
   async editLocation(editUserLocationInput: EditUserLocationInput) {
-    const { locationId, name, userId, entityType } = editUserLocationInput;
+    const { locationId, name, geoLocation, userId, entityType } =
+      editUserLocationInput;
 
     if (entityType !== HuelagerType.USER)
       throw new UnauthorizedException('Not a user');
@@ -132,7 +133,7 @@ export class UserService {
         (location) => location.locationId !== locationId,
       );
     } else {
-      user.knownLocation.locations.push({ locationId, name });
+      user.knownLocation.locations.push({ locationId, name, geoLocation });
     }
 
     await this.repository.saveUser(user);

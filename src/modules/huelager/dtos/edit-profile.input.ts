@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Vendor } from '../vendor/vendor.entity';
+import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -7,8 +7,10 @@ import {
   IsIn,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { User } from '../user/user.entity';
+import { Vendor } from '../vendor/vendor.entity';
+import GraphQLJSON from 'graphql-type-json';
+import { AddressInterface } from './create-account.input';
 
 @InputType()
 class EditVendorParam {
@@ -16,8 +18,8 @@ class EditVendorParam {
   @IsIn(['imgUrl', 'businessName', 'repName', 'businessAddress'])
   prop: 'imgUrl' | 'businessName' | 'repName' | 'businessAddress';
 
-  @Field(() => String)
-  value: string;
+  @Field(() => GraphQLJSON)
+  value: string | AddressInterface;
 }
 
 @InputType('EditVendorProfileInput')
