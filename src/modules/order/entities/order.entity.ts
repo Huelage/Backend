@@ -35,8 +35,15 @@ export enum PaymentMethod {
   CARD = 'card',
 }
 
+export enum PaymentStatus {
+  PENDING = 'pending',
+  PAID = 'paid',
+  PARTIAL = 'partial',
+}
+
 registerEnumType(OrderStatus, { name: 'OrderStatus' });
 registerEnumType(PaymentMethod, { name: 'PaymentMethod' });
+registerEnumType(PaymentStatus, { name: 'PaymentStatus' });
 
 @Entity({ name: 'order' })
 @ObjectType()
@@ -101,9 +108,9 @@ export class Order {
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
 
-  @Column({ name: 'payment_status', type: 'boolean', default: false })
-  @Field()
-  paymentStatus: boolean;
+  @Column({ type: 'enum', enum: PaymentStatus })
+  @Field(() => PaymentStatus)
+  paymentStatus: PaymentStatus;
 
   @CreateDateColumn({
     name: 'ordered_at',
