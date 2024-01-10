@@ -30,9 +30,9 @@ export enum OrderStatus {
 }
 
 export enum PaymentMethod {
-  CASH = 'cash',
   HUENIT = 'huenit',
   CARD = 'card',
+  SPLIT = 'split',
 }
 
 export enum PaymentStatus {
