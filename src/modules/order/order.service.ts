@@ -7,7 +7,7 @@ import { CreateOrderInput } from './dto/create-order.input';
 import { OrderRepository } from './order.repository';
 import { FindOrderDto } from './dto/find-order.dto';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
-import { Order, OrderStatus } from './entities/order.entity';
+import { Order, OrderStatus, PaymentStatus } from './entities/order.entity';
 import { UpdateOrderStatusInput } from './dto/update-status.input';
 import {
   calculateDeliveryFee,
@@ -15,6 +15,7 @@ import {
 } from 'src/common/helpers/helpers';
 import { HuelagerRepository } from '../huelager/huelager.repository';
 import { JwtService } from '@nestjs/jwt';
+import { FinalizeOrderInput } from './dto/finalize-order.input';
 
 @Injectable()
 export class OrderService {
@@ -25,21 +26,13 @@ export class OrderService {
   ) {}
 
   async create(createOrderInput: CreateOrderInput) {
-    const {
-      entityType,
-      vendorId,
-      deliveryAddress,
-      user,
-      orderItems,
-      paymentMethod,
-      subtotal,
-    } = createOrderInput;
+    const { entityType, vendorId, user, orderItems, subtotal } =
+      createOrderInput;
 
     if (entityType !== HuelagerType.USER)
       throw new UnauthorizedException('Not a user.');
 
     const estimatedDeliveryTime = calculateEstimatedDeliveryTime();
-    const paymentBreakdown = [{ name: paymentMethod, amount: subtotal }];
     const deliveryFee = calculateDeliveryFee();
 
     const vendor = await this.huelagerRepository.findVendor({
@@ -47,10 +40,10 @@ export class OrderService {
     });
 
     const order = await this.orderRepository.createOrder({
-      deliveryAddress,
       vendor,
       user,
       subtotal,
+      paymentStatus: PaymentStatus.UNPAID,
       orderItems: orderItems.map((orderItem) => {
         const { productId, productName, ...theRest } = orderItem;
         return {
@@ -58,16 +51,37 @@ export class OrderService {
           product: { productId, name: productName },
         };
       }),
-      paymentMethod,
       totalAmount: subtotal,
       estimatedDeliveryTime,
-      paymentBreakdown,
       deliveryFee,
       status: OrderStatus.PENDING,
     });
 
     await this.orderRepository.saveOrderItem(order.orderItems);
     await this.orderRepository.saveOrder(order);
+
+    return order;
+  }
+
+  async finalizeOrder(finalizeOrderInput: FinalizeOrderInput): Promise<Order> {
+    const {
+      orderId,
+      deliveryAddress,
+      discount,
+      paymentMethod,
+      vendor,
+      entityType,
+    } = finalizeOrderInput;
+
+    if (entityType !== HuelagerType.VENDOR)
+      throw new UnauthorizedException('Not a vendor.');
+
+    const order = await this.orderRepository.findOrder({ where: { orderId } });
+    if (!order) throw new NotFoundException('Order not found.');
+
+    order.discount = discount;
+
+    // order.paymentBreakdown
 
     return order;
   }

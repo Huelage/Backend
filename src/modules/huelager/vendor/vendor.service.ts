@@ -33,7 +33,7 @@ export class VendorService {
 
   async restructureHuelager(huelager: Huelager): Promise<Vendor> {
     if (huelager.entityType !== HuelagerType.VENDOR)
-      throw new UnauthorizedException('Not a vendor');
+      throw new UnauthorizedException('Not a vendor.');
 
     const { vendor, ...entity } = huelager;
     return { ...vendor, entity } as Vendor;

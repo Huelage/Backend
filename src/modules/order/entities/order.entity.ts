@@ -18,6 +18,7 @@ import { CanceledOrder } from './canceled_order.entity';
 import { OrderItem } from './order_item.entity';
 import GraphQLJSON from 'graphql-type-json';
 import { AddressInterface } from 'src/modules/huelager/dtos/create-account.input';
+import { WalletTransaction } from '../../../modules/transaction/entities/wallet_transaction.entity';
 
 export enum OrderStatus {
   PENDING = 'pending',
@@ -30,15 +31,15 @@ export enum OrderStatus {
 }
 
 export enum PaymentMethod {
+  SPLIT = 'split',
   HUENIT = 'huenit',
   CARD = 'card',
-  SPLIT = 'split',
 }
 
 export enum PaymentStatus {
-  PENDING = 'pending',
   PAID = 'paid',
-  PARTIAL = 'partial',
+  SPLIT = 'split',
+  UNPAID = 'unpaid',
 }
 
 registerEnumType(OrderStatus, { name: 'OrderStatus' });
@@ -96,6 +97,10 @@ export class Order {
   @Field()
   deliveryFee: number;
 
+  @Column({ nullable: true, type: 'decimal' })
+  @Field({ nullable: true })
+  discount: number;
+
   @Column({ name: 'payment_breakdown', type: 'json', nullable: true })
   @Field(() => [GraphQLJSON])
   paymentBreakdown: { name: string; amount: number }[];
@@ -104,12 +109,20 @@ export class Order {
   @Field()
   totalAmount: number;
 
-  @Column({ type: 'enum', enum: PaymentMethod })
+  @Column({
+    type: 'enum',
+    enum: ['split', 'huenit', 'card'],
+    name: 'payment_method',
+    nullable: true,
+  })
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
 
-  @Column({ type: 'enum', enum: PaymentStatus })
-  @Field(() => PaymentStatus)
+  @Column({
+    name: 'payment_status',
+    type: 'boolean',
+  })
+  @Field()
   paymentStatus: PaymentStatus;
 
   @CreateDateColumn({
@@ -134,4 +147,12 @@ export class Order {
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
+
+  @OneToOne(
+    () => WalletTransaction,
+    (walletTransaction) => walletTransaction.order,
+    { nullable: true },
+  )
+  @Field(() => [WalletTransaction], { nullable: true })
+  walletTransaction: WalletTransaction;
 }

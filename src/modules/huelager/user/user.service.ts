@@ -29,7 +29,7 @@ export class UserService {
 
   async restructureHuelager(huelager: Huelager): Promise<User> {
     if (huelager.entityType !== HuelagerType.USER)
-      throw new UnauthorizedException('Not a user');
+      throw new UnauthorizedException('Not a user.');
 
     const { user, ...entity } = huelager;
     return { ...user, entity } as User;
@@ -124,7 +124,7 @@ export class UserService {
       editUserLocationInput;
 
     if (entityType !== HuelagerType.USER)
-      throw new UnauthorizedException('Not a user');
+      throw new UnauthorizedException('Not a user.');
 
     const user = await this.repository.findUser({ where: { userId } });
 

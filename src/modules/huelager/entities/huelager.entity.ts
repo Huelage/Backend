@@ -106,9 +106,6 @@ export class Huelager {
   @Field(() => Vendor, { nullable: true })
   vendor: Vendor;
 
-  @OneToMany(() => Transaction, (transaction) => transaction.sender)
-  sender: Transaction[];
-
-  @OneToMany(() => Transaction, (transaction) => transaction.receiver)
-  receiver: Transaction[];
+  @OneToMany(() => Transaction, (transaction) => transaction.initiatorEntity)
+  transactions: Transaction[];
 }

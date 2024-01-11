@@ -33,17 +33,11 @@ export class Transaction {
   @Field()
   transactionId: string;
 
-  @ManyToOne(() => Huelager, (huelager) => huelager.sender, {
+  @ManyToOne(() => Huelager, (huelager) => huelager.transactions, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'sender_id' })
-  sender: Huelager;
-
-  @ManyToOne(() => Huelager, (huelager) => huelager.receiver, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'receiver_id' })
-  receiver: Huelager;
+  @JoinColumn({ name: 'inittiator_entity_id' })
+  initiatorEntity: Huelager;
 
   @Column({ type: 'enum', enum: TransactionType, name: 'transaction_type' })
   @Field(() => TransactionType)
@@ -51,7 +45,15 @@ export class Transaction {
 
   @Column({ type: 'decimal' })
   @Field()
-  amount: number;
+  huenit_amount: number;
+
+  @Column({ type: 'decimal' })
+  @Field()
+  card_amount: number;
+
+  @Column({ type: 'decimal' })
+  @Field()
+  total_amount: number;
 
   @Column({ type: 'enum', enum: TransactionStatus })
   @Field(() => TransactionStatus)
@@ -75,8 +77,7 @@ export class Transaction {
 
   @CreateDateColumn({
     type: 'datetime',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
+    nullable: true,
   })
   @Field()
   timestamp: Date;
