@@ -120,9 +120,10 @@ export class Order {
 
   @Column({
     name: 'payment_status',
-    type: 'boolean',
+    nullable: true,
+    default: null,
   })
-  @Field()
+  @Field({ nullable: true })
   paymentStatus: PaymentStatus;
 
   @CreateDateColumn({
