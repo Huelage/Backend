@@ -7,7 +7,7 @@ import { CreateOrderInput } from './dto/create-order.input';
 import { OrderRepository } from './order.repository';
 import { FindOrderDto } from './dto/find-order.dto';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
-import { Order, OrderStatus, PaymentStatus } from './entities/order.entity';
+import { Order, OrderStatus, PaymentMethod } from './entities/order.entity';
 import { UpdateOrderStatusInput } from './dto/update-status.input';
 import {
   calculateDeliveryFee,
@@ -15,7 +15,7 @@ import {
 } from 'src/common/helpers/helpers';
 import { HuelagerRepository } from '../huelager/huelager.repository';
 import { JwtService } from '@nestjs/jwt';
-import { FinalizeOrderInput } from './dto/finalize-order.input';
+import { CalculateDeliveryInput } from './dto/calculate-delivery.input.ts';
 
 @Injectable()
 export class OrderService {
@@ -26,14 +26,34 @@ export class OrderService {
   ) {}
 
   async create(createOrderInput: CreateOrderInput) {
-    const { entityType, vendorId, user, orderItems, subtotal } =
-      createOrderInput;
+    const {
+      vendorId,
+      orderItems,
+      deliveryAddress,
+      deliveryFee,
+      totalAmount,
+      pgTransactionId,
+      discount,
+      subtotal,
+      paymentMethod,
+      paymentBreakdown,
+      entityType,
+      user,
+    } = createOrderInput;
+
+    if (paymentMethod !== PaymentMethod.CARD) {
+      const huenitPrice = paymentBreakdown.find(
+        (payment) => payment.name === 'huenit',
+      ).amount;
+
+      huenitPrice; // to remove the error;
+      pgTransactionId; // to remove the error;
+    }
 
     if (entityType !== HuelagerType.USER)
       throw new UnauthorizedException('Not a user.');
 
     const estimatedDeliveryTime = calculateEstimatedDeliveryTime();
-    const deliveryFee = calculateDeliveryFee();
 
     const vendor = await this.huelagerRepository.findVendor({
       where: { vendorId },
@@ -43,7 +63,6 @@ export class OrderService {
       vendor,
       user,
       subtotal,
-      paymentStatus: PaymentStatus.UNPAID,
       orderItems: orderItems.map((orderItem) => {
         const { productId, productName, ...theRest } = orderItem;
         return {
@@ -51,9 +70,13 @@ export class OrderService {
           product: { productId, name: productName },
         };
       }),
-      totalAmount: subtotal,
+      totalAmount,
       estimatedDeliveryTime,
       deliveryFee,
+      deliveryAddress,
+      discount,
+      paymentBreakdown,
+      paymentMethod,
       status: OrderStatus.PENDING,
     });
 
@@ -63,27 +86,11 @@ export class OrderService {
     return order;
   }
 
-  async finalizeOrder(finalizeOrderInput: FinalizeOrderInput): Promise<Order> {
-    const {
-      orderId,
-      deliveryAddress,
-      discount,
-      paymentMethod,
-      vendor,
-      entityType,
-    } = finalizeOrderInput;
+  async calculateDeliveryFee(calculateDeliveryInput: CalculateDeliveryInput) {
+    calculateDeliveryInput.deliveryAddress.locationId;
+    const deliveryFee = calculateDeliveryFee();
 
-    if (entityType !== HuelagerType.VENDOR)
-      throw new UnauthorizedException('Not a vendor.');
-
-    const order = await this.orderRepository.findOrder({ where: { orderId } });
-    if (!order) throw new NotFoundException('Order not found.');
-
-    order.discount = discount;
-
-    // order.paymentBreakdown
-
-    return order;
+    return deliveryFee;
   }
 
   async findOne(findOrder: FindOrderDto) {

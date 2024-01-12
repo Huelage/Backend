@@ -39,7 +39,7 @@ export enum PaymentMethod {
 export enum PaymentStatus {
   PAID = 'paid',
   SPLIT = 'split',
-  UNPAID = 'unpaid',
+  PENDING = 'pending',
 }
 
 registerEnumType(OrderStatus, { name: 'OrderStatus' });

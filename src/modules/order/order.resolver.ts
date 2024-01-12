@@ -15,6 +15,7 @@ import { AccessTokenRequest } from '../../common/interfaces/request.interface';
 import { FindOrderDto } from './dto/find-order.dto';
 import { UpdateOrderStatusInput } from './dto/update-status.input';
 import { PubSub } from 'graphql-subscriptions';
+import { CalculateDeliveryInput } from './dto/calculate-delivery.input.ts';
 
 const pubSub = new PubSub();
 
@@ -56,6 +57,11 @@ export class OrderResolver {
   async findUserOrders(@Context('req') { user: huelager }: AccessTokenRequest) {
     const { entityId, entityType } = huelager;
     return await this.orderService.findUserOrders(entityType, entityId);
+  }
+
+  @Mutation(() => Number)
+  async calculateDeliveryFee(calculateDeliveryInput: CalculateDeliveryInput) {
+    return this.orderService.calculateDeliveryFee(calculateDeliveryInput);
   }
 
   @UseGuards(AccessTokenGuard)

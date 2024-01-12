@@ -2,8 +2,8 @@ import { InputType, Field } from '@nestjs/graphql';
 import GraphQLJSON from 'graphql-type-json';
 import { HuelagerType } from '../../../modules/huelager/entities/huelager.entity';
 import { User } from '../../../modules/huelager/user/user.entity';
-import { PaymentMethod } from '../entities/order.entity';
-import { AddressInterface } from 'src/modules/huelager/dtos/create-account.input';
+import { PaymentMethod, PaymentStatus } from '../entities/order.entity';
+import { AddressInterface } from '../../../modules/huelager/dtos/create-account.input';
 
 @InputType()
 export class CreateOrderInput {
@@ -13,23 +13,32 @@ export class CreateOrderInput {
   @Field(() => [OrderItemInput])
   orderItems: OrderItemInput[];
 
-  // @IsOptional()
-  // @IsString()
-  // @Field({ nullable: true })
-  // deliveryAddress: string;
+  @Field()
+  deliveryAddress: AddressInterface;
 
-  // @IsOptional()
-  // @IsNumber()
-  // @Field({ nullable: true })
-  // discount: number;
+  @Field()
+  deliveryFee: number;
+
+  @Field()
+  totalAmount: number;
+
+  @Field({ nullable: true })
+  pgTransactionId: string;
+
+  @Field()
+  discount: number;
 
   @Field()
   subtotal: number;
 
-  // @IsOptional()
-  // @IsEnum(PaymentMethod)
-  // @Field(() => PaymentMethod)
-  // paymentMethod: PaymentMethod;
+  @Field(() => PaymentMethod)
+  paymentMethod: PaymentMethod;
+
+  @Field(() => PaymentStatus)
+  paymentStatus: PaymentStatus;
+
+  @Field(() => [GraphQLJSON])
+  paymentBreakdown: { name: string; amount: number }[];
 
   user: User;
 
