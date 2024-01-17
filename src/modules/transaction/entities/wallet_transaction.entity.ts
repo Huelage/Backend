@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { Transaction } from './transaction.entity';
 import { Wallet } from '../../huelager/entities/huenit_wallet.entity';
-import { Order } from '../../../modules/order/entities/order.entity';
 
 @Entity({ name: 'wallet_transaction' })
 @ObjectType()
@@ -30,9 +29,4 @@ export class WalletTransaction {
   @ManyToOne(() => Wallet, { nullable: false })
   @JoinColumn({ name: 'receiver_wallet_id' })
   receiverWallet: Wallet;
-
-  @OneToOne(() => Order, (order) => order.walletTransaction, { nullable: true })
-  @Field(() => Order)
-  @JoinColumn({ name: 'order_id' })
-  order: Order;
 }

@@ -161,4 +161,24 @@ export class HuelagerRepository {
   async saveVendor(vendor: Vendor) {
     this.vendorRepository.save(vendor);
   }
+
+  async subtractFromBalance(entityId: string, amount: number) {
+    const wallet = await this.walletRepository.findOneBy({
+      entity: { entityId },
+    });
+
+    wallet.balance -= amount;
+    return this.walletRepository.save(wallet);
+  }
+
+  async addToBalance(entityId: string, amount: number) {
+    const wallet = await this.walletRepository.findOneBy({
+      entity: { entityId },
+    });
+
+    wallet.balance = Number(wallet.balance) + amount;
+    console.log(wallet.balance);
+
+    return this.walletRepository.save(wallet);
+  }
 }

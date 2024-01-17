@@ -38,9 +38,11 @@ type WalletTransaction {
 type Transaction {
   transactionId: String!
   transactionType: TransactionType!
-  amount: Float!
+  huenitAmount: Float!
+  cardAmount: Float!
+  totalAmount: Float!
   status: TransactionStatus!
-  description: String!
+  description: String
   paymentMethod: PaymentMethod!
   pgTransactionId: String!
   timestamp: DateTime!
@@ -60,7 +62,7 @@ enum TransactionStatus {
 }
 
 enum PaymentMethod {
-  CASH
+  SPLIT
   HUENIT
   CARD
 }
@@ -148,10 +150,11 @@ type Order {
   estimatedDeliveryTime: DateTime!
   subtotal: Float!
   deliveryFee: Float!
+  discount: Float
   paymentBreakdown: [JSON!]!
   totalAmount: Float!
   paymentMethod: PaymentMethod!
-  paymentStatus: Boolean!
+  paymentStatus: String
   orderedAt: DateTime!
   updatedAt: DateTime!
   canceledOrder: CanceledOrder!
@@ -233,6 +236,7 @@ type Query {
 
 type Mutation {
   createOrder(input: CreateOrderInput!): Order!
+  getDeliveryFee: Float!
   updateOrderStatus(input: UpdateOrderStatusInput!): Order!
   addFood(input: CreateFoodInput!): Food!
   updateFood(input: UpdateFoodInput!): Boolean!
@@ -257,10 +261,15 @@ type Mutation {
 input CreateOrderInput {
   vendorId: String!
   orderItems: [OrderItemInput!]!
-  deliveryAddress: JSON
-  discount: Float
+  deliveryAddress: JSON!
+  deliveryFee: Float!
+  totalAmount: Float!
+  pgTransactionId: String
+  discount: Float!
   subtotal: Float!
   paymentMethod: PaymentMethod!
+  paymentStatus: PaymentStatus
+  paymentBreakdown: [JSON!]!
 }
 
 input OrderItemInput {
@@ -273,6 +282,12 @@ input OrderItemInput {
   price: Float
   size: String
   extras: JSON
+}
+
+enum PaymentStatus {
+  PAID
+  SPLIT
+  PENDING
 }
 
 input UpdateOrderStatusInput {
@@ -356,6 +371,7 @@ input EditUserLocationInput {
   locationId: String!
   name: String
   geoLocation: JSON
+  extraDetails: String
 }
 
 input EditUserProfileInput {

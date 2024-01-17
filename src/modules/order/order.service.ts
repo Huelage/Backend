@@ -16,6 +16,8 @@ import {
 import { HuelagerRepository } from '../huelager/huelager.repository';
 import { JwtService } from '@nestjs/jwt';
 import { CalculateDeliveryInput } from './dto/calculate-delivery.input.ts';
+import { TransactionService } from '../transaction/transaction.service';
+import { Wallet } from '../huelager/entities/huenit_wallet.entity';
 
 @Injectable()
 export class OrderService {
@@ -23,6 +25,7 @@ export class OrderService {
     private readonly orderRepository: OrderRepository,
     private readonly huelagerRepository: HuelagerRepository,
     private readonly jwtService: JwtService,
+    private readonly transactionService: TransactionService,
   ) {}
 
   async create(createOrderInput: CreateOrderInput) {
@@ -41,13 +44,23 @@ export class OrderService {
       user,
     } = createOrderInput;
 
+    let huenitAmount = 0;
+    let senderWallet: Wallet;
+    let receiverWallet: Wallet;
+
     if (paymentMethod !== PaymentMethod.CARD) {
-      const huenitPrice = paymentBreakdown.find(
+      huenitAmount = paymentBreakdown.find(
         (payment) => payment.name === 'huenit',
       ).amount;
 
-      huenitPrice; // to remove the error;
-      pgTransactionId; // to remove the error;
+      receiverWallet = await this.huelagerRepository.addToBalance(
+        vendorId,
+        huenitAmount,
+      );
+      senderWallet = await this.huelagerRepository.subtractFromBalance(
+        user.userId,
+        huenitAmount,
+      );
     }
 
     if (entityType !== HuelagerType.USER)
@@ -82,6 +95,19 @@ export class OrderService {
 
     await this.orderRepository.saveOrderItem(order.orderItems);
     await this.orderRepository.saveOrder(order);
+
+    order.transaction = await this.transactionService.orderTransaction({
+      vendorId,
+      userId: user.userId,
+      huenitAmount,
+      cardAmount: totalAmount - huenitAmount,
+      totalAmount,
+      paymentMethod,
+      pgTransactionId,
+      order,
+      senderWallet,
+      receiverWallet,
+    });
 
     return order;
   }

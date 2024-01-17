@@ -1,11 +1,12 @@
 import { InputType, Field } from '@nestjs/graphql';
+import GraphQLJSON from 'graphql-type-json';
 import { AddressInterface } from 'src/modules/huelager/dtos/create-account.input';
 
 @InputType()
 export class CalculateDeliveryInput {
-  @Field()
+  @Field(() => GraphQLJSON)
   vendorAddress: AddressInterface;
 
-  @Field()
+  @Field(() => GraphQLJSON)
   deliveryAddress: AddressInterface;
 }

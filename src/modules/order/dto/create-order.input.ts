@@ -13,7 +13,7 @@ export class CreateOrderInput {
   @Field(() => [OrderItemInput])
   orderItems: OrderItemInput[];
 
-  @Field()
+  @Field(() => GraphQLJSON)
   deliveryAddress: AddressInterface;
 
   @Field()
@@ -34,7 +34,7 @@ export class CreateOrderInput {
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
 
-  @Field(() => PaymentStatus)
+  @Field(() => PaymentStatus, { nullable: true })
   paymentStatus: PaymentStatus;
 
   @Field(() => [GraphQLJSON])

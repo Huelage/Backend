@@ -9,11 +9,13 @@ import { OrderRepository } from './order.repository';
 import { ProductModule } from '../product/product.module';
 import { HuelagersModule } from '../huelager/huelagers.module';
 import { JwtModule } from '@nestjs/jwt';
+import { TransactionModule } from '../transaction/transaction.module';
 
 @Module({
   imports: [
     ProductModule,
     HuelagersModule,
+    TransactionModule,
     TypeOrmModule.forFeature([Order, OrderItem, CanceledOrder]),
     JwtModule.register({}),
   ],

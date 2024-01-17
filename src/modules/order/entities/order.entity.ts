@@ -148,12 +148,4 @@ export class Order {
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
-
-  @OneToOne(
-    () => WalletTransaction,
-    (walletTransaction) => walletTransaction.order,
-    { nullable: true },
-  )
-  @Field(() => [WalletTransaction], { nullable: true })
-  walletTransaction: WalletTransaction;
 }
