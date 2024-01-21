@@ -4,6 +4,7 @@
 
 type Wallet {
   walletId: String!
+  accountNumber: String!
   entity: Huelager!
   balance: Float!
   updatedAt: DateTime!
@@ -45,6 +46,8 @@ type Transaction {
   description: String
   paymentMethod: PaymentMethod!
   pgTransactionId: String!
+  bankName: String
+  bankAccountNo: String
   timestamp: DateTime!
   walletTransaction: WalletTransaction!
   order: Order!
@@ -53,6 +56,7 @@ type Transaction {
 enum TransactionType {
   TOP_UP
   WITHDRAWAL
+  TRANSFER
 }
 
 enum TransactionStatus {
@@ -232,6 +236,7 @@ type Query {
   getUserProfile: User!
   sayHello: String!
   getEntityProfile: Huelager!
+  getAccountDetails(accountNumber: String!): Huelager!
 }
 
 type Mutation {
@@ -255,6 +260,9 @@ type Mutation {
   forgotPassword(input: ForgotPasswordInput!): Huelager!
   updatePassword(input: UpdatePasswordInput!): Huelager!
   generateRSAKey: String!
+  topUpHuenit(input: TopupInput!): Transaction!
+  withdrawHuenit(input: TopupInput!): Transaction!
+  transferHuenit(input: TransferInput!): Transaction!
   uploadImage(input: UploadImageInput!): String!
 }
 
@@ -270,6 +278,7 @@ input CreateOrderInput {
   paymentMethod: PaymentMethod!
   paymentStatus: PaymentStatus
   paymentBreakdown: [JSON!]!
+  timestamp: DateTime
 }
 
 input OrderItemInput {
@@ -405,6 +414,18 @@ input UpdatePasswordInput {
   confirmPassword: String!
 }
 
+input TopupInput {
+  bankName: String!
+  bankAccountNo: String!
+  pgTransactionId: String!
+  amount: Float!
+}
+
+input TransferInput {
+  accountNumber: String!
+  amount: Float!
+}
+
 input UploadImageInput {
   id: String!
   image: Upload!
@@ -416,4 +437,5 @@ scalar Upload
 type Subscription {
   orderStatusUpdated: Order!
   newOrder: Order!
+  walletBalanceUpdated: Wallet!
 }

@@ -18,7 +18,9 @@ import { JwtService } from '@nestjs/jwt';
 import { CalculateDeliveryInput } from './dto/calculate-delivery.input.ts';
 import { TransactionService } from '../transaction/transaction.service';
 import { Wallet } from '../huelager/entities/huenit_wallet.entity';
+import { PubSub } from 'graphql-subscriptions';
 
+const pubSub = new PubSub();
 @Injectable()
 export class OrderService {
   constructor(
@@ -42,6 +44,7 @@ export class OrderService {
       paymentBreakdown,
       entityType,
       user,
+      timestamp,
     } = createOrderInput;
 
     let huenitAmount = 0;
@@ -57,6 +60,11 @@ export class OrderService {
         vendorId,
         huenitAmount,
       );
+
+      pubSub.publish(`wallet-${receiverWallet.walletId}`, {
+        walletBalanceUpdated: receiverWallet,
+      });
+
       senderWallet = await this.huelagerRepository.subtractFromBalance(
         user.userId,
         huenitAmount,
@@ -97,7 +105,6 @@ export class OrderService {
     await this.orderRepository.saveOrder(order);
 
     order.transaction = await this.transactionService.orderTransaction({
-      vendorId,
       userId: user.userId,
       huenitAmount,
       cardAmount: totalAmount - huenitAmount,
@@ -107,6 +114,7 @@ export class OrderService {
       order,
       senderWallet,
       receiverWallet,
+      timestamp: timestamp ? timestamp : new Date(),
     });
 
     return order;

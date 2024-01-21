@@ -236,4 +236,38 @@ export class HuelagerService {
 
     return publicKey;
   }
+
+  async huelagerFromAccountNumber(accountNumber: string) {
+    const huelager = await this.repository.findHuelager({
+      where: { wallet: { accountNumber } },
+    });
+
+    if (!huelager) throw new NotFoundException('Invalid account number.');
+
+    return huelager;
+  }
+
+  async verifySubscriber(connectionParams: any) {
+    const authorization = connectionParams.Authorization;
+
+    if (!authorization) throw new Error('Not authorized.');
+
+    const token = authorization.replace('Bearer ', '');
+
+    if (!token) throw new Error('Not authorized.');
+
+    const { entityId } = (await this.jwtService.decode(token)) as {
+      entityId: string;
+    };
+
+    const huelager = await this.repository.findHuelager({
+      where: { entityId },
+    });
+
+    if (!huelager) {
+      throw new UnauthorizedException();
+    }
+
+    return huelager.wallet.walletId;
+  }
 }

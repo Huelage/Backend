@@ -5,8 +5,6 @@ import {
 } from '../../../modules/order/entities/order.entity';
 
 export class OrderTransactionDto {
-  vendorId: string;
-
   userId: string;
 
   huenitAmount: number;
@@ -18,6 +16,8 @@ export class OrderTransactionDto {
   paymentMethod: PaymentMethod;
 
   pgTransactionId: string;
+
+  timestamp: Date;
 
   order: Order;
 

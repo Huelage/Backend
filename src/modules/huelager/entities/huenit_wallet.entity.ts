@@ -16,12 +16,19 @@ export class Wallet {
   @Field()
   walletId: string;
 
+  @Column({ type: 'varchar', length: 16 }) // I will have to make it unique later
+  @Field()
+  accountNumber: string;
+
   @OneToOne(() => Huelager, (huelager) => huelager.wallet, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'entity_id' })
   @Field(() => Huelager)
   entity: Huelager;
+
+  @Column({ type: 'varchar', length: 255 })
+  walletPin: string;
 
   @Column({ type: 'decimal', scale: 2, default: 0 })
   @Field()

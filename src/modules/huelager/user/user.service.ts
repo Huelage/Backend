@@ -40,15 +40,16 @@ export class UserService {
 
     const { firstName, lastName, phone, password, email } = createUserInput;
 
-    const exists = await this.repository.checkEmailAndPhone({
-      where: [{ email }, { phone }],
-    });
+    const { emailExists, phoneExists, accountNumber } =
+      await this.repository.checkEmailAndPhone({
+        where: [{ email }, { phone }],
+      });
 
-    if (exists) {
+    if (emailExists || phoneExists) {
       let inUse;
-      if (exists.emailExists && exists.phoneExists) {
+      if (emailExists && phoneExists) {
         inUse = 'Email and Phone number';
-      } else if (exists.emailExists) {
+      } else if (emailExists) {
         inUse = 'Email';
       } else {
         inUse = 'Phone number';
@@ -57,13 +58,16 @@ export class UserService {
     }
 
     const hashedPassword = await hash(password, 10);
-    const entity = await this.repository.createHuelager({
-      phone,
-      email,
-      otp,
-      password: hashedPassword,
-      entityType: HuelagerType.USER,
-    });
+    const entity = await this.repository.createHuelager(
+      {
+        phone,
+        email,
+        otp,
+        password: hashedPassword,
+        entityType: HuelagerType.USER,
+      },
+      accountNumber,
+    );
 
     const user = await this.repository.createUser({
       firstName,

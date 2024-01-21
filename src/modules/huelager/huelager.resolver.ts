@@ -1,4 +1,11 @@
-import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Args,
+  Query,
+  Context,
+  Subscription,
+} from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
@@ -14,6 +21,10 @@ import {
   AccessTokenRequest,
   RefreshTokenRequest,
 } from '../../common/interfaces/request.interface';
+import { Wallet } from './entities/huenit_wallet.entity';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubSub = new PubSub();
 
 @Resolver()
 export class HuelagerResolver {
@@ -28,6 +39,11 @@ export class HuelagerResolver {
   @Query(() => Huelager)
   getEntityProfile(@Context('req') { user: huelager }: AccessTokenRequest) {
     return huelager;
+  }
+
+  @Query(() => Huelager)
+  async getAccountDetails(@Args('accountNumber') accountNumber: string) {
+    return await this.huelagerService.huelagerFromAccountNumber(accountNumber);
   }
 
   /**
@@ -86,5 +102,16 @@ export class HuelagerResolver {
   @Mutation(() => String)
   async generateRSAKey(@Context('req') { user: huelager }: AccessTokenRequest) {
     return await this.huelagerService.generateRSAKey(huelager);
+  }
+
+  @Subscription(() => Wallet)
+  async walletBalanceUpdated(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const walletId = await this.huelagerService.verifySubscriber(
+      connectionParams,
+    );
+
+    return pubSub.asyncIterator(`wallet-${walletId}`);
   }
 }

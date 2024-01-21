@@ -48,3 +48,11 @@ export function calculateEstimatedDeliveryTime() {
 export function calculateDeliveryFee() {
   return 1000;
 }
+
+export function generateWalletAccountNumber() {
+  let accountNumber = '88';
+  for (let i = 0; i < 14; i++) {
+    accountNumber += Math.floor(Math.random() * 10);
+  }
+  return accountNumber;
+}

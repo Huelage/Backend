@@ -8,6 +8,7 @@ import { Wallet } from './entities/huenit_wallet.entity';
 import { Biometric } from './entities/biometric.entity';
 import { User } from './user/user.entity';
 import { Vendor } from './vendor/vendor.entity';
+import { generateWalletAccountNumber } from '../../common/helpers/helpers';
 
 @Injectable()
 export class HuelagerRepository {
@@ -32,14 +33,34 @@ export class HuelagerRepository {
   }) {
     const { where } = params;
     const [{ email }, { phone }] = where;
-    const existingHuelager = await this.repository.findOneBy(where);
+
+    let accountNumberExists = true;
+    let accountNumber;
+    let existingHuelager: Huelager;
+
+    while (accountNumberExists) {
+      accountNumberExists = false;
+      accountNumber = generateWalletAccountNumber();
+
+      existingHuelager = await this.repository.findOne({
+        where: [{ wallet: { accountNumber } }, { email }, { phone }],
+        relations: { wallet: true },
+      });
+
+      if (existingHuelager)
+        if (existingHuelager.wallet.accountNumber === accountNumber)
+          accountNumberExists = true;
+    }
+
     if (existingHuelager) {
       return {
         emailExists: existingHuelager.email === email ? true : false,
         phoneExists: existingHuelager.phone === phone ? true : false,
+        accountNumber,
       };
     }
-    return null;
+
+    return { emailExists: false, phoneExists: false, accountNumber };
   }
 
   async checkPhone(params: { where: { phone: string } }): Promise<boolean> {
@@ -68,8 +89,12 @@ export class HuelagerRepository {
     });
   }
 
-  async createHuelager(createHuelagerInfo: DeepPartial<Huelager>) {
+  async createHuelager(
+    createHuelagerInfo: DeepPartial<Huelager>,
+    accountNumber: string,
+  ) {
     const wallet = new Wallet();
+    wallet.accountNumber = accountNumber;
     await this.walletRepository.save(wallet);
 
     const huelager = await this.repository.create({
@@ -179,6 +204,15 @@ export class HuelagerRepository {
     wallet.balance = Number(wallet.balance) + amount;
     console.log(wallet.balance);
 
+    return this.walletRepository.save(wallet);
+  }
+
+  async findWallet(params: { where: FindOptionsWhere<Wallet> }) {
+    const { where } = params;
+    return await this.walletRepository.findOne({ where });
+  }
+
+  async saveWallet(wallet: Wallet) {
     return this.walletRepository.save(wallet);
   }
 }

@@ -21,6 +21,7 @@ export enum TransactionStatus {
 export enum TransactionType {
   TOP_UP = 'top_up',
   WITHDRAWAL = 'withdrawal',
+  TRANSFER = 'trasfer',
 }
 
 registerEnumType(TransactionStatus, { name: 'TransactionStatus' });
@@ -43,11 +44,11 @@ export class Transaction {
   @Field(() => TransactionType)
   transactionType: TransactionType;
 
-  @Column({ type: 'decimal', name: 'huenit_amount' })
+  @Column({ type: 'decimal', name: 'huenit_amount', default: 0 })
   @Field()
   huenitAmount: number;
 
-  @Column({ type: 'decimal', name: 'card_amount' })
+  @Column({ type: 'decimal', name: 'card_amount', default: 0 })
   @Field()
   cardAmount: number;
 
@@ -74,6 +75,14 @@ export class Transaction {
   @Column({ name: 'pg_transaction_id', type: 'text', nullable: true })
   @Field()
   pgTransactionId: string;
+
+  @Column({ name: 'bank_name', nullable: true, type: 'varchar' })
+  @Field({ nullable: true })
+  bankName: string;
+
+  @Column({ name: 'bank_acc_no', nullable: true, type: 'varchar' })
+  @Field({ nullable: true })
+  bankAccountNo: string;
 
   @CreateDateColumn({
     type: 'datetime',
