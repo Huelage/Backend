@@ -21,8 +21,10 @@ import {
   AccessTokenRequest,
   RefreshTokenRequest,
 } from '../../common/interfaces/request.interface';
-import { Wallet } from './entities/huenit_wallet.entity';
 import { PubSub } from 'graphql-subscriptions';
+import { Transaction } from '../transaction/entities/transaction.entity';
+import { UpdateWalletPinInput } from './dtos/update-wallet-pin.input';
+import { VerifyWalletPinInput } from './dtos/verify-wallet-pin.input';
 
 const pubSub = new PubSub();
 
@@ -99,19 +101,52 @@ export class HuelagerResolver {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Mutation(() => Huelager)
+  async updateWalletPin(
+    @Args('input') updateWalletPinInput: UpdateWalletPinInput,
+
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ) {
+    updateWalletPinInput.huelager = huelager;
+    return await this.huelagerService.updateWalletPin(updateWalletPinInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Mutation(() => Boolean)
+  async verifyWalletPin(
+    @Args('input') verifyWalletPinInput: VerifyWalletPinInput,
+
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ) {
+    verifyWalletPinInput.huelager = huelager;
+    return await this.huelagerService.verifyWalletPin(verifyWalletPinInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Mutation(() => String)
   async generateRSAKey(@Context('req') { user: huelager }: AccessTokenRequest) {
     return await this.huelagerService.generateRSAKey(huelager);
   }
 
-  @Subscription(() => Wallet)
+  @Subscription(() => Number)
   async walletBalanceUpdated(
     @Context('req') { connectionParams }: { connectionParams: any },
   ) {
-    const walletId = await this.huelagerService.verifySubscriber(
+    const { walletId } = await this.huelagerService.verifySubscriber(
       connectionParams,
     );
 
     return pubSub.asyncIterator(`wallet-${walletId}`);
+  }
+
+  @Subscription(() => Transaction)
+  async transactionHistoryUpdated(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const { entityId } = await this.huelagerService.verifySubscriber(
+      connectionParams,
+    );
+
+    return pubSub.asyncIterator(`transaction-${entityId}`);
   }
 }

@@ -49,27 +49,30 @@ export class OrderService {
 
     let huenitAmount = 0;
     let senderWallet: Wallet;
-    let receiverWallet: Wallet;
 
     if (paymentMethod !== PaymentMethod.CARD) {
       huenitAmount = paymentBreakdown.find(
         (payment) => payment.name === 'huenit',
       ).amount;
 
-      receiverWallet = await this.huelagerRepository.addToBalance(
-        vendorId,
-        huenitAmount,
-      );
-
-      pubSub.publish(`wallet-${receiverWallet.walletId}`, {
-        walletBalanceUpdated: receiverWallet,
-      });
-
       senderWallet = await this.huelagerRepository.subtractFromBalance(
         user.userId,
         huenitAmount,
       );
+
+      pubSub.publish(`wallet-${senderWallet.walletId}`, {
+        walletBalanceUpdated: senderWallet.balance,
+      });
     }
+
+    const receiverWallet = await this.huelagerRepository.addToBalance(
+      vendorId,
+      totalAmount,
+    );
+
+    pubSub.publish(`wallet-${senderWallet.walletId}`, {
+      walletBalanceUpdated: senderWallet.balance,
+    });
 
     if (entityType !== HuelagerType.USER)
       throw new UnauthorizedException('Not a user.');
@@ -98,6 +101,7 @@ export class OrderService {
       discount,
       paymentBreakdown,
       paymentMethod,
+
       status: OrderStatus.PENDING,
     });
 
@@ -105,6 +109,7 @@ export class OrderService {
     await this.orderRepository.saveOrder(order);
 
     order.transaction = await this.transactionService.orderTransaction({
+      vendorId,
       userId: user.userId,
       huenitAmount,
       cardAmount: totalAmount - huenitAmount,

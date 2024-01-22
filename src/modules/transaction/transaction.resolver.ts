@@ -1,4 +1,4 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TransactionService } from './transaction.service';
 import { Transaction } from './entities/transaction.entity';
 import { TopupInput } from './dtos/topup.input';
@@ -7,12 +7,29 @@ import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
 import { AccessTokenRequest } from 'src/common/interfaces/request.interface';
 import { TransferInput } from './dtos/transfer.input';
 import { PubSub } from 'graphql-subscriptions';
+import { WalletTransaction } from './entities/wallet_transaction.entity';
 
 const pubSub = new PubSub();
 
 @Resolver(() => Transaction)
 export class TransactionResolver {
   constructor(private readonly transactionService: TransactionService) {}
+
+  @UseGuards(AccessTokenGuard)
+  @Query(() => [Transaction])
+  async getTransactions(
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ): Promise<Transaction[]> {
+    return await this.transactionService.getTransactions(huelager);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Query(() => [WalletTransaction])
+  async getWalletTransactions(
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ): Promise<WalletTransaction[]> {
+    return await this.transactionService.getWalletTransactions(huelager);
+  }
 
   @UseGuards(AccessTokenGuard)
   @Mutation(() => Transaction)
@@ -42,12 +59,6 @@ export class TransactionResolver {
   ): Promise<Transaction> {
     transferInput.sender = huelager;
 
-    const { transaction, receiverWallet } =
-      await this.transactionService.transfer(transferInput);
-
-    pubSub.publish(`wallet-${receiverWallet.walletId}`, {
-      walletBalanceUpdated: receiverWallet,
-    });
-    return transaction;
+    return await this.transactionService.transfer(transferInput);
   }
 }

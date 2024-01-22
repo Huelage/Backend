@@ -237,6 +237,8 @@ type Query {
   sayHello: String!
   getEntityProfile: Huelager!
   getAccountDetails(accountNumber: String!): Huelager!
+  getTransactions: [Transaction!]!
+  getWalletTransactions: [WalletTransaction!]!
 }
 
 type Mutation {
@@ -259,6 +261,8 @@ type Mutation {
   verifyEmailOtp(input: VerifyEmailInput!): Huelager!
   forgotPassword(input: ForgotPasswordInput!): Huelager!
   updatePassword(input: UpdatePasswordInput!): Huelager!
+  updateWalletPin(input: UpdateWalletPinInput!): Huelager!
+  verifyWalletPin(input: VerifyWalletPinInput!): Boolean!
   generateRSAKey: String!
   topUpHuenit(input: TopupInput!): Transaction!
   withdrawHuenit(input: TopupInput!): Transaction!
@@ -414,6 +418,14 @@ input UpdatePasswordInput {
   confirmPassword: String!
 }
 
+input UpdateWalletPinInput {
+  pin: String!
+}
+
+input VerifyWalletPinInput {
+  pin: String!
+}
+
 input TopupInput {
   bankName: String!
   bankAccountNo: String!
@@ -437,5 +449,6 @@ scalar Upload
 type Subscription {
   orderStatusUpdated: Order!
   newOrder: Order!
-  walletBalanceUpdated: Wallet!
+  walletBalanceUpdated: Float!
+  transactionHistoryUpdated: Transaction!
 }

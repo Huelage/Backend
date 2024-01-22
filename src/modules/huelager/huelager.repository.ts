@@ -209,7 +209,10 @@ export class HuelagerRepository {
 
   async findWallet(params: { where: FindOptionsWhere<Wallet> }) {
     const { where } = params;
-    return await this.walletRepository.findOne({ where });
+    return await this.walletRepository.findOne({
+      where,
+      relations: { entity: true },
+    });
   }
 
   async saveWallet(wallet: Wallet) {

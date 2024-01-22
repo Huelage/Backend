@@ -85,6 +85,7 @@ export class OrderResolver {
       entityType,
       entityId,
     };
+
     const order = await this.orderService.updateOrderStatus(
       updateOrderStatusInput,
     );

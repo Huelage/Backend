@@ -16,6 +16,10 @@ import { TopupInput } from './dtos/topup.input';
 import { HuelagerRepository } from '../huelager/huelager.repository';
 import { WithdrawalInput } from './dtos/withdrawal.input';
 import { TransferInput } from './dtos/transfer.input';
+import { Huelager } from '../huelager/entities/huelager.entity';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubSub = new PubSub();
 
 @Injectable()
 export class TransactionService {
@@ -26,6 +30,7 @@ export class TransactionService {
 
   async orderTransaction(orderTransactionDto: OrderTransactionDto) {
     const {
+      vendorId,
       userId,
       huenitAmount,
       cardAmount,
@@ -64,6 +69,14 @@ export class TransactionService {
       );
     }
     await this.repository.saveTransaction(transaction);
+
+    pubSub.publish(`transaction-${userId}`, {
+      transactionHistoryUpdated: transaction,
+    });
+
+    pubSub.publish(`transaction-${vendorId}`, {
+      transactionHistoryUpdated: transaction,
+    });
 
     return transaction;
   }
@@ -110,7 +123,19 @@ export class TransactionService {
     await this.repository.saveWalletTransaction(transaction.walletTransaction);
     await this.repository.saveTransaction(transaction);
 
-    return { transaction, receiverWallet };
+    pubSub.publish(`wallet-${receiverWallet.walletId}`, {
+      walletBalanceUpdated: receiverWallet.balance,
+    });
+
+    pubSub.publish(`wallet-${senderWallet.walletId}`, {
+      walletBalanceUpdated: senderWallet.balance,
+    });
+
+    pubSub.publish(`transaction-${receiverWallet.entity.entityId}`, {
+      transactionHistoryUpdated: transaction,
+    });
+
+    return transaction;
   }
 
   async topUp(topupInput: TopupInput): Promise<Transaction> {
@@ -141,6 +166,10 @@ export class TransactionService {
     await this.repository.saveWalletTransaction(transaction.walletTransaction);
     await this.repository.saveTransaction(transaction);
 
+    pubSub.publish(`wallet-${wallet.walletId}`, {
+      walletBalanceUpdated: wallet.balance,
+    });
+
     return transaction;
   }
 
@@ -149,7 +178,6 @@ export class TransactionService {
       withdrawalInput;
 
     const { entityId } = entity;
-
     const wallet = await this.huelagerRepository.subtractFromBalance(
       entityId,
       amount,
@@ -176,6 +204,32 @@ export class TransactionService {
     await this.repository.saveWalletTransaction(transaction.walletTransaction);
     await this.repository.saveTransaction(transaction);
 
+    pubSub.publish(`wallet-${wallet.walletId}`, {
+      walletBalanceUpdated: wallet.balance,
+    });
+
     return transaction;
+  }
+
+  async getTransactions({ entityId }: Huelager) {
+    const transactions = await this.repository.getTransactions({
+      where: [
+        { initiatorEntity: { entityId } },
+        { walletTransaction: { receiverWallet: { entity: { entityId } } } },
+      ],
+    });
+
+    return transactions;
+  }
+
+  async getWalletTransactions({ entityId }: Huelager) {
+    const walletTransactions = await this.repository.getWalletTransactions({
+      where: [
+        { senderWallet: { entity: { entityId } } },
+        { receiverWallet: { entity: { entityId } } },
+      ],
+    });
+
+    return walletTransactions;
   }
 }

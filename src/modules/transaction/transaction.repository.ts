@@ -40,4 +40,26 @@ export class TransactionRepository {
     const { where, update } = params;
     return await this.transactionRepository.update(where, update);
   }
+
+  async getTransactions(params: { where: FindOptionsWhere<Transaction>[] }) {
+    const { where } = params;
+    const transactions = await this.transactionRepository.find({
+      where,
+      relations: { walletTransaction: true },
+    });
+
+    return transactions;
+  }
+
+  async getWalletTransactions(params: {
+    where: FindOptionsWhere<WalletTransaction>[];
+  }) {
+    const { where } = params;
+    const walletTransactions = await this.walletTransactionRepository.find({
+      where,
+      relations: { transaction: true },
+    });
+
+    return walletTransactions;
+  }
 }

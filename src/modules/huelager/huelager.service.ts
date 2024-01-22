@@ -21,6 +21,8 @@ import { VerifyEmailInput } from './dtos/verify-email.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { UpdatePasswordInput } from './dtos/update-password.input';
 import { env } from '../../config/env.config';
+import { UpdateWalletPinInput } from './dtos/update-wallet-pin.input';
+import { VerifyWalletPinInput } from './dtos/verify-wallet-pin.input';
 
 @Injectable()
 export class HuelagerService {
@@ -268,6 +270,27 @@ export class HuelagerService {
       throw new UnauthorizedException();
     }
 
-    return huelager.wallet.walletId;
+    return { entityId, walletId: huelager.wallet.walletId };
+  }
+
+  async updateWalletPin(
+    updateWalletPinInput: UpdateWalletPinInput,
+  ): Promise<Huelager> {
+    const { pin, huelager } = updateWalletPinInput;
+
+    huelager.wallet.walletPin = await hash(pin, 10);
+    this.repository.saveWallet(huelager.wallet);
+
+    return huelager;
+  }
+
+  async verifyWalletPin(
+    verifyWalletPinInput: VerifyWalletPinInput,
+  ): Promise<boolean> {
+    const { pin, huelager } = verifyWalletPinInput;
+
+    const matches = await compare(pin, huelager.wallet.walletPin);
+
+    return matches;
   }
 }
