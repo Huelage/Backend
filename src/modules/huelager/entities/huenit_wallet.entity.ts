@@ -20,6 +20,7 @@ export class Wallet {
   @Column({
     type: 'varchar',
     length: 16,
+    unique: true,
     default: () => generateWalletAccountNumber(),
   }) // I will have to make it unique later
   @Field()
