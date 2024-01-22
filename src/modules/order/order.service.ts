@@ -49,7 +49,7 @@ export class OrderService {
 
     if (paymentMethod !== PaymentMethod.CARD) {
       huenitAmount = paymentBreakdown.find(
-        (payment) => payment.name === 'huenit',
+        (payment) => payment.name.toLowerCase() === 'huenit',
       ).amount;
 
       senderWallet = await this.huelagerRepository.subtractFromBalance(
@@ -67,8 +67,8 @@ export class OrderService {
       totalAmount,
     );
 
-    pubSub.publish(`wallet-${senderWallet.walletId}`, {
-      walletBalanceUpdated: senderWallet.balance,
+    pubSub.publish(`wallet-${receiverWallet.walletId}`, {
+      walletBalanceUpdated: receiverWallet.balance,
     });
 
     if (entityType !== HuelagerType.USER)
