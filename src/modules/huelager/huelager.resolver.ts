@@ -155,7 +155,7 @@ export class HuelagerResolver {
   async orderStatusUpdated(
     @Context('req') { connectionParams }: { connectionParams: any },
   ) {
-    const entityId = await this.huelagerService.verifySubscriber(
+    const { entityId } = await this.huelagerService.verifySubscriber(
       connectionParams,
     );
 
@@ -166,7 +166,7 @@ export class HuelagerResolver {
   async newOrder(
     @Context('req') { connectionParams }: { connectionParams: any },
   ) {
-    const entityId = await this.huelagerService.verifySubscriber(
+    const { entityId } = await this.huelagerService.verifySubscriber(
       connectionParams,
     );
 
