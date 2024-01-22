@@ -6,10 +6,8 @@ import { UseGuards } from '@nestjs/common';
 import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
 import { AccessTokenRequest } from 'src/common/interfaces/request.interface';
 import { TransferInput } from './dtos/transfer.input';
-import { PubSub } from 'graphql-subscriptions';
 import { WalletTransaction } from './entities/wallet_transaction.entity';
-
-const pubSub = new PubSub();
+import { pubSub } from '../huelager/huelager.resolver';
 
 @Resolver(() => Transaction)
 export class TransactionResolver {
@@ -59,6 +57,6 @@ export class TransactionResolver {
   ): Promise<Transaction> {
     transferInput.sender = huelager;
 
-    return await this.transactionService.transfer(transferInput);
+    return this.transactionService.transfer(transferInput);
   }
 }

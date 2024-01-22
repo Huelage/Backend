@@ -202,7 +202,6 @@ export class HuelagerRepository {
     });
 
     wallet.balance = Number(wallet.balance) + amount;
-    console.log(wallet.balance);
 
     return this.walletRepository.save(wallet);
   }

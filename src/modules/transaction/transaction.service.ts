@@ -17,9 +17,7 @@ import { HuelagerRepository } from '../huelager/huelager.repository';
 import { WithdrawalInput } from './dtos/withdrawal.input';
 import { TransferInput } from './dtos/transfer.input';
 import { Huelager } from '../huelager/entities/huelager.entity';
-import { PubSub } from 'graphql-subscriptions';
-
-const pubSub = new PubSub();
+import { pubSub } from '../huelager/huelager.resolver';
 
 @Injectable()
 export class TransactionService {

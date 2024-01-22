@@ -18,9 +18,8 @@ import { JwtService } from '@nestjs/jwt';
 import { CalculateDeliveryInput } from './dto/calculate-delivery.input.ts';
 import { TransactionService } from '../transaction/transaction.service';
 import { Wallet } from '../huelager/entities/huenit_wallet.entity';
-import { PubSub } from 'graphql-subscriptions';
+import { pubSub } from '../huelager/huelager.resolver';
 
-const pubSub = new PubSub();
 @Injectable()
 export class OrderService {
   constructor(

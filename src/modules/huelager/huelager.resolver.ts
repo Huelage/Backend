@@ -150,3 +150,5 @@ export class HuelagerResolver {
     return pubSub.asyncIterator(`transaction-${entityId}`);
   }
 }
+
+export { pubSub };
