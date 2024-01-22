@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Huelager } from './huelager.entity';
+import { generateWalletAccountNumber } from 'src/common/helpers/helpers';
 
 @Entity({ name: 'huenit_wallet' })
 @ObjectType()
@@ -16,7 +17,11 @@ export class Wallet {
   @Field()
   walletId: string;
 
-  @Column({ type: 'varchar', length: 16 }) // I will have to make it unique later
+  @Column({
+    type: 'varchar',
+    length: 16,
+    default: () => generateWalletAccountNumber(),
+  }) // I will have to make it unique later
   @Field()
   accountNumber: string;
 
