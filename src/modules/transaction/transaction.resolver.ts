@@ -7,7 +7,6 @@ import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
 import { AccessTokenRequest } from 'src/common/interfaces/request.interface';
 import { TransferInput } from './dtos/transfer.input';
 import { WalletTransaction } from './entities/wallet_transaction.entity';
-import { pubSub } from '../huelager/huelager.resolver';
 
 @Resolver(() => Transaction)
 export class TransactionResolver {
