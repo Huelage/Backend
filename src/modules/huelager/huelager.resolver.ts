@@ -25,6 +25,7 @@ import { PubSub } from 'graphql-subscriptions';
 import { Transaction } from '../transaction/entities/transaction.entity';
 import { UpdateWalletPinInput } from './dtos/update-wallet-pin.input';
 import { VerifyWalletPinInput } from './dtos/verify-wallet-pin.input';
+import { Order } from '../order/entities/order.entity';
 
 const pubSub = new PubSub();
 
@@ -148,6 +149,28 @@ export class HuelagerResolver {
     );
 
     return pubSub.asyncIterator(`transaction-${entityId}`);
+  }
+
+  @Subscription(() => Order)
+  async orderStatusUpdated(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const entityId = await this.huelagerService.verifySubscriber(
+      connectionParams,
+    );
+
+    return pubSub.asyncIterator(`order-${entityId}`);
+  }
+
+  @Subscription(() => Order)
+  async newOrder(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const entityId = await this.huelagerService.verifySubscriber(
+      connectionParams,
+    );
+
+    return pubSub.asyncIterator(`order-new-${entityId}`);
   }
 }
 

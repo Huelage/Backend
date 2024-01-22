@@ -14,7 +14,6 @@ import {
   calculateEstimatedDeliveryTime,
 } from 'src/common/helpers/helpers';
 import { HuelagerRepository } from '../huelager/huelager.repository';
-import { JwtService } from '@nestjs/jwt';
 import { CalculateDeliveryInput } from './dto/calculate-delivery.input.ts';
 import { TransactionService } from '../transaction/transaction.service';
 import { Wallet } from '../huelager/entities/huenit_wallet.entity';
@@ -25,7 +24,6 @@ export class OrderService {
   constructor(
     private readonly orderRepository: OrderRepository,
     private readonly huelagerRepository: HuelagerRepository,
-    private readonly jwtService: JwtService,
     private readonly transactionService: TransactionService,
   ) {}
 
@@ -193,29 +191,5 @@ export class OrderService {
     await this.orderRepository.saveOrder(order);
 
     return order;
-  }
-
-  async verifySubscriber(connectionParams: any) {
-    const authorization = connectionParams.Authorization;
-
-    if (!authorization) throw new Error('Not authorized.');
-
-    const token = authorization.replace('Bearer ', '');
-
-    if (!token) throw new Error('Not authorized.');
-
-    const { entityId } = (await this.jwtService.decode(token)) as {
-      entityId: string;
-    };
-
-    const huelager = await this.huelagerRepository.findHuelager({
-      where: { entityId },
-    });
-
-    if (!huelager) {
-      throw new UnauthorizedException();
-    }
-
-    return entityId;
   }
 }

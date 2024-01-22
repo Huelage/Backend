@@ -95,22 +95,4 @@ export class OrderResolver {
 
     return order;
   }
-
-  @Subscription(() => Order)
-  async orderStatusUpdated(
-    @Context('req') { connectionParams }: { connectionParams: any },
-  ) {
-    const entityId = await this.orderService.verifySubscriber(connectionParams);
-
-    return pubSub.asyncIterator(`order-${entityId}`);
-  }
-
-  @Subscription(() => Order)
-  async newOrder(
-    @Context('req') { connectionParams }: { connectionParams: any },
-  ) {
-    const entityId = await this.orderService.verifySubscriber(connectionParams);
-
-    return pubSub.asyncIterator(`order-new-${entityId}`);
-  }
 }

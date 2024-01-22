@@ -447,8 +447,8 @@ input UploadImageInput {
 scalar Upload
 
 type Subscription {
-  orderStatusUpdated: Order!
-  newOrder: Order!
   walletBalanceUpdated: Float!
   transactionHistoryUpdated: Transaction!
+  orderStatusUpdated: Order!
+  newOrder: Order!
 }
