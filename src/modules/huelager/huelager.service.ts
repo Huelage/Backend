@@ -21,6 +21,8 @@ import { VerifyEmailInput } from './dtos/verify-email.input';
 import { ForgotPasswordInput } from './dtos/forgot-password.input';
 import { UpdatePasswordInput } from './dtos/update-password.input';
 import { env } from '../../config/env.config';
+import { UpdateWalletPinInput } from './dtos/update-wallet-pin.input';
+import { VerifyWalletPinInput } from './dtos/verify-wallet-pin.input';
 
 @Injectable()
 export class HuelagerService {
@@ -235,5 +237,60 @@ export class HuelagerService {
     });
 
     return publicKey;
+  }
+
+  async huelagerFromAccountNumber(accountNumber: string) {
+    const huelager = await this.repository.findHuelager({
+      where: { wallet: { accountNumber } },
+    });
+
+    if (!huelager) throw new NotFoundException('Invalid account number.');
+
+    return huelager;
+  }
+
+  async verifySubscriber(connectionParams: any) {
+    const authorization = connectionParams.Authorization;
+
+    if (!authorization) throw new Error('Not authorized.');
+
+    const token = authorization.replace('Bearer ', '');
+
+    if (!token) throw new Error('Not authorized.');
+
+    const { entityId } = (await this.jwtService.decode(token)) as {
+      entityId: string;
+    };
+
+    const huelager = await this.repository.findHuelager({
+      where: { entityId },
+    });
+
+    if (!huelager) {
+      throw new UnauthorizedException();
+    }
+
+    return { entityId, walletId: huelager.wallet.walletId };
+  }
+
+  async updateWalletPin(
+    updateWalletPinInput: UpdateWalletPinInput,
+  ): Promise<Huelager> {
+    const { pin, huelager } = updateWalletPinInput;
+
+    huelager.wallet.walletPin = await hash(pin, 10);
+    this.repository.saveWallet(huelager.wallet);
+
+    return huelager;
+  }
+
+  async verifyWalletPin(
+    verifyWalletPinInput: VerifyWalletPinInput,
+  ): Promise<boolean> {
+    const { pin, huelager } = verifyWalletPinInput;
+
+    const matches = await compare(pin, huelager.wallet.walletPin);
+
+    return matches;
   }
 }

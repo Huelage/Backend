@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
 import GraphQLJSON from 'graphql-type-json';
 import { AddressInterface } from 'src/modules/huelager/dtos/create-account.input';
 

@@ -1,4 +1,11 @@
-import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Args,
+  Query,
+  Context,
+  Subscription,
+} from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from '../../common/guards/refresh-token.guard';
@@ -14,6 +21,13 @@ import {
   AccessTokenRequest,
   RefreshTokenRequest,
 } from '../../common/interfaces/request.interface';
+import { PubSub } from 'graphql-subscriptions';
+import { Transaction } from '../transaction/entities/transaction.entity';
+import { UpdateWalletPinInput } from './dtos/update-wallet-pin.input';
+import { VerifyWalletPinInput } from './dtos/verify-wallet-pin.input';
+import { Order } from '../order/entities/order.entity';
+
+const pubSub = new PubSub();
 
 @Resolver()
 export class HuelagerResolver {
@@ -28,6 +42,11 @@ export class HuelagerResolver {
   @Query(() => Huelager)
   getEntityProfile(@Context('req') { user: huelager }: AccessTokenRequest) {
     return huelager;
+  }
+
+  @Query(() => Huelager)
+  async getAccountDetails(@Args('accountNumber') accountNumber: string) {
+    return await this.huelagerService.huelagerFromAccountNumber(accountNumber);
   }
 
   /**
@@ -83,8 +102,76 @@ export class HuelagerResolver {
   }
 
   @UseGuards(AccessTokenGuard)
+  @Mutation(() => Huelager)
+  async updateWalletPin(
+    @Args('input') updateWalletPinInput: UpdateWalletPinInput,
+
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ) {
+    updateWalletPinInput.huelager = huelager;
+    return await this.huelagerService.updateWalletPin(updateWalletPinInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Mutation(() => Boolean)
+  async verifyWalletPin(
+    @Args('input') verifyWalletPinInput: VerifyWalletPinInput,
+
+    @Context('req') { user: huelager }: AccessTokenRequest,
+  ) {
+    verifyWalletPinInput.huelager = huelager;
+    return await this.huelagerService.verifyWalletPin(verifyWalletPinInput);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Mutation(() => String)
   async generateRSAKey(@Context('req') { user: huelager }: AccessTokenRequest) {
     return await this.huelagerService.generateRSAKey(huelager);
   }
+
+  @Subscription(() => Number)
+  async walletBalanceUpdated(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const { walletId } = await this.huelagerService.verifySubscriber(
+      connectionParams,
+    );
+
+    return pubSub.asyncIterator(`wallet-${walletId}`);
+  }
+
+  @Subscription(() => Transaction)
+  async transactionHistoryUpdated(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const { entityId } = await this.huelagerService.verifySubscriber(
+      connectionParams,
+    );
+
+    return pubSub.asyncIterator(`transaction-${entityId}`);
+  }
+
+  @Subscription(() => Order)
+  async orderStatusUpdated(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const { entityId } = await this.huelagerService.verifySubscriber(
+      connectionParams,
+    );
+
+    return pubSub.asyncIterator(`order-${entityId}`);
+  }
+
+  @Subscription(() => Order)
+  async newOrder(
+    @Context('req') { connectionParams }: { connectionParams: any },
+  ) {
+    const { entityId } = await this.huelagerService.verifySubscriber(
+      connectionParams,
+    );
+
+    return pubSub.asyncIterator(`order-new-${entityId}`);
+  }
 }
+
+export { pubSub };

@@ -1,11 +1,4 @@
-import {
-  Resolver,
-  Mutation,
-  Args,
-  Query,
-  Context,
-  Subscription,
-} from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { OrderService } from './order.service';
 import { Order } from './entities/order.entity';
 import { CreateOrderInput } from './dto/create-order.input';
@@ -14,10 +7,8 @@ import { AccessTokenGuard } from '../../common/guards/access-token.guard';
 import { AccessTokenRequest } from '../../common/interfaces/request.interface';
 import { FindOrderDto } from './dto/find-order.dto';
 import { UpdateOrderStatusInput } from './dto/update-status.input';
-import { PubSub } from 'graphql-subscriptions';
 import { CalculateDeliveryInput } from './dto/calculate-delivery.input.ts';
-
-const pubSub = new PubSub();
+import { pubSub } from '../huelager/huelager.resolver';
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -60,7 +51,7 @@ export class OrderResolver {
   }
 
   @Mutation(() => Number)
-  async calculateDeliveryFee(
+  async getDeliveryFee(
     @Args('input') calculateDeliveryInput: CalculateDeliveryInput,
   ) {
     return this.orderService.calculateDeliveryFee(calculateDeliveryInput);
@@ -87,6 +78,7 @@ export class OrderResolver {
       entityType,
       entityId,
     };
+
     const order = await this.orderService.updateOrderStatus(
       updateOrderStatusInput,
     );
@@ -97,23 +89,5 @@ export class OrderResolver {
     pubSub.publish(`order-${userId}`, { orderStatusUpdated: order });
 
     return order;
-  }
-
-  @Subscription(() => Order)
-  async orderStatusUpdated(
-    @Context('req') { connectionParams }: { connectionParams: any },
-  ) {
-    const entityId = await this.orderService.verifySubscriber(connectionParams);
-
-    return pubSub.asyncIterator(`order-${entityId}`);
-  }
-
-  @Subscription(() => Order)
-  async newOrder(
-    @Context('req') { connectionParams }: { connectionParams: any },
-  ) {
-    const entityId = await this.orderService.verifySubscriber(connectionParams);
-
-    return pubSub.asyncIterator(`order-new-${entityId}`);
   }
 }

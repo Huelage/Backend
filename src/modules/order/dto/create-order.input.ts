@@ -37,6 +37,9 @@ export class CreateOrderInput {
   @Field(() => [GraphQLJSON])
   paymentBreakdown: { name: PaymentMethod; amount: number }[];
 
+  @Field({ nullable: true })
+  timestamp: Date;
+
   user: User;
 
   entityType: HuelagerType;

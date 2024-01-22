@@ -4,6 +4,7 @@
 
 type Wallet {
   walletId: String!
+  accountNumber: String!
   entity: Huelager!
   balance: Float!
   updatedAt: DateTime!
@@ -39,13 +40,21 @@ type WalletTransaction {
 type Transaction {
   transactionId: String!
   transactionType: TransactionType!
+<<<<<<< HEAD
   huenit_amount: Float!
   card_amount: Float!
   total_amount: Float!
+=======
+  huenitAmount: Float!
+  cardAmount: Float!
+  totalAmount: Float!
+>>>>>>> 0e9425393383e5c39c1a9c696db65de10a0c767e
   status: TransactionStatus!
-  description: String!
+  description: String
   paymentMethod: PaymentMethod!
   pgTransactionId: String!
+  bankName: String
+  bankAccountNo: String
   timestamp: DateTime!
   walletTransaction: WalletTransaction!
   order: Order!
@@ -54,6 +63,7 @@ type Transaction {
 enum TransactionType {
   TOP_UP
   WITHDRAWAL
+  TRANSFER
 }
 
 enum TransactionStatus {
@@ -233,11 +243,14 @@ type Query {
   getUserProfile: User!
   sayHello: String!
   getEntityProfile: Huelager!
+  getAccountDetails(accountNumber: String!): Huelager!
+  getTransactions: [Transaction!]!
+  getWalletTransactions: [WalletTransaction!]!
 }
 
 type Mutation {
   createOrder(input: CreateOrderInput!): Order!
-  calculateDeliveryFee(input: CalculateDeliveryInput!): Float!
+  getDeliveryFee: Float!
   updateOrderStatus(input: UpdateOrderStatusInput!): Order!
   addFood(input: CreateFoodInput!): Food!
   updateFood(input: UpdateFoodInput!): Boolean!
@@ -255,7 +268,12 @@ type Mutation {
   verifyEmailOtp(input: VerifyEmailInput!): Huelager!
   forgotPassword(input: ForgotPasswordInput!): Huelager!
   updatePassword(input: UpdatePasswordInput!): Huelager!
+  updateWalletPin(input: UpdateWalletPinInput!): Huelager!
+  verifyWalletPin(input: VerifyWalletPinInput!): Boolean!
   generateRSAKey: String!
+  topUpHuenit(input: TopupInput!): Transaction!
+  withdrawHuenit(input: TopupInput!): Transaction!
+  transferHuenit(input: TransferInput!): Transaction!
   uploadImage(input: UploadImageInput!): String!
 }
 
@@ -270,6 +288,7 @@ input CreateOrderInput {
   subtotal: Float!
   paymentMethod: PaymentMethod!
   paymentBreakdown: [JSON!]!
+  timestamp: DateTime
 }
 
 input OrderItemInput {
@@ -282,11 +301,6 @@ input OrderItemInput {
   price: Float
   size: String
   extras: JSON
-}
-
-input CalculateDeliveryInput {
-  vendorAddress: JSON!
-  deliveryAddress: JSON!
 }
 
 input UpdateOrderStatusInput {
@@ -404,6 +418,26 @@ input UpdatePasswordInput {
   confirmPassword: String!
 }
 
+input UpdateWalletPinInput {
+  pin: String!
+}
+
+input VerifyWalletPinInput {
+  pin: String!
+}
+
+input TopupInput {
+  bankName: String!
+  bankAccountNo: String!
+  pgTransactionId: String!
+  amount: Float!
+}
+
+input TransferInput {
+  accountNumber: String!
+  amount: Float!
+}
+
 input UploadImageInput {
   id: String!
   image: Upload!
@@ -413,6 +447,8 @@ input UploadImageInput {
 scalar Upload
 
 type Subscription {
+  walletBalanceUpdated: Float!
+  transactionHistoryUpdated: Transaction!
   orderStatusUpdated: Order!
   newOrder: Order!
 }

@@ -10,6 +10,7 @@ import { compare, hash } from 'bcryptjs';
 import {
   genRandomOtp,
   generateVendorKey,
+  generateWalletAccountNumber,
 } from '../../../common/helpers/helpers';
 import { SmsService } from '../../../providers/sms.service';
 import { AuthenticateVendorInput } from '../dtos/authenticate-account.input';
@@ -64,15 +65,16 @@ export class VendorService {
     const { businessAddress, phone, password, email, businessName, repName } =
       createVendorInput;
 
-    const exists = await this.repository.checkEmailAndPhone({
-      where: [{ email }, { phone }],
-    });
+    const { emailExists, phoneExists, accountNumber } =
+      await this.repository.checkEmailAndPhone({
+        where: [{ email }, { phone }],
+      });
 
-    if (exists) {
+    if (emailExists || phoneExists) {
       let inUse;
-      if (exists.emailExists && exists.phoneExists) {
+      if (emailExists && phoneExists) {
         inUse = 'Email and Phone number';
-      } else if (exists.emailExists) {
+      } else if (emailExists) {
         inUse = 'Email';
       } else {
         inUse = 'Phone number';
@@ -81,13 +83,16 @@ export class VendorService {
     }
 
     const hashedPassword = await hash(password, 10);
-    const entity = await this.repository.createHuelager({
-      phone,
-      email,
-      otp,
-      password: hashedPassword,
-      entityType: HuelagerType.VENDOR,
-    });
+    const entity = await this.repository.createHuelager(
+      {
+        phone,
+        email,
+        otp,
+        password: hashedPassword,
+        entityType: HuelagerType.VENDOR,
+      },
+      accountNumber,
+    );
 
     const vendor = await this.repository.createVendor({
       businessName,

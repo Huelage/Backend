@@ -3,6 +3,8 @@ import { User } from '../../huelager/user/user.entity';
 import { Vendor } from '../../huelager/vendor/vendor.entity';
 import { Transaction } from '../../transaction/entities/transaction.entity';
 
+import GraphQLJSON from 'graphql-type-json';
+import { AddressInterface } from 'src/modules/huelager/dtos/create-account.input';
 import {
   Column,
   CreateDateColumn,
@@ -16,9 +18,6 @@ import {
 } from 'typeorm';
 import { CanceledOrder } from './canceled_order.entity';
 import { OrderItem } from './order_item.entity';
-import GraphQLJSON from 'graphql-type-json';
-import { AddressInterface } from 'src/modules/huelager/dtos/create-account.input';
-import { WalletTransaction } from '../../../modules/transaction/entities/wallet_transaction.entity';
 
 export enum OrderStatus {
   PENDING = 'pending',
@@ -133,12 +132,4 @@ export class Order {
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
-
-  @OneToOne(
-    () => WalletTransaction,
-    (walletTransaction) => walletTransaction.order,
-    { nullable: true },
-  )
-  @Field(() => [WalletTransaction], { nullable: true })
-  walletTransaction: WalletTransaction;
 }

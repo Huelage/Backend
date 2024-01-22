@@ -3,13 +3,15 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import {
   calculateDeliveryFee,
   calculateEstimatedDeliveryTime,
 } from 'src/common/helpers/helpers';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
+import { Wallet } from '../huelager/entities/huenit_wallet.entity';
 import { HuelagerRepository } from '../huelager/huelager.repository';
+import { pubSub } from '../huelager/huelager.resolver';
+import { TransactionService } from '../transaction/transaction.service';
 import { CalculateDeliveryInput } from './dto/calculate-delivery.input.ts';
 import { CreateOrderInput } from './dto/create-order.input';
 import { FindOrderDto } from './dto/find-order.dto';
@@ -22,7 +24,7 @@ export class OrderService {
   constructor(
     private readonly orderRepository: OrderRepository,
     private readonly huelagerRepository: HuelagerRepository,
-    private readonly jwtService: JwtService,
+    private readonly transactionService: TransactionService,
   ) {}
 
   async create(createOrderInput: CreateOrderInput) {
@@ -39,14 +41,35 @@ export class OrderService {
       paymentBreakdown,
       entityType,
       user,
+      timestamp,
     } = createOrderInput;
 
-    if (paymentMethod !== PaymentMethod.CARD) {
-      const huenitPrice = totalAmount;
+    let huenitAmount = 0;
+    let senderWallet: Wallet;
 
-      huenitPrice; // to remove the error;
-      pgTransactionId; // to remove the error;
+    if (paymentMethod !== PaymentMethod.CARD) {
+      huenitAmount = paymentBreakdown.find(
+        (payment) => payment.name.toLowerCase() === 'huenit',
+      ).amount;
+
+      senderWallet = await this.huelagerRepository.subtractFromBalance(
+        user.userId,
+        huenitAmount,
+      );
+
+      pubSub.publish(`wallet-${senderWallet.walletId}`, {
+        walletBalanceUpdated: senderWallet.balance,
+      });
     }
+
+    const receiverWallet = await this.huelagerRepository.addToBalance(
+      vendorId,
+      totalAmount,
+    );
+
+    pubSub.publish(`wallet-${receiverWallet.walletId}`, {
+      walletBalanceUpdated: receiverWallet.balance,
+    });
 
     if (entityType !== HuelagerType.USER)
       throw new UnauthorizedException('Not a user.');
@@ -75,11 +98,26 @@ export class OrderService {
       discount,
       paymentBreakdown,
       paymentMethod,
+
       status: OrderStatus.PENDING,
     });
 
     await this.orderRepository.saveOrderItem(order.orderItems);
     await this.orderRepository.saveOrder(order);
+
+    order.transaction = await this.transactionService.orderTransaction({
+      vendorId,
+      userId: user.userId,
+      huenitAmount,
+      cardAmount: totalAmount - huenitAmount,
+      totalAmount,
+      paymentMethod,
+      pgTransactionId,
+      order,
+      senderWallet,
+      receiverWallet,
+      timestamp: timestamp ? timestamp : new Date(),
+    });
 
     return order;
   }
@@ -153,29 +191,5 @@ export class OrderService {
     await this.orderRepository.saveOrder(order);
 
     return order;
-  }
-
-  async verifySubscriber(connectionParams: any) {
-    const authorization = connectionParams.Authorization;
-
-    if (!authorization) throw new Error('Not authorized.');
-
-    const token = authorization.replace('Bearer ', '');
-
-    if (!token) throw new Error('Not authorized.');
-
-    const { entityId } = (await this.jwtService.decode(token)) as {
-      entityId: string;
-    };
-
-    const huelager = await this.huelagerRepository.findHuelager({
-      where: { entityId },
-    });
-
-    if (!huelager) {
-      throw new UnauthorizedException();
-    }
-
-    return entityId;
   }
 }

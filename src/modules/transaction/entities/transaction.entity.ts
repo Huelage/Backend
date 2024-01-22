@@ -12,15 +12,16 @@ import {
 import { WalletTransaction } from './wallet_transaction.entity';
 import { Order, PaymentMethod } from '../../order/entities/order.entity';
 
-enum TransactionStatus {
+export enum TransactionStatus {
   COMPLETED = 'completed',
   PENDING = 'pending',
   FAILED = 'failed',
 }
 
-enum TransactionType {
+export enum TransactionType {
   TOP_UP = 'top_up',
   WITHDRAWAL = 'withdrawal',
+  TRANSFER = 'trasfer',
 }
 
 registerEnumType(TransactionStatus, { name: 'TransactionStatus' });
@@ -43,24 +44,24 @@ export class Transaction {
   @Field(() => TransactionType)
   transactionType: TransactionType;
 
-  @Column({ type: 'decimal' })
+  @Column({ type: 'decimal', name: 'huenit_amount', default: 0 })
   @Field()
-  huenit_amount: number;
+  huenitAmount: number;
 
-  @Column({ type: 'decimal' })
+  @Column({ type: 'decimal', name: 'card_amount', default: 0 })
   @Field()
-  card_amount: number;
+  cardAmount: number;
 
-  @Column({ type: 'decimal' })
+  @Column({ type: 'decimal', name: 'total_amount' })
   @Field()
-  total_amount: number;
+  totalAmount: number;
 
   @Column({ type: 'enum', enum: TransactionStatus })
   @Field(() => TransactionStatus)
   status: TransactionStatus;
 
-  @Column({ type: 'text' })
-  @Field()
+  @Column({ type: 'text', nullable: true })
+  @Field({ nullable: true })
   description: string;
 
   @Column({
@@ -74,6 +75,14 @@ export class Transaction {
   @Column({ name: 'pg_transaction_id', type: 'text', nullable: true })
   @Field()
   pgTransactionId: string;
+
+  @Column({ name: 'bank_name', nullable: true, type: 'varchar' })
+  @Field({ nullable: true })
+  bankName: string;
+
+  @Column({ name: 'bank_acc_no', nullable: true, type: 'varchar' })
+  @Field({ nullable: true })
+  bankAccountNo: string;
 
   @CreateDateColumn({
     type: 'datetime',
