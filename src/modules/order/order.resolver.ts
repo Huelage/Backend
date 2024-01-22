@@ -60,7 +60,9 @@ export class OrderResolver {
   }
 
   @Mutation(() => Number)
-  async calculateDeliveryFee(calculateDeliveryInput: CalculateDeliveryInput) {
+  async calculateDeliveryFee(
+    @Args('input') calculateDeliveryInput: CalculateDeliveryInput,
+  ) {
     return this.orderService.calculateDeliveryFee(calculateDeliveryInput);
   }
 

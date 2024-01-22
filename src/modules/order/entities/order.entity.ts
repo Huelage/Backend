@@ -36,15 +36,8 @@ export enum PaymentMethod {
   CARD = 'card',
 }
 
-export enum PaymentStatus {
-  PAID = 'paid',
-  SPLIT = 'split',
-  PENDING = 'pending',
-}
-
 registerEnumType(OrderStatus, { name: 'OrderStatus' });
 registerEnumType(PaymentMethod, { name: 'PaymentMethod' });
-registerEnumType(PaymentStatus, { name: 'PaymentStatus' });
 
 @Entity({ name: 'order' })
 @ObjectType()
@@ -89,11 +82,11 @@ export class Order {
   @Field()
   estimatedDeliveryTime: Date;
 
-  @Column({ type: 'decimal' })
+  @Column({ type: 'float' })
   @Field()
   subtotal: number;
 
-  @Column({ name: 'delivery_fee', type: 'decimal', nullable: true })
+  @Column({ name: 'delivery_fee', type: 'float', nullable: true })
   @Field()
   deliveryFee: number;
 
@@ -105,25 +98,18 @@ export class Order {
   @Field(() => [GraphQLJSON])
   paymentBreakdown: { name: string; amount: number }[];
 
-  @Column({ name: 'total_amount', type: 'decimal' })
+  @Column({ name: 'total_amount', type: 'float' })
   @Field()
   totalAmount: number;
 
   @Column({
     type: 'enum',
-    enum: ['split', 'huenit', 'card'],
+    enum: PaymentMethod,
     name: 'payment_method',
     nullable: true,
   })
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
-
-  @Column({
-    name: 'payment_status',
-    type: 'boolean',
-  })
-  @Field()
-  paymentStatus: PaymentStatus;
 
   @CreateDateColumn({
     name: 'ordered_at',

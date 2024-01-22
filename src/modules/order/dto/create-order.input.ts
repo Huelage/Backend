@@ -1,9 +1,9 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import GraphQLJSON from 'graphql-type-json';
+import { AddressInterface } from '../../../modules/huelager/dtos/create-account.input';
 import { HuelagerType } from '../../../modules/huelager/entities/huelager.entity';
 import { User } from '../../../modules/huelager/user/user.entity';
-import { PaymentMethod, PaymentStatus } from '../entities/order.entity';
-import { AddressInterface } from '../../../modules/huelager/dtos/create-account.input';
+import { PaymentMethod } from '../entities/order.entity';
 
 @InputType()
 export class CreateOrderInput {
@@ -13,7 +13,7 @@ export class CreateOrderInput {
   @Field(() => [OrderItemInput])
   orderItems: OrderItemInput[];
 
-  @Field()
+  @Field(() => GraphQLJSON)
   deliveryAddress: AddressInterface;
 
   @Field()
@@ -34,11 +34,8 @@ export class CreateOrderInput {
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
 
-  @Field(() => PaymentStatus)
-  paymentStatus: PaymentStatus;
-
   @Field(() => [GraphQLJSON])
-  paymentBreakdown: { name: string; amount: number }[];
+  paymentBreakdown: { name: PaymentMethod; amount: number }[];
 
   user: User;
 

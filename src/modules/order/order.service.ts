@@ -3,19 +3,19 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateOrderInput } from './dto/create-order.input';
-import { OrderRepository } from './order.repository';
-import { FindOrderDto } from './dto/find-order.dto';
-import { HuelagerType } from '../huelager/entities/huelager.entity';
-import { Order, OrderStatus, PaymentMethod } from './entities/order.entity';
-import { UpdateOrderStatusInput } from './dto/update-status.input';
+import { JwtService } from '@nestjs/jwt';
 import {
   calculateDeliveryFee,
   calculateEstimatedDeliveryTime,
 } from 'src/common/helpers/helpers';
+import { HuelagerType } from '../huelager/entities/huelager.entity';
 import { HuelagerRepository } from '../huelager/huelager.repository';
-import { JwtService } from '@nestjs/jwt';
 import { CalculateDeliveryInput } from './dto/calculate-delivery.input.ts';
+import { CreateOrderInput } from './dto/create-order.input';
+import { FindOrderDto } from './dto/find-order.dto';
+import { UpdateOrderStatusInput } from './dto/update-status.input';
+import { Order, OrderStatus, PaymentMethod } from './entities/order.entity';
+import { OrderRepository } from './order.repository';
 
 @Injectable()
 export class OrderService {
@@ -42,9 +42,7 @@ export class OrderService {
     } = createOrderInput;
 
     if (paymentMethod !== PaymentMethod.CARD) {
-      const huenitPrice = paymentBreakdown.find(
-        (payment) => payment.name === 'huenit',
-      ).amount;
+      const huenitPrice = totalAmount;
 
       huenitPrice; // to remove the error;
       pgTransactionId; // to remove the error;
