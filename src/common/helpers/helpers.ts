@@ -56,3 +56,9 @@ export function generateWalletAccountNumber() {
   }
   return accountNumber;
 }
+
+export const numberToCurrency = (value: number) => {
+  const number = value.toFixed(2);
+  const [currency, decimal] = number.split('.');
+  return `₦${currency.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${decimal}`;
+};

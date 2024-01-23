@@ -18,6 +18,7 @@ import {
   TransactionType,
 } from './entities/transaction.entity';
 import { TransactionRepository } from './transaction.repository';
+import { numberToCurrency } from 'src/common/helpers/helpers';
 
 @Injectable()
 export class TransactionService {
@@ -103,7 +104,13 @@ export class TransactionService {
       amount,
     );
 
-    const description = `Funds transfer from ${sender.user.firstName} ${sender.user.lastName} - Amount: NGN ${amount}`;
+    const description =
+      'Funds transfer from ' +
+      sender.user.firstName +
+      ' ' +
+      sender.user.lastName +
+      ' - Amount: NGN ' +
+      numberToCurrency(amount);
     const transaction = await this.repository.createTransaction({
       cardAmount: 0,
       totalAmount: amount,
@@ -153,7 +160,7 @@ export class TransactionService {
       transactionType: TransactionType.TOP_UP,
       status: TransactionStatus.COMPLETED,
       paymentMethod: PaymentMethod.CARD,
-      description: `Top up - Amount: NGN ${amount}`,
+      description: `Top up - Amount: NGN ${numberToCurrency(amount)}`,
       pgTransactionId,
     });
 
@@ -193,7 +200,7 @@ export class TransactionService {
       transactionType: TransactionType.WITHDRAWAL,
       status: TransactionStatus.COMPLETED,
       paymentMethod: PaymentMethod.CARD,
-      description: `Withdrawal - Amount: NGN ${amount}`,
+      description: `Withdrawal - Amount: NGN ${numberToCurrency(amount)}`,
       pgTransactionId,
     });
 

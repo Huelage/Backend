@@ -6,6 +6,7 @@ import {
 import {
   calculateDeliveryFee,
   calculateEstimatedDeliveryTime,
+  numberToCurrency,
 } from 'src/common/helpers/helpers';
 import { HuelagerType } from '../huelager/entities/huelager.entity';
 import { Wallet } from '../huelager/entities/huenit_wallet.entity';
@@ -98,7 +99,6 @@ export class OrderService {
       discount,
       paymentBreakdown,
       paymentMethod,
-
       status: OrderStatus.PENDING,
     });
 
@@ -107,11 +107,21 @@ export class OrderService {
 
     let items = '';
     orderItems.forEach((item, idx) => {
-      items += `${item.quantity} portion${item.quantity === 1 ? '' : 's'} of ${
-        item.productName
-      } ${idx === orderItems.length - 1 ? '' : '+ '}`;
+      items +=
+        item.quantity +
+        ' portion' +
+        (item.quantity === 1 ? '' : 's') +
+        ' of ' +
+        item.productName +
+        (idx === orderItems.length - 1 ? '' : '+ ');
     });
-    const description = `Purchase from ${vendor.businessName}: ${items} - NGN ${totalAmount}`;
+    const description =
+      'Purchase from ' +
+      vendor.businessName +
+      ': ' +
+      items +
+      ' - NGN ' +
+      numberToCurrency(totalAmount);
 
     order.transaction = await this.transactionService.orderTransaction({
       vendorId,
