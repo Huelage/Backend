@@ -26,4 +26,6 @@ export class OrderTransactionDto {
   senderWallet: Wallet;
 
   receiverWallet: Wallet;
+
+  description: string;
 }

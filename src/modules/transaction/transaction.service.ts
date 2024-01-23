@@ -4,20 +4,20 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { TransactionRepository } from './transaction.repository';
+import { Huelager } from '../huelager/entities/huelager.entity';
+import { HuelagerRepository } from '../huelager/huelager.repository';
+import { pubSub } from '../huelager/huelager.resolver';
+import { PaymentMethod } from '../order/entities/order.entity';
 import { OrderTransactionDto } from './dtos/order-transaction.dto';
+import { TopupInput } from './dtos/topup.input';
+import { TransferInput } from './dtos/transfer.input';
+import { WithdrawalInput } from './dtos/withdrawal.input';
 import {
   Transaction,
   TransactionStatus,
   TransactionType,
 } from './entities/transaction.entity';
-import { PaymentMethod } from '../order/entities/order.entity';
-import { TopupInput } from './dtos/topup.input';
-import { HuelagerRepository } from '../huelager/huelager.repository';
-import { WithdrawalInput } from './dtos/withdrawal.input';
-import { TransferInput } from './dtos/transfer.input';
-import { Huelager } from '../huelager/entities/huelager.entity';
-import { pubSub } from '../huelager/huelager.resolver';
+import { TransactionRepository } from './transaction.repository';
 
 @Injectable()
 export class TransactionService {
@@ -39,11 +39,13 @@ export class TransactionService {
       receiverWallet,
       order,
       timestamp,
+      description,
     } = orderTransactionDto;
 
     const transaction = await this.repository.createTransaction({
+      description,
       initiatorEntity: { entityId: userId },
-      transactionType: TransactionType.WITHDRAWAL,
+      transactionType: TransactionType.PURCHASE,
       huenitAmount,
       cardAmount,
       totalAmount,
@@ -51,7 +53,6 @@ export class TransactionService {
       status: TransactionStatus.COMPLETED,
       pgTransactionId,
       timestamp: timestamp,
-
       order,
     });
 
@@ -102,13 +103,16 @@ export class TransactionService {
       amount,
     );
 
+    const description = `Funds transfer from ${sender.user.firstName} ${sender.user.lastName} - Amount: NGN ${amount}`;
     const transaction = await this.repository.createTransaction({
       cardAmount: 0,
       totalAmount: amount,
       huenitAmount: amount,
       initiatorEntity: sender,
+      transactionType: TransactionType.TRANSFER,
       status: TransactionStatus.COMPLETED,
       paymentMethod: PaymentMethod.HUENIT,
+      description,
     });
 
     transaction.walletTransaction = {
@@ -137,20 +141,19 @@ export class TransactionService {
   }
 
   async topUp(topupInput: TopupInput): Promise<Transaction> {
-    const { bankName, bankAccountNo, amount, entity, pgTransactionId } =
-      topupInput;
+    const { amount, entity, pgTransactionId } = topupInput;
     const { entityId } = entity;
 
     const wallet = await this.huelagerRepository.addToBalance(entityId, amount);
 
     const transaction = await this.repository.createTransaction({
-      bankAccountNo,
-      bankName,
       cardAmount: amount,
       totalAmount: amount,
       initiatorEntity: entity,
+      transactionType: TransactionType.TOP_UP,
       status: TransactionStatus.COMPLETED,
       paymentMethod: PaymentMethod.CARD,
+      description: `Top up - Amount: NGN ${amount}`,
       pgTransactionId,
     });
 
@@ -187,8 +190,10 @@ export class TransactionService {
       cardAmount: amount,
       totalAmount: amount,
       initiatorEntity: entity,
+      transactionType: TransactionType.WITHDRAWAL,
       status: TransactionStatus.COMPLETED,
       paymentMethod: PaymentMethod.CARD,
+      description: `Withdrawal - Amount: NGN ${amount}`,
       pgTransactionId,
     });
 

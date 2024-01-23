@@ -7,6 +7,7 @@ type Wallet {
   accountNumber: String!
   entity: Huelager!
   balance: Float!
+  createdAt: DateTime!
   updatedAt: DateTime!
 }
 
@@ -34,23 +35,16 @@ enum Rating {
 
 type WalletTransaction {
   transaction: Transaction!
-  order: Order!
 }
 
 type Transaction {
   transactionId: String!
   transactionType: TransactionType!
-<<<<<<< HEAD
-  huenit_amount: Float!
-  card_amount: Float!
-  total_amount: Float!
-=======
   huenitAmount: Float!
   cardAmount: Float!
   totalAmount: Float!
->>>>>>> 0e9425393383e5c39c1a9c696db65de10a0c767e
   status: TransactionStatus!
-  description: String
+  description: String!
   paymentMethod: PaymentMethod!
   pgTransactionId: String!
   bankName: String
@@ -62,6 +56,7 @@ type Transaction {
 
 enum TransactionType {
   TOP_UP
+  PURCHASE
   WITHDRAWAL
   TRANSFER
 }
@@ -169,7 +164,6 @@ type Order {
   updatedAt: DateTime!
   canceledOrder: CanceledOrder!
   orderItems: [OrderItem!]!
-  walletTransaction: [WalletTransaction!]
 }
 
 enum OrderStatus {
@@ -250,7 +244,7 @@ type Query {
 
 type Mutation {
   createOrder(input: CreateOrderInput!): Order!
-  getDeliveryFee: Float!
+  getDeliveryFee(input: CalculateDeliveryInput!): Float!
   updateOrderStatus(input: UpdateOrderStatusInput!): Order!
   addFood(input: CreateFoodInput!): Food!
   updateFood(input: UpdateFoodInput!): Boolean!
@@ -272,7 +266,7 @@ type Mutation {
   verifyWalletPin(input: VerifyWalletPinInput!): Boolean!
   generateRSAKey: String!
   topUpHuenit(input: TopupInput!): Transaction!
-  withdrawHuenit(input: TopupInput!): Transaction!
+  withdrawHuenit(input: WithdrawalInput!): Transaction!
   transferHuenit(input: TransferInput!): Transaction!
   uploadImage(input: UploadImageInput!): String!
 }
@@ -301,6 +295,11 @@ input OrderItemInput {
   price: Float
   size: String
   extras: JSON
+}
+
+input CalculateDeliveryInput {
+  vendorAddress: JSON!
+  deliveryAddress: JSON!
 }
 
 input UpdateOrderStatusInput {
@@ -427,6 +426,11 @@ input VerifyWalletPinInput {
 }
 
 input TopupInput {
+  pgTransactionId: String!
+  amount: Float!
+}
+
+input WithdrawalInput {
   bankName: String!
   bankAccountNo: String!
   pgTransactionId: String!

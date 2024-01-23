@@ -105,6 +105,14 @@ export class OrderService {
     await this.orderRepository.saveOrderItem(order.orderItems);
     await this.orderRepository.saveOrder(order);
 
+    let items = '';
+    orderItems.forEach((item, idx) => {
+      items += `${item.quantity} portion${item.quantity === 1 ? '' : 's'} of ${
+        item.productName
+      } ${idx === orderItems.length - 1 ? '' : '+ '}`;
+    });
+    const description = `Purchase from ${vendor.businessName}: ${items} - NGN ${totalAmount}`;
+
     order.transaction = await this.transactionService.orderTransaction({
       vendorId,
       userId: user.userId,
@@ -116,6 +124,7 @@ export class OrderService {
       order,
       senderWallet,
       receiverWallet,
+      description,
       timestamp: timestamp ? timestamp : new Date(),
     });
 

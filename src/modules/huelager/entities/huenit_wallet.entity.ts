@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
@@ -8,7 +9,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Huelager } from './huelager.entity';
-import { generateWalletAccountNumber } from 'src/common/helpers/helpers';
 
 @Entity({ name: 'huenit_wallet' })
 @ObjectType()
@@ -17,12 +17,7 @@ export class Wallet {
   @Field()
   walletId: string;
 
-  @Column({
-    type: 'varchar',
-    length: 16,
-    unique: true,
-    default: () => generateWalletAccountNumber(),
-  }) // I will have to make it unique later
+  @Column({ type: 'varchar', length: 16, unique: true }) // I will have to make it unique later
   @Field()
   accountNumber: string;
 
@@ -39,6 +34,13 @@ export class Wallet {
   @Column({ type: 'decimal', scale: 2, default: 0 })
   @Field()
   balance: number;
+
+  @CreateDateColumn({
+    name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  @Field()
+  createdAt: Date;
 
   @UpdateDateColumn({
     name: 'updated_at',

@@ -20,6 +20,7 @@ export enum TransactionStatus {
 
 export enum TransactionType {
   TOP_UP = 'top_up',
+  PURCHASE = 'purchase',
   WITHDRAWAL = 'withdrawal',
   TRANSFER = 'trasfer',
 }
@@ -37,7 +38,7 @@ export class Transaction {
   @ManyToOne(() => Huelager, (huelager) => huelager.transactions, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'inittiator_entity_id' })
+  @JoinColumn({ name: 'initiator_entity_id' })
   initiatorEntity: Huelager;
 
   @Column({ type: 'enum', enum: TransactionType, name: 'transaction_type' })
@@ -60,14 +61,15 @@ export class Transaction {
   @Field(() => TransactionStatus)
   status: TransactionStatus;
 
-  @Column({ type: 'text', nullable: true })
-  @Field({ nullable: true })
+  @Column({ type: 'text' })
+  @Field()
   description: string;
 
   @Column({
     name: 'payment_method',
     type: 'enum',
-    enum: ['card', 'huenit', 'split'],
+    enum: PaymentMethod,
+    enumName: 'PaymentMethod',
   })
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
@@ -84,10 +86,7 @@ export class Transaction {
   @Field({ nullable: true })
   bankAccountNo: string;
 
-  @CreateDateColumn({
-    type: 'datetime',
-    nullable: true,
-  })
+  @CreateDateColumn({ type: 'datetime', nullable: true })
   @Field()
   timestamp: Date;
 

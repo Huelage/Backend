@@ -7,6 +7,7 @@ import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
 import { AccessTokenRequest } from 'src/common/interfaces/request.interface';
 import { TransferInput } from './dtos/transfer.input';
 import { WalletTransaction } from './entities/wallet_transaction.entity';
+import { WithdrawalInput } from './dtos/withdrawal.input';
 
 @Resolver(() => Transaction)
 export class TransactionResolver {
@@ -41,11 +42,11 @@ export class TransactionResolver {
   @UseGuards(AccessTokenGuard)
   @Mutation(() => Transaction)
   async withdrawHuenit(
-    @Args('input') topupInput: TopupInput,
+    @Args('input') withdrawalInput: WithdrawalInput,
     @Context('req') { user: huelager }: AccessTokenRequest,
   ) {
-    topupInput.entity = huelager;
-    return await this.transactionService.withdrawal(topupInput);
+    withdrawalInput.entity = huelager;
+    return await this.transactionService.withdrawal(withdrawalInput);
   }
 
   @UseGuards(AccessTokenGuard)
