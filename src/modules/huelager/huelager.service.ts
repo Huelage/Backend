@@ -247,7 +247,7 @@ export class HuelagerService {
   }: AccountDetailInput) {
     if (!walletId && !accountNumber)
       throw new BadRequestException(
-        'walletId anf accountNumber cannot both be null',
+        'walletId and accountNumber cannot both be null',
       );
 
     const searchField = accountNumber ? { accountNumber } : { walletId };
