@@ -239,9 +239,14 @@ type Query {
   getUserProfile: User!
   sayHello: String!
   getEntityProfile: Huelager!
-  getAccountDetails(accountNumber: String!): Huelager!
+  getAccountDetails(input: AccountDetailInput!): Huelager!
   getTransactions: [Transaction!]!
   getWalletTransactions: [WalletTransaction!]!
+}
+
+input AccountDetailInput {
+  accountNumber: String
+  walletId: String
 }
 
 type Mutation {

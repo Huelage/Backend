@@ -23,6 +23,7 @@ import { UpdatePasswordInput } from './dtos/update-password.input';
 import { env } from '../../config/env.config';
 import { UpdateWalletPinInput } from './dtos/update-wallet-pin.input';
 import { VerifyWalletPinInput } from './dtos/verify-wallet-pin.input';
+import { AccountDetailInput } from './dtos/account-details.input';
 
 @Injectable()
 export class HuelagerService {
@@ -239,9 +240,13 @@ export class HuelagerService {
     return publicKey;
   }
 
-  async huelagerFromAccountNumber(accountNumber: string) {
+  async huelagerFromAccountNumber({
+    accountNumber,
+    walletId,
+  }: AccountDetailInput) {
+    const searchField = accountNumber ? { accountNumber } : { walletId };
     const huelager = await this.repository.findHuelager({
-      where: { wallet: { accountNumber } },
+      where: { wallet: searchField },
     });
 
     if (!huelager) throw new NotFoundException('Invalid account number.');

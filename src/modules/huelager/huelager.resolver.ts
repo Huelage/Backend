@@ -26,6 +26,7 @@ import { Transaction } from '../transaction/entities/transaction.entity';
 import { UpdateWalletPinInput } from './dtos/update-wallet-pin.input';
 import { VerifyWalletPinInput } from './dtos/verify-wallet-pin.input';
 import { Order } from '../order/entities/order.entity';
+import { AccountDetailInput } from './dtos/account-details.input';
 
 const pubSub = new PubSub();
 
@@ -45,8 +46,12 @@ export class HuelagerResolver {
   }
 
   @Query(() => Huelager)
-  async getAccountDetails(@Args('accountNumber') accountNumber: string) {
-    return await this.huelagerService.huelagerFromAccountNumber(accountNumber);
+  async getAccountDetails(
+    @Args('input') accountDetailInput: AccountDetailInput,
+  ) {
+    return await this.huelagerService.huelagerFromAccountNumber(
+      accountDetailInput,
+    );
   }
 
   /**
