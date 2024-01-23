@@ -45,15 +45,15 @@ export class Transaction {
   @Field(() => TransactionType)
   transactionType: TransactionType;
 
-  @Column({ type: 'decimal', name: 'huenit_amount', default: 0 })
+  @Column({ type: 'float', name: 'huenit_amount', default: 0 })
   @Field()
   huenitAmount: number;
 
-  @Column({ type: 'decimal', name: 'card_amount', default: 0 })
+  @Column({ type: 'float', name: 'card_amount', default: 0 })
   @Field()
   cardAmount: number;
 
-  @Column({ type: 'decimal', name: 'total_amount' })
+  @Column({ type: 'float', name: 'total_amount' })
   @Field()
   totalAmount: number;
 

@@ -113,7 +113,7 @@ export class OrderService {
         (item.quantity === 1 ? '' : 's') +
         ' of ' +
         item.productName +
-        (idx === orderItems.length - 1 ? '' : '+ ');
+        (idx === orderItems.length - 1 ? '' : ' + ');
     });
     const description =
       'Purchase from ' +

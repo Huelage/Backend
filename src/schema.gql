@@ -35,6 +35,8 @@ enum Rating {
 
 type WalletTransaction {
   transaction: Transaction!
+  senderWallet: Wallet!
+  receiverWallet: Wallet!
 }
 
 type Transaction {

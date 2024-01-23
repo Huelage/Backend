@@ -45,7 +45,13 @@ export class TransactionRepository {
     const { where } = params;
     const transactions = await this.transactionRepository.find({
       where,
-      relations: { walletTransaction: true },
+      relations: {
+        walletTransaction: {
+          senderWallet: true,
+          receiverWallet: true,
+        },
+        order: true,
+      },
     });
 
     return transactions;

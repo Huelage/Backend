@@ -24,9 +24,11 @@ export class WalletTransaction {
 
   @ManyToOne(() => Wallet, { nullable: false })
   @JoinColumn({ name: 'sender_wallet_id' })
+  @Field(() => Wallet)
   senderWallet: Wallet;
 
   @ManyToOne(() => Wallet, { nullable: false })
   @JoinColumn({ name: 'receiver_wallet_id' })
+  @Field(() => Wallet)
   receiverWallet: Wallet;
 }
