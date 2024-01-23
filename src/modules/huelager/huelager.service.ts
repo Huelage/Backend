@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -244,7 +245,13 @@ export class HuelagerService {
     accountNumber,
     walletId,
   }: AccountDetailInput) {
+    if (!walletId && !accountNumber)
+      throw new BadRequestException(
+        'walletId anf accountNumber cannot both be null',
+      );
+
     const searchField = accountNumber ? { accountNumber } : { walletId };
+
     const huelager = await this.repository.findHuelager({
       where: { wallet: searchField },
     });
