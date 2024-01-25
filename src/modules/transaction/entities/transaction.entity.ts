@@ -94,11 +94,11 @@ export class Transaction {
     () => WalletTransaction,
     (walletTransaction) => walletTransaction.transaction,
   )
-  @Field(() => WalletTransaction)
+  @Field(() => WalletTransaction, { nullable: true })
   walletTransaction: WalletTransaction;
 
   @OneToOne(() => Order, (order) => order.transaction)
-  @Field(() => Order)
+  @Field(() => Order, { nullable: true })
   order: Order;
 }
 

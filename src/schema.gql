@@ -52,8 +52,8 @@ type Transaction {
   bankName: String
   bankAccountNo: String
   timestamp: DateTime!
-  walletTransaction: WalletTransaction!
-  order: Order!
+  walletTransaction: WalletTransaction
+  order: Order
 }
 
 enum TransactionType {
