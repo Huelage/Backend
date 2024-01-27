@@ -57,17 +57,13 @@ export class TransactionService {
       order,
     });
 
-    if (paymentMethod != PaymentMethod.CARD) {
-      transaction.walletTransaction = {
-        senderWallet,
-        receiverWallet,
-        transaction,
-        transactionId: transaction.transactionId,
-      };
-      await this.repository.saveWalletTransaction(
-        transaction.walletTransaction,
-      );
-    }
+    transaction.walletTransaction = {
+      senderWallet,
+      receiverWallet,
+      transaction,
+      transactionId: transaction.transactionId,
+    };
+    await this.repository.saveWalletTransaction(transaction.walletTransaction);
     await this.repository.saveTransaction(transaction);
 
     pubSub.publish(`transaction-${userId}`, {
